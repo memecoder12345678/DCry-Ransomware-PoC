@@ -338,10 +338,11 @@ def start_encryption():
     global id
     id = uuid.uuid1()
     key = bytearray(get_random_bytes(32))
+    key_b64 = bytearray(base64.urlsafe_b64encode(b"DCRY+DKEY$" + bytes(key)))
     try:
         mlock(key)
-
-        key_b64 = base64.urlsafe_b64encode(b"DCRY+DKEY$" + bytes(key)).decode()
+        mlock(key_b64)
+        
         encrypted_key = encrypt_key(key_b64.encode())
 
         data = {
@@ -396,6 +397,9 @@ def start_encryption():
     finally:
         zeroize1(key)
         munlock(key)
+        zeroize1(key_b64)
+        munlock(key_b64)
+        del key, key_b64
 
 
 def encrypt_directory(directory_path, key):
