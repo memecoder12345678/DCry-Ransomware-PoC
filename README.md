@@ -1,4 +1,4 @@
-### **Don't-Cry Ransomware**
+# Don't-Cry Ransomware
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue?logo=python\&logoColor=white)
 ![Cython](https://img.shields.io/badge/Requires-Cython-yellow?logo=python\&logoColor=white)
