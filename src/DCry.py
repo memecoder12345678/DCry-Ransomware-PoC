@@ -34,8 +34,9 @@ from win32com.client import Dispatch
 from file_crypto import encrypt_file  # type: ignore
 from Crypto.Cipher import PKCS1_OAEP
 
-YOUR_URL = dx42("YOUR_ENCODED_URL").decode() # replace with your encoded URL
-# Using the ex42 function from the edx42 module to encode the URL
+# Decode the encoded URL using the dx42 function.
+YOUR_URL = dx42("YOUR_ENCODED_URL").decode()  # Replace with your encoded URL.
+# Encode a URL using the ex42 function from the edx42 module.
 # Example: encoded_url = ex42("https://example.com".encode())
 id = ""
 
