@@ -56,7 +56,7 @@ def is_valid_key(key):
         key_file = os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256")
         if magic != b"DCRY+DKEY$":
             return False
-        if not key or len(key) != 16 or not os.path.exists(key_file):
+        if not key or len(key) != 32 or not os.path.exists(key_file):
             return False
         with open(key_file, "r") as f:
             return f.read() == hashlib.sha256(key).hexdigest()
