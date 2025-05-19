@@ -7,7 +7,7 @@
 ![DCry](./DCRY.png)
 使用 Python 编写的勒索软件 💀💀💀
 ## 使用方法
-* 打开 [`DCry.py`](./src/DCry.py) 文件。
+* 打开 [`DCry.py`](src/DCry.py) 文件。
 * 使用 `dx42` 函数替换 `YOUR_URL` 变量，方法如下：
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
