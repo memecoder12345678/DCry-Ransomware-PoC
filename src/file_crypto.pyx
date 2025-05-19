@@ -116,7 +116,8 @@ def encrypt_file(str path, bytes key, int chunk_size=268435456):
             fwrite(<char *> &encrypted_view[0], 1, len(encrypted_chunk), f_out)
         success = True
     except Exception as e:
-        print(f"Error encrypting {path}: {e}")
+        # print(f"Error encrypting {path}: {e}")
+        pass
     finally:
         if f_in:
             fclose(f_in)
