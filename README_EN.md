@@ -5,7 +5,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Status](https://img.shields.io/badge/Status-Temporarily--Inactive-orange)
 ![DCry](./DCRY.png)
-Ransomware using Python 💀💀💀
+Ransomware written in Python 💀💀💀
 ## Usage
 * Open the [`DCry.py`](./src/DCry.py) file.
 * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
