@@ -4,10 +4,10 @@
 ![License](https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Status](https://img.shields.io/badge/Status-Temporarily--Inactive-orange)
-![DCry](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/imgs/DCRY.png)
+![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware/main/imgs/DCRY.png)
 使用 Python 编写的勒索软件 💀💀💀
 ## 使用方法
-* 打开 [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/src/DCry.py) 文件。
+* 打开 [`DCry.py`](main/src/DCry.py) 文件。
 * 使用 `dx42` 函数替换 `YOUR_URL` 变量，方法如下：
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
