@@ -1,6 +1,8 @@
-.pyd
-.dcry
-.exe
-.c
-src/build/*
-src/dist/*
+**/*.pyd
+**/*.dcry
+**/*.exe
+**/*.c
+**/src/build/
+**/src/dist/
+**/src/build/*
+**/src/dist/*
