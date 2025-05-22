@@ -1,3 +1,6 @@
 .pyd
 .dcry
-url
+.exe
+.c
+src/build/*
+src/dist/*
