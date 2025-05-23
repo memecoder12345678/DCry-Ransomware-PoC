@@ -24,7 +24,10 @@
   YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()
   ```
 * 用你的比特币地址字符串替换 `YOUR_BITCOIN_ADDRESS`。
-* 用你的邮箱地址字符串替换 `YOUR_EMAIL_ADDRESS`。
+* 将 `YOUR_EMAIL_ADDRESS` 同样替换为你已加密的邮箱地址。
+  ```python
+  YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()  
+  ```
 * 将 `dev_mode` 设置为 `False` 来关闭开发模式。
 * 使用以下命令安装所需依赖：
   ```bash

