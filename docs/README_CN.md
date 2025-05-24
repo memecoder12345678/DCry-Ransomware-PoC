@@ -1,9 +1,14 @@
-# Don't-Cry 勒索软件
-![Python](https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white)
-![Cython](https://img.shields.io/badge/Requires-Cython-yellow?logo=python&logoColor=white)
-![License](https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Windows-blue)
-![Status](https://img.shields.io/badge/Status-Temporarily--Inactive-orange)
+<h1 align="center">Don't-Cry 勒索软件h1>
+  
+<div align="center">
+
+  <img src="https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Requires-Cython-yellow?logo=python&logoColor=white" alt="Cython">
+  <img src="https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Windows-blue" alt="Platform">
+  <img src="https://img.shields.io/badge/Status-Temporarily--Inactive-orange" alt="Status">
+</div>
+
 ![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware/main/imgs/DCry.png)
 使用 Python 编写的勒索软件 💀💀💀
 ## 使用方法
