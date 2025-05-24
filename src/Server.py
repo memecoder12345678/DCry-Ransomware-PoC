@@ -117,7 +117,7 @@ def upload():
         return "Server error: Could not write victim data.", 500
     except Exception as e:
         app.logger.error(f"Error processing key for victim {victim_id}: {e}")
-        return "Error processing key.", 500 # Line 120 (original)
+        return "Error processing key.", 500
 
     print(f"Saved victim: {victim_id}")
     return f"Victim {flask_escape(victim_id)} received.", 200
