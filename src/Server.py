@@ -13,7 +13,8 @@ import os
 import json
 import base64
 import re
-from flask import Flask, request, render_template_string, escape as flask_escape
+from markupsafe import escape as flask_escape
+from flask import Flask, request, render_template_string
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
