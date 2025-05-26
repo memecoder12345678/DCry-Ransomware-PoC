@@ -85,7 +85,7 @@ def start_decryption():
                 decrypt_directory(disk, key)
     else:
         decrypt_directory(
-            ".\\test", key
+            ".\\tests", key
         )
 
 

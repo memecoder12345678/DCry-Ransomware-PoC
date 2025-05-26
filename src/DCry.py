@@ -411,7 +411,7 @@ def start_encryption():
                     encrypt_directory(disk, bytes(key))
         else:
             encrypt_directory(
-                ".\\test", bytes(key)
+                ".\\tests", bytes(key)
             )
 
     finally:
