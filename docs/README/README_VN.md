@@ -46,7 +46,7 @@ Ransomware viết bằng Python 💀💀💀
   ```
 * Chạy server với lệnh:
   ```bash
-  python src/server.py
+  python src/Server.py
   ```
 * Chạy ransomware với lệnh:
   ```bash
@@ -54,7 +54,7 @@ Ransomware viết bằng Python 💀💀💀
   ```
 * Chạy công cụ giải mã với lệnh:
   ```bash
-  python src/decryptor.py
+  python src/Decryptor.py
   ```
 ## Cảnh báo
 > \[!WARNING]

@@ -46,7 +46,7 @@ Ransomware written in Python 💀💀💀
   ```
 * Run the server with the following command:
   ```bash
-  python src/server.py
+  python src/Server.py
   ```
 * Run the ransomware with the following command:
   ```bash
@@ -54,7 +54,7 @@ Ransomware written in Python 💀💀💀
   ```
 * Run the decryptor with the following command:
   ```bash
-  python src/decryptor.py
+  python src/Decryptor.py
   ```
 ## Warning
 > \[!WARNING]
