@@ -50,7 +50,7 @@ Ransomware written in Python 💀💀💀
   ```
 * Run the ransomware with the following command:
   ```bash
-  python src/DCRY.py
+  python src/DCry.py
   ```
 * Run the decryptor with the following command:
   ```bash

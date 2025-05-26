@@ -50,7 +50,7 @@ Ransomware viết bằng Python 💀💀💀
   ```
 * Chạy ransomware với lệnh:
   ```bash
-  python src/DCRY.py
+  python src/DCry.py
   ```
 * Chạy công cụ giải mã với lệnh:
   ```bash
