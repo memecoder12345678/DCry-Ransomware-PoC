@@ -9,10 +9,10 @@
   <img src="https://img.shields.io/badge/Status-Temporarily--Inactive-orange" alt="Status">
 </div>
 
-![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware/main/imgs/DCry.png)
+![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware-PoC/main/imgs/DCry.png)
 Ransomware viết bằng Python 💀💀💀
 ## Cách sử dụng
-* Mở file [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/src/DCry.py).
+* Mở file [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware-PoC/blob/main/src/DCry.py).
 * Thay biến `YOUR_URL` bằng URL đã mã hóa sử dụng hàm `dx42` như sau:
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
@@ -33,6 +33,8 @@ Ransomware viết bằng Python 💀💀💀
   ```python
   YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
   ```
+* Đặt `dev_mode = False` để tắt chế độ phát triển.
+* Mở file [`Decryptor.py`](https://github.com/memecoder12345678/DCry-Ransomware-PoC/blob/main/src/Decryptor.py).
 * Đặt `dev_mode = False` để tắt chế độ phát triển.
 * Cài đặt các thư viện cần thiết với lệnh:
   ```bash

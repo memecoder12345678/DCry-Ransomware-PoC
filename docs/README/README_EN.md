@@ -9,10 +9,10 @@
   <img src="https://img.shields.io/badge/Status-Temporarily--Inactive-orange" alt="Status">
 </div>
 
-![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware/main/imgs/DCry.png)
+![DCry](https://raw.githubusercontent.com/memecoder12345678/DCry-Ransomware-PoC/main/imgs/DCry.png)
 Ransomware written in Python 💀💀💀
 ## Usage
-* Open the [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware/blob/main/src/DCry.py) file.
+* Open the [`DCry.py`](https://github.com/memecoder12345678/DCry-Ransomware-PoC/blob/main/src/DCry.py) file.
 * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
@@ -33,6 +33,8 @@ Ransomware written in Python 💀💀💀
   ```python 
   YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()   
   ```
+* Set `dev_mode = False` to disable development mode.
+* Open the [`Decryptor.py`](https://github.com/memecoder12345678/DCry-Ransomware-PoC/blob/main/src/Decryptor.py) file.
 * Set `dev_mode = False` to disable development mode.
 * Install the required packages with the following command:
   ```bash

