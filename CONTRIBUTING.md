@@ -1,4 +1,0 @@
-# CONTRIBUTING
-For English, see [CONTRIBUTING_EN.md](./docs/CONTRIBUTING/CONTRIBUTING_EN.md).  
-Đọc tiếng Việt, xem [CONTRIBUTING_VN.md](./docs/CONTRIBUTING/CONTRIBUTING_VN.md).  
-
