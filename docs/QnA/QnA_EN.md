@@ -11,3 +11,28 @@ Because it’s Python 😩. Tools like PyInstaller pack your code, Python itself
 
 Real malware? They use C/C++/Go/Rust and compression to stay lean. This is just a chonky PoC 😅.
 
+---
+
+### 🛠️ Can it really encrypt and decrypt files?
+
+Yes. AES-256-GCM is used for secure encryption, and the AES key is protected with RSA-OAEP. If you have the RSA private key (from the C2 server), you can decrypt all affected files using the Decryptor script.
+
+---
+
+### 🧩 Why are the URLs, emails, proxies encoded?
+
+To avoid exposing important info (like the C2 server) in the source code. You use `ex42()` to encode, and `dx42()` to decode them during runtime.
+
+---
+
+### 🦠 Will antivirus detect it?
+
+Likely yes, especially if you're just running the script directly. To avoid detection, use Cython compilation, obfuscate strings, and maybe even pack it with tools like UPX or Themida.
+
+---
+
+### 🧪 What’s the goal of this project?
+
+For education. To help researchers, students, and reverse engineers understand how real ransomware works.
+**It’s 100% PoC. Don’t use it for evil 😇.**
+
