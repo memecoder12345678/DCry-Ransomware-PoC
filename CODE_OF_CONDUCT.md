@@ -1,0 +1,5 @@
+# CODE OF CONDUCT
+For English, see [CODE_OF_CONDUCT_EN.md](./docs/CODE_OF_CONDUCT/CODE_OF_CONDUCT_EN.md).  
+Đọc tiếng Việt, xem [CODE_OF_CONDUCT_VN.md](./docs/CODE_OF_CONDUCT/CODE_OF_CONDUCT_VN.md).  
+
+
