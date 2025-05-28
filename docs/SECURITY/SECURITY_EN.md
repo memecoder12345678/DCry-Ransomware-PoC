@@ -4,7 +4,7 @@
 
 If you discover any security vulnerability in this project, please report it following the process below:
 
-- 📧 Send a private email to: **memecoder17@gmail.com**  
+- Send a private email to: **memecoder17@gmail.com** 📧
 - Please do NOT open a public issue to avoid exposing the vulnerability before it is fixed.  
 - After receiving your report, I will respond within **72 hours** to update you on the status.  
 - If the vulnerability is confirmed, I will fix it immediately and notify the reporter.  
