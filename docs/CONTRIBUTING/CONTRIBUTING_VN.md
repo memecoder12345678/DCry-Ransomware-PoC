@@ -17,10 +17,10 @@
   ```bash
   git checkout -b your-feature
   ```
-4. Commit thay đổi
+3. Commit thay đổi:
   ```bash
   git commit -m "Add cool stuff 🚀"
   ```
-6. Push lên repo fork của bạn
-7. Gửi Pull Request về đây
+4. Push lên repo fork của bạn
+5. Gửi Pull Request về đây
 
