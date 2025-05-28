@@ -13,7 +13,13 @@
 ### How to contribute:
 
 1. **Fork** this repository
-2. Create a new branch (`git checkout -b your-feature`)
-3. Commit your changes (`git commit -m "Add cool stuff 🚀"`)
+2. Create a new branch:
+  ```bash
+  git checkout -b your-feature
+  ```
+3. Commit your changes:
+  ```bash
+  git commit -m "Add cool stuff 🚀"
+  ```
 4. Push to your fork
 5. Open a Pull Request
