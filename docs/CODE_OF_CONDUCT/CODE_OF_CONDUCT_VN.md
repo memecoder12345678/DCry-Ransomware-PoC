@@ -20,5 +20,6 @@
 ---
 
 > *Remember*: "With great ransomware comes great responsibility." 💀💀💀
+> 
 > Hãy dùng kiến thức đúng nơi, đúng chỗ 🤓
 
