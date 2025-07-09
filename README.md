@@ -1,4 +1,4 @@
-<h1 align="center">Don't-Cry Ransomware</h1>
+<h1 align="center">Don't-Cry Ransomware PoC</h1>
   
 <div align="center">
 
@@ -10,7 +10,7 @@
 </div>
 
 ![DCry](imgs/DCry.png)
-Ransomware written in Python 💀💀💀
+PoC ransomware written in Python 💀💀💀
 
 ## Usage
 * Open the [`DCry.py`](src/DCry.py) file.
