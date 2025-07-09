@@ -1,4 +1,4 @@
-# QnA
+# FAQ
 ## ❓ What is *Don't Cry Ransomware*?
 
 It’s a PoC ransomware written in Python + Cython, made for education and malware analysis. It encrypts files using AES-256-GCM, disables recovery tools, kills antivirus, sends the key to a C2 server, and shows a ransom note.

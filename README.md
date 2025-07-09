@@ -62,8 +62,8 @@ Ransomware written in Python 💀💀💀
 > \[!WARNING]
 > This project is a ransomware simulation for educational purposes only.
 
-## FnA  
-* See details in [FnA.md](docs/FnA.md)
+## FAQ 
+* See details in [FAQ.md](docs/FAQ.md)
 
 ## Contributing  
 * See contribution guidelines in [CONTRIBUTING.md](docs/CONTRIBUTING.md)
