@@ -71,7 +71,7 @@ PoC ransomware written in Python 💀💀💀
 ## Code Of Conduct  
 * See our community standards in [CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
 
-## SECURITY  
+## Security
 * See the security policy in [SECURITY.md](docs/SECURITY.md)
 
 
