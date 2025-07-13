@@ -13,11 +13,14 @@ import os
 from libc.stdlib cimport malloc, free
 from Crypto.Random import get_random_bytes
 from libc.stdio cimport FILE, fopen, fread, fwrite, fclose, remove
+from cython.parallel cimport parallel, prange
 
 from colorama import Fore
 from Crypto.Cipher import AES
 
-def decrypt_file(str path, bytes key, int chunk_size=268435456):
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def decrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
     cdef:
         bytes MAGIC = b"DCRY$"
         str decrypted_path = os.path.splitext(path)[0]
@@ -82,8 +85,9 @@ def decrypt_file(str path, bytes key, int chunk_size=268435456):
         free(tag)
         free(buffer)
 
-
-def encrypt_file(str path, bytes key, int chunk_size=268435456):
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def encrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
     cdef:
         bytes MAGIC = b"DCRY$"
         str encrypted_path = path + ".dcry"
