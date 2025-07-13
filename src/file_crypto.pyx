@@ -10,10 +10,10 @@
 # The authors assume no liability for any misuse or damage caused.
 
 import os
+cimport cython
 from libc.stdlib cimport malloc, free
 from Crypto.Random import get_random_bytes
 from libc.stdio cimport FILE, fopen, fread, fwrite, fclose, remove
-from cython.parallel cimport parallel, prange
 
 from colorama import Fore
 from Crypto.Cipher import AES
