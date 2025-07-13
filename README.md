@@ -1,12 +1,12 @@
 <h1 align="center">Don't-Cry Ransomware PoC</h1>
   
 <div align="center">
-
   <img src="https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Requires-Cython-yellow?logo=python&logoColor=white" alt="Cython">
   <img src="https://img.shields.io/badge/Requires-Rust%20%3E%3D%201.87.0-orange?logo=rust&logoColor=white" alt="Rust >= 1.87.0">
   <img src="https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white" alt="License">
   <img src="https://img.shields.io/badge/Platform-Windows-blue" alt="Platform">
+  <img src="https://img.shields.io/github/stars/memecoder12345678/DCry-Ransomware?style=social" alt="Stars">
 </div>
 
 ![DCry](imgs/DCry.png)
