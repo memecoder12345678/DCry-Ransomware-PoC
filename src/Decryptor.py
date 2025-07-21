@@ -90,7 +90,7 @@ def start_decryption():
 
 
 def decrypt_directory(directory_path, key):
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=16) as executor:
         futures = []
         for root, _, files in os.walk(directory_path):
             for file in files:
