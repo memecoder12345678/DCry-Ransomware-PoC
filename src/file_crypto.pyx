@@ -20,7 +20,7 @@ from Crypto.Cipher import AES
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def decrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
+def decrypt_file(str path, bytes key, int chunk_size=268435456):
     cdef:
         bytes MAGIC = b"DCRY$"
         str decrypted_path = os.path.splitext(path)[0]
@@ -35,6 +35,17 @@ def decrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
     success = False
     if not f_in or not f_out:
         print(f"{Fore.LIGHTRED_EX}Error opening file: {path}")
+        return
+    if not nonce or not tag or not buffer or not magic_buffer:
+        print(f"{Fore.LIGHTRED_EX}Memory allocation failed: {path}")
+        if f_in:
+            fclose(f_in)
+        if f_out:
+            fclose(f_out)
+        if magic_buffer: free(magic_buffer)
+        if nonce: free(nonce)
+        if tag: free(tag)
+        if buffer: free(buffer)
         return
     try:
         if fread(magic_buffer, 1, len(MAGIC), f_in) != len(MAGIC):
@@ -66,9 +77,7 @@ def decrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
                     f_out,
                 )
             except ValueError:
-                print(
-                    f"{Fore.LIGHTRED_EX}Authentication failed for {path} - File may be tampered!"
-                )
+                print(f"{Fore.LIGHTRED_EX}Authentication failed for {path} - File may be tampered!")
                 return
         success = True
     except Exception as e:
@@ -80,14 +89,15 @@ def decrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
             fclose(f_out)
         if success:
             remove(path.encode())
-        free(magic_buffer)
-        free(nonce)
-        free(tag)
-        free(buffer)
+        if magic_buffer: free(magic_buffer)
+        if nonce: free(nonce)
+        if tag: free(tag)
+        if buffer: free(buffer)
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def encrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
+def encrypt_file(str path, bytes key, int chunk_size=268435456):
     cdef:
         bytes MAGIC = b"DCRY$"
         str encrypted_path = path + ".dcry"
@@ -102,6 +112,14 @@ def encrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
         const unsigned char[:] tag_view
     success = False
     if not f_in or not f_out:
+        return
+    if not nonce or not buffer:
+        if f_in:
+            fclose(f_in)
+        if f_out:
+            fclose(f_out)
+        if nonce: free(nonce)
+        if buffer: free(buffer)
         return
     try:
         fwrite(<char *>MAGIC, 1, len(MAGIC), f_out)
@@ -119,8 +137,7 @@ def encrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
             fwrite(<char *> &tag_view[0], 1, 16, f_out)
             fwrite(<char *> &encrypted_view[0], 1, len(encrypted_chunk), f_out)
         success = True
-    except Exception as e:
-        # print(f"Error encrypting {path}: {e}")
+    except Exception:
         pass
     finally:
         if f_in:
@@ -129,5 +146,5 @@ def encrypt_file(str path, bytes key, int chunk_size=268435456) nogil:
             fclose(f_out)
         if success:
             remove(path.encode())
-        free(nonce)
-        free(buffer)
+        if nonce: free(nonce)
+        if buffer: free(buffer)

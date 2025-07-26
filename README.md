@@ -38,23 +38,23 @@ PoC ransomware written in Python 💀💀💀
 * Open the [`Decryptor.py`](src/Decryptor.py) file.
 * Set `dev_mode = False` to disable development mode.
 * Install the required packages with the following command:
-  ```bash
+  ```powershell
   pip install -r requirements.txt
   ```
 * Build the Cython code with the following command:
-  ```bash
-  python src/setup.py build_ext --inplace
+  ```powershell
+  python src/setup.py build_ext --inplace; Move-Item -Path file_crypto.*.pyd -Destination src -Force
   ```
 * Run the server with the following command:
-  ```bash
+  ```powershell
   python src/Server.py
   ```
 * Run the ransomware with the following command:
-  ```bash
+  ```powershell
   python src/DCry.py
   ```
 * Run the decryptor with the following command:
-  ```bash
+  ```powershell
   python src/Decryptor.py
   ```
 

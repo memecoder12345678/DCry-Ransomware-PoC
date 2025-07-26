@@ -2,6 +2,6 @@
 **/*.dcry
 **/*.exe
 **/*.c
-src/build/
-src/dist/
-src/__pycache__/
+**/build/
+**/dist/
+**/__pycache__/

