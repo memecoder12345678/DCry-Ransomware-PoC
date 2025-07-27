@@ -33,6 +33,6 @@ Likely yes, especially if you're just running the script directly. To avoid dete
 
 ### 🧪 What’s the goal of this project?
 
-For education. To help researchers, students, and reverse engineers understand how real ransomware works.
+For educational purposes. To help researchers, students, and reverse engineers understand how real ransomware works, and also to prove that Python is not useless, we are.
 **It’s 100% PoC. Don’t use it for evil 😇.**
 
