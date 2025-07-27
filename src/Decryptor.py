@@ -94,7 +94,7 @@ def start_decryption():
              if (
                  disk[:1] != os.getenv("SystemDrive")
                  and disk[:1] != os.getenv("HOMEDRIVE")
-                 and ctypes.windll.kernel32.GetDriveTypeW(disk) == 2
+                 and ctypes.windll.kernel32.GetDriveTypeW(disk) != 2
              ):
                 decrypt_directory(disk, key)
     else:
