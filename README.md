@@ -13,7 +13,7 @@
 PoC ransomware written in Python 💀💀💀
 
 ## Usage
-* Open the [`DCry.py`](src/DCry.py) file.
+* Open the [`DCry.py`](src/dcry.py) file.
 * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
   ```python
   YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
@@ -35,7 +35,7 @@ PoC ransomware written in Python 💀💀💀
   YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()   
   ```
 * Set `dev_mode = False` to disable development mode.
-* Open the [`Decryptor.py`](src/Decryptor.py) file.
+* Open the [`Decryptor.py`](src/decryptor.py) file.
 * Set `dev_mode = False` to disable development mode.
 * Install the required packages with the following command:
   ```powershell
@@ -47,15 +47,15 @@ PoC ransomware written in Python 💀💀💀
   ```
 * Run the server with the following command:
   ```powershell
-  python src/Server.py
+  python src/server.py
   ```
 * Run the ransomware with the following command:
   ```powershell
-  python src/DCry.py
+  python src/dcry.py
   ```
 * Run the decryptor with the following command:
   ```powershell
-  python src/Decryptor.py
+  python src/decryptor.py
   ```
 
 ## Warning
