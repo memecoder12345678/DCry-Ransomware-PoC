@@ -8,7 +8,7 @@
 * **New features**: Exfiltration, persistence, watchdog, etc.
 * **Decryptor upgrades**: More secure, more user-friendly.
 * **Antivirus bypass tricks**: Share your black magic 😈 
-* **Language support**: Translate README, QnA into other languages 🌍
+* **Language support**: Translate README, FAQ into other languages 🌍
 
 ### How to contribute:
 
