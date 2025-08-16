@@ -2,7 +2,7 @@
 
 > This is a learning space. It's for researchers, students, and curious minds — not blackhat ops.
 
-### ✅ Do:
+### ✔️ Do:
 
 * Respect other contributors and their ideas
 * Keep all discussions and code educational/research-oriented
