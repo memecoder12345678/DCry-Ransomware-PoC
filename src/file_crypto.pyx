@@ -12,11 +12,11 @@
 import os
 cimport cython
 from libc.stdlib cimport malloc, free
-from Crypto.Random import get_random_bytes
 from libc.stdio cimport FILE, fopen, fread, fwrite, fclose, remove
 
 from colorama import Fore
 from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
