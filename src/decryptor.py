@@ -19,8 +19,8 @@ import hashlib
 from concurrent.futures import ThreadPoolExecutor
 
 import winshell
-from colorama import Fore, init
 from Crypto.Cipher import AES  # hidden import
+from colorama import Fore, init
 from file_crypto import decrypt_file  # type: ignore
 
 init(autoreset=True)
@@ -135,3 +135,4 @@ def main():
 dev_mode = True
 if __name__ == "__main__":
     main()
+
