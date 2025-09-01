@@ -11,11 +11,13 @@
 
 import re
 import os
+import base64
 import shutil
+from datetime import datetime, timedelta
+
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from flask_wtf.csrf import CSRFProtect
-from datetime import datetime, timedelta
 from markupsafe import escape as flask_escape
 from flask import Flask, request, render_template_string, redirect, url_for
 
@@ -115,7 +117,7 @@ def upload():
         f.write(f"date={date}\n")
     key_path = os.path.join(folder, "key.txt")
     with open(key_path, "w") as f:
-        f.write(decrypt_key(key))
+        f.write(base64.b64decode(decrypt_key(key).encode())
     return "Upload success."
 
 
