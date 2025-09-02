@@ -117,7 +117,7 @@ def upload():
         f.write(f"date={date}\n")
     key_path = os.path.join(folder, "key.txt")
     with open(key_path, "w") as f:
-        f.write(base64.b64decode(decrypt_key(key).encode())
+        f.write(base64.b64decode(decrypt_key(key).encode()))
     return "Upload success."
 
 
