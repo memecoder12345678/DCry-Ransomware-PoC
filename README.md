@@ -10,7 +10,7 @@
 </div>
 
 ![DCry](imgs/DCry.png)
-PoC ransomware written in Python 💀💀💀
+PoC ransomware in Python targeting Windows systems 💀💀💀
 
 ## Usage
 * Open the [`dcry.py`](src/dcry.py) file.
