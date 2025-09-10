@@ -20,19 +20,19 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 1. Install the required packages:
 
 ```powershell
-pip install -r requirements-server.txt
+pip3 install -r requirements-server.txt
 ```
 
 2. Run the server:
 
-```powershell
+```bash
 gunicorn -b 0.0.0.0:8080 src.server:app
 ```
 
 > Or for debugging:
 
-```powershell
-python src/server.py
+```bash
+python3 src/server.py
 ```
 
 ### Client (Windows)
@@ -40,7 +40,7 @@ python src/server.py
 1. Install the required packages:
 
 ```powershell
-pip install -r requirements-other.txt
+pip install -r requirements-client.txt
 ```
 
 ---
@@ -70,7 +70,7 @@ Move-Item -Path file_crypto.*.pyd -Destination src -Force
 
 4. Run the server (WSGI):
 
-```powershell
+```bash
 gunicorn -b 0.0.0.0:8080 src.server:app
 ```
 
