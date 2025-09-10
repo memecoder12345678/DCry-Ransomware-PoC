@@ -1,0 +1,11 @@
+py7zr==1.0.0
+pywin32==308
+psutil==7.0.0
+winshell==0.6
+cython==3.0.12
+zeroize==1.1.2
+colorama==0.4.6
+requests==2.32.3
+setuptools==75.8.0
+pycryptodome==3.21.0
+requests[socks]==2.32.3
