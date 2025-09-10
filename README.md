@@ -48,7 +48,7 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
   ```
 * Run the server with the following command:
   ```powershell
-  python src/server.py
+  gunicorn -b 0.0.0.0:8080 src.server:app
   ```
 * Run the ransomware with the following command:
   ```powershell
