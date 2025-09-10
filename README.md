@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/github/stars/memecoder12345678/DCry-Ransomware?style=social" alt="Stars">
 </div>
 
-![DCry](imgs/DCry.png)
+![DCry](imgs/dcry.png)
 PoC ransomware in Python targeting Windows systems 💀💀💀
 
 ## Usage
