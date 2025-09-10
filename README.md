@@ -1,4 +1,4 @@
-# Don't-Cry Ransomware PoC
+<h1 align="center">Don't-Cry Ransomware PoC</h1>
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white" alt="Python">
