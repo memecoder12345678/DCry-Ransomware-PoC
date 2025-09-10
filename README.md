@@ -15,7 +15,7 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 
 ## Setup & Installation
 
-### Server
+### Server (Linux)
 
 1. Install the required packages:
 
@@ -35,7 +35,7 @@ gunicorn -b 0.0.0.0:8080 src.server:app
 python src/server.py
 ```
 
-### Client
+### Client (Windows)
 
 1. Install the required packages:
 
