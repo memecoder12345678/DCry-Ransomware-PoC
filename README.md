@@ -5,7 +5,8 @@
   <img src="https://img.shields.io/badge/Requires-Cython-yellow?logo=python&logoColor=white" alt="Cython">
   <img src="https://img.shields.io/badge/Rust-1.87.0%2B-orange?logo=rust&logoColor=white" alt="Rust >= 1.87.0">
   <img src="https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white" alt="License">
-  <img src="https://img.shields.io/badge/Platform-Windows-blue" alt="Platform">
+  <img src="https://img.shields.io/badge/Platform-Windows-blue?logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIGZpbGw9IiNGRkZGRkYiIGhlaWdodD0iODAwcHgiIHdpZHRoPSI4MDBweCIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgCgkgdmlld0JveD0iMCAwIDQ5OC41NyA0OTguNTciIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxIDIpIj4KCTxnPgoJCTxnPgoJCQk8cGF0aCBkPSJNMjI3LjMwMiwzOC4yODl2MjAyLjI4MmgyNjguNTlWLTJMMjI3LjMwMiwzOC4yODl6IE00NzkuMTA1LDIyMy43ODRIMjQ0LjA4OVY1Mi41NTdsMjM1LjAxNi0zNC40MTNWMjIzLjc4NHoiLz4KCQkJPHBhdGggZD0iTTAuNjc5LDI0My4wODloMjA5LjgzNlYzOS45NjdMMC42NzksNzEuMDIzVjI0My4wODl6IE0xNy40NjYsODUuMjkybDE3Ni4yNjItMjYuMDJ2MTY3LjAzSDE3LjQ2NlY4NS4yOTJ6Ii8+CgkJCTxwYXRoIGQ9Ik0yMjcuMzAyLDQ1Ni4yODJsMjY4LjU5LDQwLjI4OVYyNTkuODc1aC0yNjguNTlWNDU2LjI4MnogTTI0NC4wODksMjc2LjY2MmgyMzUuMDE2djIwMC42MDNsLTIzNS4wMTYtMzUuMjUzVjI3Ni42NjJ6Ii8+CgkJCTxwYXRoIGQ9Ik0wLjY3OSw0MjMuNTQ4bDIwOS44MzYsMzEuMDU2VjI1OS44NzVIMC42NzlWNDIzLjU0OHogTTE3LjQ2NiwyNzYuNjYyaDE3Ni4yNjJ2MTU4LjYzNmwtMTc2LjI2Mi0yNi4wMlYyNzYuNjYyeiIvPgoJCTwvZz4KCTwvZz4KPC9nPgo8L3N2Zz4=" alt="Platform">
+
   <img src="https://img.shields.io/github/stars/memecoder12345678/DCry-Ransomware?style=social" alt="Stars">
 </div>
 
