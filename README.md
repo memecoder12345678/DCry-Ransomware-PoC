@@ -19,50 +19,50 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 
 1. Install the required packages:
 
-```powershell
-pip3 install -r requirements-server.txt
-```
+  ```powershell
+  pip3 install -r requirements-server.txt
+  ```
 
 2. Run the server:
 
-```bash
-gunicorn -b 0.0.0.0:8080 src.server:app
-```
+  ```bash
+  gunicorn -b 0.0.0.0:8080 src.server:app
+  ```
 
 > Or for debugging:
 
-```bash
-python3 src/server.py
-```
+  ```bash
+  python3 src/server.py
+  ```
 
 ### Client (Windows)
 
 1. Install the required packages:
-
-```powershell
-pip install -r requirements-client.txt
-```
+  
+  ```powershell
+  pip install -r requirements-client.txt
+  ```
 
 ---
 
 ## Usage
 
 1. Open [`src/dcry.py`](src/dcry.py)
-
-  * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
-    ```python
-    YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
-    ```
-    (Use the `ex42` function from the `edx42` module to encode your URL first.)
-    
-    Example:
-    ```python
-    encoded_url = ex42(b"https://your-tor-server.onion")
-    YOUR_URL = dx42(encoded_url).decode()
-    ```
-
-   * Replace `YOUR_PROXY`, `YOUR_BITCOIN_ADDRESS`, `YOUR_EMAIL_ADDRESS` similarly.
-   * Set `dev_mode = False` if not using development mode.
+  
+    * Replace the `YOUR_URL` variable with the encoded URL using the `dx42` function like this:
+      ```python
+      YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()
+      ```
+      (Use the `ex42` function from the `edx42` module to encode your URL first.)
+      
+      Example:
+      ```python
+      encoded_url = ex42(b"https://your-tor-server.onion")
+      YOUR_URL = dx42(encoded_url).decode()
+      ```
+  
+     * Replace `YOUR_PROXY`, `YOUR_BITCOIN_ADDRESS`, `YOUR_EMAIL_ADDRESS` similarly.
+     * Set `dev_mode = False` if not using development mode.
 
 2. Open [`src/decryptor.py`](src/decryptor.py)
 
@@ -70,28 +70,28 @@ pip install -r requirements-client.txt
 
 3. Build the Cython code:
 
-```powershell
-python src/setup.py build_ext --inplace
-Move-Item -Path file_crypto.*.pyd -Destination src -Force
-```
+  ```powershell
+  python src/setup.py build_ext --inplace
+  Move-Item -Path file_crypto.*.pyd -Destination src -Force
+  ```
 
 4. Run the server (WSGI):
 
-```bash
-gunicorn -b 0.0.0.0:8080 src.server:app
-```
+  ```bash
+  gunicorn -b 0.0.0.0:8080 src.server:app
+  ```
 
 5. Run the ransomware:
 
-```powershell
-python src/dcry.py
-```
+  ```powershell
+  python src/dcry.py
+  ```
 
 6. Run the decryptor:
 
-```powershell
-python src/decryptor.py
-```
+  ```powershell
+  python src/decryptor.py
+  ```
 
 ---
 
@@ -104,21 +104,21 @@ python src/decryptor.py
 
 ## FAQ
 
-* See details in [FAQ.md](docs/FAQ.md)
+  * See details in [FAQ.md](docs/FAQ.md)
 
 ## Contributing
 
-* See contribution guidelines in [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+  * See contribution guidelines in [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Code of Conduct
 
-* See our community standards in [CODE\_OF\_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
+  * See our community standards in [CODE\_OF\_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
 
 ## Security
 
-* See the security policy in [SECURITY.md](docs/SECURITY.md)
+  * See the security policy in [SECURITY.md](docs/SECURITY.md)
 
 ## License
 
-* This project is licensed under the terms of the [Apache License 2.0](./LICENSE)
+  * This project is licensed under the terms of the [Apache License 2.0](./LICENSE)
 
