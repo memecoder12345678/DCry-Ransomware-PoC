@@ -35,6 +35,16 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
   python3 src/server.py
   ```
 
+> 💡 **Tip:** You can also run the server behind a Tor hidden service to hide your real IP.
+> Example (in `torrc`):
+>
+> ```txt
+> HiddenServiceDir /var/lib/tor/dcry/
+> HiddenServicePort 80 127.0.0.1:8080
+> ```
+>
+> After restarting Tor, your Onion address will be available in `/var/lib/tor/dcry/hostname`.
+
 ### Client (Windows)
 
 1. Install the required packages:
