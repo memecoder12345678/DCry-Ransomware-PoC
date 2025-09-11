@@ -41,7 +41,7 @@ cdef extern from "windows.h":
     bint UnmapViewOfFile(LPVOID lpBaseAddress)
     bint GetFileSizeEx(HANDLE hFile, LARGE_INTEGER* lpFileSize)
 
-cdef long long CHUNK_SIZE = 512 * 1024 ** 2
+cdef long long CHUNK_SIZE = 8 * 1024 ** 2
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
