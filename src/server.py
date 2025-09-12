@@ -213,8 +213,10 @@ def dashboard_data():
     return jsonify(victims)
 
 @app.route("/dashboard")
-def dashboard():
+def dashboard(): 
     victims_data = get_victims_data()
+    # no password?
+    # this is not a bug, it is a feature
     html = """
 <!DOCTYPE html>
 <html lang="vi" data-bs-theme="dark">
@@ -289,7 +291,6 @@ def dashboard():
                 const victims = await response.json();
                 const tableBody = document.getElementById('victimsTableBody');
                 
-                // Store current checked state
                 const checkedIds = new Set();
                 tableBody.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
                     checkedIds.add(cb.value);
