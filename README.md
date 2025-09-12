@@ -105,6 +105,18 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 
 ---
 
+## Performance Note
+
+**Estimated encryption speed with 16 processes (1 file, 53 GB):**
+
+- Speed per process: ~56 MB/s
+- Using 16 processes: ~896 MB/s
+
+
+> ⚡ Using multiprocessing allows Python to approach native C/C++ speeds for large files.
+
+---
+
 ## Warning
 
 > [!WARNING]
