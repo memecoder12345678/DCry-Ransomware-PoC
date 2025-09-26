@@ -11,8 +11,6 @@
 
 import os
 cimport cython
-from libc.stdlib cimport malloc, free
-from libc.stdio cimport remove
 
 from colorama import Fore
 from Crypto.Cipher import AES
