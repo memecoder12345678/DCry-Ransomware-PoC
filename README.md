@@ -71,7 +71,7 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
       YOUR_URL = dx42(encoded_url).decode()
       ```
   
-     * Replace `YOUR_PROXY`, `YOUR_BITCOIN_ADDRESS`, `YOUR_EMAIL_ADDRESS` similarly.
+     * Replace `YOUR_PROXY`, `YOUR_BITCOIN_ADDRESS`, `YOUR_EMAIL_ADDRESS`, `YOUR_DOWNLOAD_URL` similarly.
      * Set `dev_mode = False` if not using development mode.
 
 2. Open [`src/decryptor.py`](src/decryptor.py)

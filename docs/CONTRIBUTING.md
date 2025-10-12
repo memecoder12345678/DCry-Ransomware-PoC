@@ -4,9 +4,9 @@
 
 ### What you can contribute:
 
-* **Code improvements**: Make it faster, lighter, stealthier.
-* **New features**: Exfiltration, persistence, watchdog, etc.
-* **Decryptor upgrades**: More secure, more user-friendly.
+* **Code improvements**: Make it faster, lighter, stealthier
+* **New features**: Exfiltration, persistence, watchdog, etc
+* **Decryptor upgrades**: More secure, more user-friendly
 * **Antivirus bypass tricks**: Share your black magic 😈 
 * **Language support**: Translate README, FAQ into other languages 🌍
 

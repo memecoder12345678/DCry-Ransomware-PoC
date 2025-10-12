@@ -10,11 +10,13 @@
 # The authors assume no liability for any misuse or damage caused.
 
 import os
+
 cimport cython
 
 from colorama import Fore
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+
 
 cdef extern from "windows.h":
     ctypedef unsigned long DWORD

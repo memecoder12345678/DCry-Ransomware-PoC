@@ -9,8 +9,8 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
-from setuptools import setup
 from Cython.Build import cythonize
+from setuptools import setup
 
 setup(
     ext_modules=cythonize(

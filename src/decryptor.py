@@ -9,19 +9,19 @@
 # under supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
-import os
-import sys
 import base64
 import ctypes
-import string
 import getpass
 import hashlib
+import os
+import string
+import sys
 from concurrent.futures import ThreadPoolExecutor
 
 import winshell
-from Crypto.Cipher import AES # hidden import
 from colorama import Fore, init
-from file_crypto import decrypt_file # type: ignore
+from Crypto.Cipher import AES  # hidden import
+from file_crypto import decrypt_file  # type: ignore
 
 init(autoreset=True)
 

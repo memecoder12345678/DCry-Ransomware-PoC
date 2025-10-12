@@ -7,7 +7,7 @@ It’s a PoC ransomware written in Python + Cython, made for education and malwa
 
 ## WTF why is the file so big?
 
-Because it’s Python 😩. Tools like PyInstaller pack your code, Python itself, and all libraries (like `cryptography`, `requests`, etc.) into one huge `.exe`. It’s not your code’s fault—it’s carrying a whole ecosystem.
+Because it’s Python 😩. Tools like PyInstaller pack your code, Python itself, and all libraries (like `cryptography`, `requests`, etc.) into one huge `.exe`. It’s not your code’s fault&mdash;it’s carrying a whole ecosystem.
 
 Real malware? They use C/C++/Go/Rust and compression to stay lean. This is just a chonky PoC 😅.
 

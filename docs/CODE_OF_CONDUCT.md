@@ -1,6 +1,6 @@
 ## Community Rules
 
-> This is a learning space. It's for researchers, students, and curious minds — not blackhat ops.
+> This is a learning space. It's for researchers, students, and curious minds &mdash; not blackhat ops.
 
 ### ✔️ Do:
 
@@ -14,7 +14,7 @@
 * Use this project for real-world attacks
 * Share malicious compiled payloads
 * Submit spammy or troll PRs
-* Treat this project as a hacking tool — **it’s a PoC**
+* Treat this project as a hacking tool &mdash; **it’s a PoC**
 
 ---
 
