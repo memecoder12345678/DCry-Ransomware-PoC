@@ -1,6 +1,6 @@
 ## Contributing
 
-> Want to make DCry more powerful... I mean, better? You're welcome here!
+> Want to make dcry more powerful... I mean, better? You're welcome here!
 
 ### What you can contribute:
 

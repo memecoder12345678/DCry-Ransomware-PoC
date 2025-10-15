@@ -2,7 +2,7 @@
 #                             Don't Cry Ransomware                             #
 #                          ! EDUCATIONAL PURPOSES ONLY !                       #
 ################################################################################
-# DISCLAIMER: This is a simulated ransomware (DCry), written for cybersecurity
+# DISCLAIMER: This is a simulated ransomware (dcry), written for cybersecurity
 # research, ethical hacking education, and malware analysis training only.
 # It mimics the behavior of real ransomware but must NOT be used for illegal or
 # unauthorized activity. Run only in isolated environments (e.g., sandbox or VM)
