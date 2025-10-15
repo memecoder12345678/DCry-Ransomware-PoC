@@ -24,7 +24,7 @@ def calculate_xor_key(index):
     return key_val % 256
 
 
-def ex42(text: bytes) -> bytes:
+def ex42(text):
     output = bytearray(len(text))
     for i, byte in enumerate(text):
         xor_key = calculate_xor_key(i)
@@ -40,7 +40,7 @@ def ex42(text: bytes) -> bytes:
     return bytes(output)
 
 
-def dx42(data: bytes) -> bytes:
+def dx42(data):
     output = bytearray(len(data))
     for i, byte in enumerate(data):
         xor_key = calculate_xor_key(i)
