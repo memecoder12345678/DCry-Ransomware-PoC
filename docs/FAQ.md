@@ -1,13 +1,13 @@
 # FAQ
 ## What is *Don't Cry Ransomware*?
 
-It’s a PoC ransomware written in Python + Cython, made for education and malware analysis. It encrypts files using AES-256-GCM, disables recovery tools, kills antivirus, sends the key to a C2 server, and shows a ransom note.
+It's a PoC ransomware written in Python + Cython, made for education and malware analysis. It encrypts files using AES-256-GCM, disables recovery tools, kills antivirus, sends the key to a C2 server, and shows a ransom note.
 
 ---
 
 ## WTF why is the file so big?
 
-Because it’s Python 😩. Tools like PyInstaller pack your code, Python itself, and all libraries (like `cryptography`, `requests`, etc.) into one huge `.exe`. It’s not your code’s fault&mdash;it’s carrying a whole ecosystem.
+Because it's Python 😩. Tools like PyInstaller pack your code, Python itself, and all libraries (like `cryptography`, `requests`, etc.) into one huge `.exe`. It's not your code's fault&mdash;it's carrying a whole ecosystem.
 
 Real malware? They use C/C++/Go/Rust and compression to stay lean. This is just a chonky PoC 😅.
 
@@ -31,8 +31,8 @@ Likely yes, especially if you're just running the script directly. To avoid dete
 
 ---
 
-### What’s the goal of this project?
+### What's the goal of this project?
 
 For educational purposes. To help researchers, students, reverse engineers understand how real ransomware works, and also to prove that Python is not useless, we are.
-**It’s 100% PoC. Don’t use it for evil 😇.**
+**It's 100% PoC. Don't use it for evil 😇.**
 

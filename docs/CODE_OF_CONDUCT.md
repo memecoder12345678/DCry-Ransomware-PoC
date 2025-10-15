@@ -14,7 +14,7 @@
 * Use this project for real-world attacks
 * Share malicious compiled payloads
 * Submit spammy or troll PRs
-* Treat this project as a hacking tool &mdash; **it’s a PoC**
+* Treat this project as a hacking tool &mdash; **it's a PoC**
 
 ---
 
