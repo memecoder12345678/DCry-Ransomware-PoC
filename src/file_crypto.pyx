@@ -32,7 +32,6 @@ cdef extern from "windows.h":
     cdef DWORD OPEN_EXISTING
     cdef DWORD PAGE_READONLY
     cdef DWORD FILE_MAP_READ
-    cdef void* NULL
 
     HANDLE CreateFileA(char* lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, void* lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
     bint CloseHandle(HANDLE hObject)

