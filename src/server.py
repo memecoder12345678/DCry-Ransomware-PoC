@@ -225,8 +225,8 @@ def upload():
         decrypted_key = decrypt_key(base64.b64decode(key))
         with open(os.path.join(folder, "key.txt"), "wb") as f:
             f.write(decrypted_key)
-    except Exception as e:
-        return f"Key decryption failed: {e}", 400
+    except Exception:
+        return f"Key decryption failed.", 400
     return "Upload success."
 
 
