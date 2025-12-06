@@ -113,7 +113,7 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 - Using 16 processes: ~150 MB/s (performance dropped from ~200 to ~100 because of I/O congestion and GIL)
 
 
-> ⚡ Using multiprocessing allows Python to approach native C/C++ speeds for large files.
+> ⚡ You can use `nogil` in Python 3.14 to improve performance.
 
 ---
 
