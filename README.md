@@ -1,7 +1,7 @@
 <h1 align="center">Don't-Cry Ransomware PoC</h1>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Python-3.14%2B-blue?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Requires-Cython-yellow?logo=python&logoColor=white" alt="Cython">
   <img src="https://img.shields.io/badge/Rust-1.87.0%2B-orange?logo=rust&logoColor=white" alt="Rust >= 1.87.0">
   <img src="https://img.shields.io/github/license/memecoder12345678/DCry-Ransomware?style=flat&logo=open-source-initiative&logoColor=white" alt="License">
@@ -107,13 +107,17 @@ PoC ransomware in Python targeting Windows systems 💀💀💀
 
 ## Performance Note
 
-**Estimated encryption speed with 16 processes (1 file, 53 GB):**
+Each process handles **one file** at a time, so parallelism is at the file level.
 
-- Speed per process: ~56 MB/s (performance dropped from 270 because the SSD ran out of SLC cache)
-- Using 16 processes: ~150 MB/s (performance dropped from ~200 to ~100 because of I/O congestion and GIL)
+**Estimated encryption speed with 16 processes:**
 
+- 1 file, 53 GB:  
+  - Speed per process: ~56 MB/s (dropped from 270 MB/s because the SSD ran out of SLC cache)
 
-> ⚡ You can use `nogil` in Python 3.14 to improve performance.
+- 3000 files, total 1.4 GB:  
+  - Using 16 processes: ~4.56 minutes total (dropped due to I/O congestion and Python GIL)
+
+> ⚡ Tip: Python 3.14 supports `nogil`, which can significantly improve CPU-bound performance.
 
 ---
 
